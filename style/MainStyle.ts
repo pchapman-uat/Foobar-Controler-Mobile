@@ -10,5 +10,9 @@ export const MainStyle = StyleSheet.create({
 
   statusItem: {
     textAlign: 'center'
+  },
+  textInput: {
+    borderWidth: 1,
+    margin: 5,
   }
 }); 

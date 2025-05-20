@@ -1,6 +1,6 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { Button, Text, View } from 'react-native';
+import { Button, Text, TextInput, View } from 'react-native';
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { StyleManager as SM } from '../style/StyleManager';
 import { AppContext } from '../AppContext';
@@ -23,10 +23,6 @@ export default function App({ navigation}: Props) {
   const [infoPluginVersion, setPluginInfoVersion] = useState<string>("");
 
   const [status, setStatus] = useState<string>("");
-  useEffect(() => {
-    console.log("Loaded!");
-    ctx.BeefWeb.con.set("192.168.0.63", 8880);
-  }, []);
 
   const connectToBeefweb = useCallback(async () => {
     setStatus("Connecting... Please Wait")
@@ -47,6 +43,11 @@ export default function App({ navigation}: Props) {
   const onConnectFail = () => {
     setStatus("Failed")
   }
+
+  const setIP = (ip: string) => {
+    ctx.BeefWeb.setConnection(ip, 8880)
+  }
+
   return (
     <View style={SM.Main.container}>
       <StatusBar style="auto" />
@@ -56,6 +57,9 @@ export default function App({ navigation}: Props) {
         <Text style={SM.Main.statusItem}>Title: {infoTitle}</Text>
         <Text style={SM.Main.statusItem}>Version: {infoVersion}</Text>
         <Text style={SM.Main.statusItem}>Plugin Version: {infoPluginVersion}</Text>
+      </View>
+      <View>
+        <TextInput style={{...SM.Main.textInput, width: 200}} textContentType='URL' onChangeText={setIP}></TextInput>
       </View>
       <Button title="Connect to Beefweb" onPress={connectToBeefweb} />
       <Button title="Now Playing" onPress={() => navigation.navigate('NowPlaying')} />
