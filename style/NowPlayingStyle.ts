@@ -23,8 +23,11 @@ export default StyleSheet.create({
         height: '100%'
     },
     controlsContainer: {
+        width: '100%',
         display: 'flex',
-        justifyContent: 'space-around'
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+
     },
     controlItem: {
 

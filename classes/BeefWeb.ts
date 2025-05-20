@@ -48,6 +48,10 @@ export default class Beefweb {
     async toggle(){
        await this._post(this.combineUrl("player", "pause", "toggle"));
     }
+
+    async skip(){
+        await this._post(this.combineUrl("player", "next"))
+    }
     get albumArtiURI() {
         const url = this.con.getUrl()
         return url ? this.combineUrl(url, "artwork", "current")+`?d=${Date.now()}` : ""

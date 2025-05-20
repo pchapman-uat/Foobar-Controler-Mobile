@@ -44,9 +44,12 @@ export default function NowPlaying({ navigation }: Props){
     };
 
     const onToggle = () => {
-        ctx.BeefWeb.toggle()
+        ctx.BeefWeb.toggle();
     }
 
+    const onSkip = () => {
+        ctx.BeefWeb.skip();
+    }
     const progressBar = (elapsed: number, length: number) => {
         const percentage = (elapsed/length) * 100
         
@@ -69,6 +72,7 @@ export default function NowPlaying({ navigation }: Props){
             <Button title="Force Update" onPress={() => onUpdate()}></Button>
             <View style={SM.NP.controlsContainer}>
                 <Button title="Toggle" onPress={() => onToggle()}/>
+                <Button title="Skip" onPress={() => onSkip()}/>
             </View>
         </View>
     )
