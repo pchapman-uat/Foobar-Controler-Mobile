@@ -43,7 +43,10 @@ export default class Beefweb {
             return playerResponse;
         }
     }
-    
+    get albumArtiURI() {
+        const url = this.con.getUrl()
+        return url ? this.combineUrl(url, "artwork", "current")+`?d=${Date.now()}` : ""
+    }
     setConnection(ip: string, port:number){
         this.con.set(ip, port);
     }
