@@ -1,4 +1,4 @@
-type RawColumns = [boolean, boolean, string, string, string, string, number,number, number, string]
+export type RawColumns = [boolean, boolean, string, string, string, string, number,number, number, string]
 
 export class PlayerResponse {
     info: PlayerInfo;

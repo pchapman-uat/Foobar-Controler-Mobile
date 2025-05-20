@@ -3,10 +3,12 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Connection from './screens/Connection'
 import NowPlaying from './screens/NowPlaying';
+import Library from './screens/Library';
 
 export type RootStackParamList = {
   Connection: undefined;
-  NowPlaying: undefined
+  NowPlaying: undefined,
+  Library: undefined,
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -21,6 +23,7 @@ export default () => {
           options={{title: 'Connection'}}
         />
         <Stack.Screen name="NowPlaying" component={NowPlaying} />
+        <Stack.Screen name="Library" component={Library} />
       </Stack.Navigator>
     </NavigationContainer>
   );

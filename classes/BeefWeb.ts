@@ -1,4 +1,5 @@
 import { Columns, PlayerResponse } from "./responses/Player";
+import { PlaylistItemsResponse } from "./responses/PlaylistItems";
 import { WebRequest } from "./WebRequest";
 import axios, { AxiosResponse } from "axios";
 
@@ -45,6 +46,16 @@ export default class Beefweb {
         }
     }
 
+    async getPlaylistItems(playlistId:number){
+        const playlistInfo = await this._fetch(this.combineUrl("playlists", playlistId.toString()));
+        if(playlistInfo && playlistInfo.data.itemCount){
+            const response = await this._fetch(this.combineUrl("playlists", playlistId.toString(), "items", `0:${playlistInfo.data.itemCount}`)+Columns.columnsQuery)
+            if(response){
+                return await WebRequest.create<PlaylistItemsResponse>(response, PlaylistItemsResponse)
+            }
+        }
+    }
+
     async toggle(){
        await this._post(this.combineUrl("player", "pause", "toggle"));
     }
@@ -63,11 +74,13 @@ export default class Beefweb {
     private async _fetch(path: string): Promise<AxiosResponse<any, any> | null>{
         const url = this.con.getUrl();
         if(url){
+            const fullUrl = this.combineUrl(url,path)
             try {
-                const response = await axios.get(this.combineUrl(url,path), this.timeout)
+                const response = await axios.get(fullUrl, this.timeout)
                 return response;
             } catch {
                 console.warn("Fetch Failed!")
+                console.log(fullUrl)
                 return null
             }
             
