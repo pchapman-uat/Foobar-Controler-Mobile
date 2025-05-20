@@ -1,35 +1,55 @@
-import React from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { Button, StyleSheet, Text, View } from 'react-native';
+import { Button, Text, View } from 'react-native';
+import { StyleManager as SM } from './style/StyleManager';
+import { AppContext } from './AppContext';
+import { RequestStatus } from './classes/WebRequest';
+import { PlayerResponse } from './classes/responses/Player';
 
-interface AppState {}
+export default function App() {
+  const ctx = useContext(AppContext);
 
-export default class App extends React.Component<{}, AppState> {
-  constructor(props: {}) {
-    super(props);
-    // You can initialize state here if needed
-    this.test = this.test.bind(this);
+  const [infoName, setInfoname] = useState<string>("");
+  const [infoTitle, setInfoTitle] = useState<string>("");
+  const [infoVersion, setInfoVersion] = useState<string>("");
+  const [infoPluginVersion, setPluginInfoVersion] = useState<string>("");
+
+  const [status, setStatus] = useState<string>("");
+  useEffect(() => {
+    console.log("Loaded!");
+    ctx.BeefWeb.con.set("192.168.0.63", 8880);
+  }, []);
+
+  const connectToBeefweb = useCallback(async () => {
+    setStatus("Connecting... Please Wait")
+    const response = await ctx.BeefWeb.getPlayer()
+    console.log(response)
+    if(!response || response.status != RequestStatus.OK) onConnectFail();
+    else onConnectSucess(response.data);
+  }, [ctx])
+
+  const onConnectSucess = (response: PlayerResponse) => {
+    setStatus("Connected!");
+    setInfoname(response.info.name)
+    setInfoTitle(response.info.title)
+    setInfoVersion(response.info.version)
+    setPluginInfoVersion(response.info.pluginVersion)
   }
 
-  test() {
-    console.log("test");
+  const onConnectFail = () => {
+    setStatus("Failed")
   }
-
-  render() {
-    return (
-      <View style={styles.container}>
-        <StatusBar style="auto" />
-        <Text>Hello World!</Text>
+  return (
+    <View style={SM.Main.container}>
+      <StatusBar style="auto" />
+      <View>
+        <Text style={SM.Main.statusItem}>Status: {status}</Text>
+        <Text style={SM.Main.statusItem}>Name: {infoName}</Text>
+        <Text style={SM.Main.statusItem}>Title: {infoTitle}</Text>
+        <Text style={SM.Main.statusItem}>Version: {infoVersion}</Text>
+        <Text style={SM.Main.statusItem}>Plugin Version: {infoPluginVersion}</Text>
       </View>
-    );
-  }
+      <Button title="Connect to Beefweb" onPress={connectToBeefweb} />
+    </View>
+  );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
