@@ -1,6 +1,6 @@
 import { Columns, PlayerResponse } from "./responses/Player";
 import { WebRequest } from "./WebRequest";
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 
 enum Status {
     Offline,
@@ -34,6 +34,7 @@ class Connection {
 export default class Beefweb {
     status = Status.Offline
     con = new Connection();
+    readonly timeout = {timeout: 5000};
 
     async getPlayer(){
         const response = await this._fetch(this.combineUrl("player")+Columns.columnsQuery)
@@ -43,6 +44,10 @@ export default class Beefweb {
             return playerResponse;
         }
     }
+
+    async toggle(){
+       await this._post(this.combineUrl("player", "pause", "toggle"));
+    }
     get albumArtiURI() {
         const url = this.con.getUrl()
         return url ? this.combineUrl(url, "artwork", "current")+`?d=${Date.now()}` : ""
@@ -51,13 +56,14 @@ export default class Beefweb {
         this.con.set(ip, port);
     }
 
-    private async _fetch(path: string){
+    private async _fetch(path: string): Promise<AxiosResponse<any, any> | null>{
         const url = this.con.getUrl();
         if(url){
             try {
-                const response = await axios.get(this.con.getUrl()+"/"+path, {timeout: 5000})
+                const response = await axios.get(this.combineUrl(url,path), this.timeout)
                 return response;
             } catch {
+                console.warn("Fetch Failed!")
                 return null
             }
             
@@ -65,8 +71,18 @@ export default class Beefweb {
         return null;
     }
 
-    private _post(){
-        throw new Error("Uniplimented Method")
+    private async _post(path: string): Promise<AxiosResponse<any, any> | null>{
+        const url = this.con.getUrl();
+        if(url){
+            try {
+                console.log(this.combineUrl(url, path), this.timeout)
+                return await axios.post(this.combineUrl(url, path), this.timeout)
+            } catch {
+                console.warn("Post Failed!")
+                return null;
+            }
+        }
+        return null;
     }
 
     private combineUrl(...paths: string[]){

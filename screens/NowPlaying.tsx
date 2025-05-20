@@ -43,6 +43,10 @@ export default function NowPlaying({ navigation }: Props){
         return <Image source={{ uri: url }} style={SM.NP.alubmArt} />;
     };
 
+    const onToggle = () => {
+        ctx.BeefWeb.toggle()
+    }
+
     const progressBar = (elapsed: number, length: number) => {
         const percentage = (elapsed/length) * 100
         
@@ -52,6 +56,7 @@ export default function NowPlaying({ navigation }: Props){
             </View>
         )
     }
+    
     return (
         <View style={SM.Main.container}>
             <View style={SM.NP.nowPlayingContainer}>
@@ -62,6 +67,9 @@ export default function NowPlaying({ navigation }: Props){
             </View>
              {progressBar(elapsed, length)}
             <Button title="Force Update" onPress={() => onUpdate()}></Button>
+            <View style={SM.NP.controlsContainer}>
+                <Button title="Toggle" onPress={() => onToggle()}/>
+            </View>
         </View>
     )
 }

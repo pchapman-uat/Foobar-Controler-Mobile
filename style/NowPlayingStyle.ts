@@ -21,5 +21,12 @@ export default StyleSheet.create({
         backgroundColor: 'green',
         width: '50%',
         height: '100%'
+    },
+    controlsContainer: {
+        display: 'flex',
+        justifyContent: 'space-around'
+    },
+    controlItem: {
+
     }
 })
