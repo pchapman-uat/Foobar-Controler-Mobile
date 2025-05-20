@@ -5,11 +5,21 @@ export default StyleSheet.create({
        
     },
     alubmArt: {
-        height: 100,
-        width: 100,
+        height: 300,
+        width: 300,
         alignSelf: 'center'
     },
     npText: {
         textAlign: 'center',
+    },
+    progressOuter: {
+        height: 30,
+        width: '100%',
+        backgroundColor: 'red'
+    },
+    progressInner: {
+        backgroundColor: 'green',
+        width: '50%',
+        height: '100%'
     }
 })

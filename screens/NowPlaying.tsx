@@ -19,6 +19,8 @@ export default function NowPlaying({ navigation }: Props){
     const [title, setTitle] = useState("")
     const [artist, setArtist] = useState("")
     const [albumArt, setAlbumArt] = useState("")
+    const [elapsed, setElapsed] = useState(0);
+    const [length, setLength] = useState(1)
 
     const onUpdate = async () => {
         const response = await ctx.BeefWeb.getPlayer();
@@ -28,6 +30,8 @@ export default function NowPlaying({ navigation }: Props){
             setAlbum(columns.album);
             setArtist(columns.artist);
             setTitle(columns.title);
+            setElapsed(columns.elapsed);
+            setLength(columns.length);
             setAlbumArt(ctx.BeefWeb.albumArtiURI)
         }
     }
@@ -38,6 +42,16 @@ export default function NowPlaying({ navigation }: Props){
 
         return <Image source={{ uri: url }} style={SM.NP.alubmArt} />;
     };
+
+    const progressBar = (elapsed: number, length: number) => {
+        const percentage = (elapsed/length) * 100
+        
+        return (
+            <View style={SM.NP.progressOuter}>
+                <View style={{...SM.NP.progressInner, width: `${percentage}%`}}></View>
+            </View>
+        )
+    }
     return (
         <View style={SM.Main.container}>
             <View style={SM.NP.nowPlayingContainer}>
@@ -46,6 +60,7 @@ export default function NowPlaying({ navigation }: Props){
                 <Text style={SM.NP.npText}>{artist}</Text>
                 <Text style={SM.NP.npText}>{album}</Text>
             </View>
+             {progressBar(elapsed, length)}
             <Button title="Force Update" onPress={() => onUpdate()}></Button>
         </View>
     )
