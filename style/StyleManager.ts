@@ -1,4 +1,6 @@
-import {MainStyle as Main} from "./MainStyle"
+import {MainStyle} from "./MainStyle"
+import NowPlayingStyle from "./NowPlayingStyle";
 export class StyleManager {
-    static Main = Main;
+    static Main = MainStyle;
+    static NP = NowPlayingStyle
 }

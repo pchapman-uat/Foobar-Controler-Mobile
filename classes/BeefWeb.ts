@@ -1,4 +1,4 @@
-import { PlayerResponse } from "./responses/Player";
+import { Columns, PlayerResponse } from "./responses/Player";
 import { WebRequest } from "./WebRequest";
 import axios from "axios";
 
@@ -36,13 +36,14 @@ export default class Beefweb {
     con = new Connection();
 
     async getPlayer(){
-        const response = await this._fetch("/player");
+        const response = await this._fetch(this.combineUrl("player")+Columns.columnsQuery)
         console.log("done")
         if(response) {
             const playerResponse = await WebRequest.create<PlayerResponse>(response, PlayerResponse);
             return playerResponse;
         }
     }
+    
     setConnection(ip: string, port:number){
         this.con.set(ip, port);
     }
@@ -51,7 +52,7 @@ export default class Beefweb {
         const url = this.con.getUrl();
         if(url){
             try {
-                const response = await axios.get(this.con.getUrl()+path, {timeout: 5000})
+                const response = await axios.get(this.con.getUrl()+"/"+path, {timeout: 5000})
                 return response;
             } catch {
                 return null
@@ -60,7 +61,12 @@ export default class Beefweb {
         }
         return null;
     }
+
     private _post(){
         throw new Error("Uniplimented Method")
+    }
+
+    private combineUrl(...paths: string[]){
+        return paths.join("/")
     }
 }
