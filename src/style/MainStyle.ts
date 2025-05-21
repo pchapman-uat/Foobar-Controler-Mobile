@@ -1,6 +1,9 @@
 import { StyleSheet } from "react-native";
 
 export const MainStyle = StyleSheet.create({
+  view: {
+      flex: 1,
+  },
   container: {
     flex: 1,
     backgroundColor: '#fff',

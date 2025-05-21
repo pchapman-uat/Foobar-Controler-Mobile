@@ -1,9 +1,10 @@
 import { View, Text, Button, Image } from "react-native";
-import { NPStyle, MainStyle} from "../style/StyleManager";
+import { NPStyle, MainStyle} from "../managers/StyleManager";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../App";
 import { useContext, useState } from "react";
 import { AppContext } from "../AppContext";
+import NavBarScreen from "../elements/NavBarScreen";
 
 
 type NowPlayingNavigationProp = NativeStackNavigationProp<RootStackParamList, 'NowPlaying'>;
@@ -61,19 +62,23 @@ export default function NowPlaying({ navigation }: Props){
     }
     
     return (
-        <View style={MainStyle.container}>
-            <View style={NPStyle.nowPlayingContainer}>
-                {renderImage(albumArt)}
-                <Text style={NPStyle.npText}>{title}</Text>
-                <Text style={NPStyle.npText}>{artist}</Text>
-                <Text style={NPStyle.npText}>{album}</Text>
+        <NavBarScreen navigation={navigation}>
+            <View style={MainStyle.container}>
+                <View style={NPStyle.nowPlayingContainer}>
+                    {renderImage(albumArt)}
+                    <Text style={NPStyle.npText}>{title}</Text>
+                    <Text style={NPStyle.npText}>{artist}</Text>
+                    <Text style={NPStyle.npText}>{album}</Text>
+                </View>
+                {progressBar(elapsed, length)}
+                <Button title="Force Update" onPress={() => onUpdate()}></Button>
+                <View style={NPStyle.controlsContainer}>
+                    <Button title="Toggle" onPress={() => onToggle()}/>
+                    <Button title="Skip" onPress={() => onSkip()}/>
+                </View>
             </View>
-             {progressBar(elapsed, length)}
-            <Button title="Force Update" onPress={() => onUpdate()}></Button>
-            <View style={NPStyle.controlsContainer}>
-                <Button title="Toggle" onPress={() => onToggle()}/>
-                <Button title="Skip" onPress={() => onSkip()}/>
-            </View>
-        </View>
+            
+        </NavBarScreen>
+        
     )
 }
