@@ -1,5 +1,5 @@
 import { View, Text, Button, Image } from "react-native";
-import { StyleManager as SM } from "../style/StyleManager";
+import { NPStyle, MainStyle} from "../style/StyleManager";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../App";
 import { useContext, useState } from "react";
@@ -37,10 +37,10 @@ export default function NowPlaying({ navigation }: Props){
     }
     const renderImage = (url: string) => {
         if (!url || url.trim() === '') {
-            return <Image source={require('../assets/icon.png')}  style={SM.NP.alubmArt}/>;
+            return <Image source={require('../assets/icon.png')}  style={NPStyle.alubmArt}/>;
         }
 
-        return <Image source={{ uri: url }} style={SM.NP.alubmArt} />;
+        return <Image source={{ uri: url }} style={NPStyle.alubmArt} />;
     };
 
     const onToggle = () => {
@@ -54,23 +54,23 @@ export default function NowPlaying({ navigation }: Props){
         const percentage = (elapsed/length) * 100
         
         return (
-            <View style={SM.NP.progressOuter}>
-                <View style={{...SM.NP.progressInner, width: `${percentage}%`}}></View>
+            <View style={NPStyle.progressOuter}>
+                <View style={{...NPStyle.progressInner, width: `${percentage}%`}}></View>
             </View>
         )
     }
     
     return (
-        <View style={SM.Main.container}>
-            <View style={SM.NP.nowPlayingContainer}>
+        <View style={MainStyle.container}>
+            <View style={NPStyle.nowPlayingContainer}>
                 {renderImage(albumArt)}
-                <Text style={SM.NP.npText}>{title}</Text>
-                <Text style={SM.NP.npText}>{artist}</Text>
-                <Text style={SM.NP.npText}>{album}</Text>
+                <Text style={NPStyle.npText}>{title}</Text>
+                <Text style={NPStyle.npText}>{artist}</Text>
+                <Text style={NPStyle.npText}>{album}</Text>
             </View>
              {progressBar(elapsed, length)}
             <Button title="Force Update" onPress={() => onUpdate()}></Button>
-            <View style={SM.NP.controlsContainer}>
+            <View style={NPStyle.controlsContainer}>
                 <Button title="Toggle" onPress={() => onToggle()}/>
                 <Button title="Skip" onPress={() => onSkip()}/>
             </View>

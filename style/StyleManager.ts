@@ -1,6 +1,4 @@
 import {MainStyle} from "./MainStyle"
 import NowPlayingStyle from "./NowPlayingStyle";
-export class StyleManager {
-    static Main = MainStyle;
-    static NP = NowPlayingStyle
-}
+import LibraryStyle from "./LibraryStyle";
+export {MainStyle, NowPlayingStyle as NPStyle, LibraryStyle}

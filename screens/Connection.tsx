@@ -2,7 +2,7 @@ import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { Button, Text, TextInput, View } from 'react-native';
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { StyleManager as SM } from '../style/StyleManager';
+import { MainStyle } from '../style/StyleManager';
 import { AppContext } from '../AppContext';
 import { RequestStatus } from '../classes/WebRequest';
 import { PlayerResponse } from '../classes/responses/Player';
@@ -49,17 +49,17 @@ export default function App({ navigation}: Props) {
   }
 
   return (
-    <View style={SM.Main.container}>
+    <View style={MainStyle.container}>
       <StatusBar style="auto" />
       <View>
-        <Text style={SM.Main.statusItem}>Status: {status}</Text>
-        <Text style={SM.Main.statusItem}>Name: {infoName}</Text>
-        <Text style={SM.Main.statusItem}>Title: {infoTitle}</Text>
-        <Text style={SM.Main.statusItem}>Version: {infoVersion}</Text>
-        <Text style={SM.Main.statusItem}>Plugin Version: {infoPluginVersion}</Text>
+        <Text style={MainStyle.statusItem}>Status: {status}</Text>
+        <Text style={MainStyle.statusItem}>Name: {infoName}</Text>
+        <Text style={MainStyle.statusItem}>Title: {infoTitle}</Text>
+        <Text style={MainStyle.statusItem}>Version: {infoVersion}</Text>
+        <Text style={MainStyle.statusItem}>Plugin Version: {infoPluginVersion}</Text>
       </View>
       <View>
-        <TextInput style={{...SM.Main.textInput, width: 200}} textContentType='URL' onChangeText={setIP}></TextInput>
+        <TextInput style={{...MainStyle.textInput, width: 200}} textContentType='URL' onChangeText={setIP}></TextInput>
       </View>
       <Button title="Connect to Beefweb" onPress={connectToBeefweb} />
       <Button title="Now Playing" onPress={() => navigation.navigate('NowPlaying')} />

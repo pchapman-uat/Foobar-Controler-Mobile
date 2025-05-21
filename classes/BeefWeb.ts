@@ -56,6 +56,14 @@ export default class Beefweb {
         }
     }
 
+    async playSong(playlistId:number, songId:number){
+        await this._post(this.combineUrl("player", "play", playlistId.toString(),songId.toString()))
+    }
+
+    async queueSong(playlistId:number, songId:number){
+       await this._post(this.combineUrl("playqueue", "add"), {plref: playlistId, itemIndex: songId})
+    }
+
     async toggle(){
        await this._post(this.combineUrl("player", "pause", "toggle"));
     }
@@ -88,14 +96,15 @@ export default class Beefweb {
         return null;
     }
 
-    private async _post(path: string): Promise<AxiosResponse<any, any> | null>{
+    private async _post(path: string, body?:object): Promise<AxiosResponse<any, any> | null>{
         const url = this.con.getUrl();
         if(url){
             try {
                 console.log(this.combineUrl(url, path), this.timeout)
-                return await axios.post(this.combineUrl(url, path), this.timeout)
-            } catch {
+                return await axios.post(this.combineUrl(url, path), body, this.timeout)
+            } catch (error) {
                 console.warn("Post Failed!")
+                console.error(error)
                 return null;
             }
         }
