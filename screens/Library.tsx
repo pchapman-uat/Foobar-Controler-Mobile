@@ -1,9 +1,9 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useContext, useEffect, useState } from "react";
-import { Button, Modal, Pressable, ScrollView, Text, TextInput, TouchableOpacity, View} from "react-native";
+import { Button, Modal, Pressable, SafeAreaView, ScrollView, Text, TextInput, TouchableOpacity, View} from "react-native";
 import { Picker } from '@react-native-picker/picker';
 import { RootStackParamList } from "../App";
-import { LibraryStyle } from "../style/StyleManager";
+import { LibraryStyle, MainStyle } from "../style/StyleManager";
 
 import { AppContext } from "../AppContext";
 import { Columns } from "../classes/responses/Player";
@@ -16,7 +16,9 @@ type Props = {
 
 export default function Library(){
     const [playlistId, setPlaylistId] = useState<string>()
+    const [searchInput, setSearchInput] = useState<string>()
     const [songs, setSongs] = useState<Columns[]>()
+    const [filteredSongs, setfilteredSongs] = useState<Columns[]>()
     const ctx = useContext(AppContext);
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedSong, setSelectedSong] = useState<Columns | null>(null);
@@ -25,17 +27,23 @@ export default function Library(){
 
     const onPlaylistChange = async (playlistID:string) => {
         setPlaylistId(playlistID)
+        setSearchInput("")
         if(playlistId && playlistId != ""){
             console.log(playlistId)
             const response = await ctx.BeefWeb.getPlaylistItems(playlistID);
             if(response){
+                console.log("Setting Songs")
                 setSongs(response.data.items)
+                setfilteredSongs(response.data.items)
             }
         }
     }
     const displaySongs = (songs?: Columns[]) => {
         
-        if(!songs) return null;
+        if(!songs){
+            console.warn("Songs are null")
+            return;
+        }
 
         const handleLongPress = (song: Columns, index:number) => {
             setSelectedSong(song);
@@ -44,15 +52,12 @@ export default function Library(){
         };
         const playSong = () => {
             if(!playlistId || !selectedIndex) return;
-            const pref = Number.parseInt(playlistId)
-            ctx.BeefWeb.playSong(pref, selectedIndex)
+            ctx.BeefWeb.playSong(playlistId, selectedIndex)
             setModalVisible(false);
         }
         const queueSong = () => {
             if(!playlistId || !selectedIndex) return;
-            const pref = Number.parseInt(playlistId)
-            console.log(pref, selectedIndex)
-            ctx.BeefWeb.queueSong(pref, selectedIndex)
+            ctx.BeefWeb.queueSong(playlistId, selectedIndex)
             setModalVisible(false);
         };
         return (
@@ -95,8 +100,18 @@ export default function Library(){
         fetchPlaylists();
     }, []);
 
+
+    const searchSong = (input: string) => {
+        setSearchInput(input)
+        if(!input || input == "" || !songs ) return;
+        const regex = new RegExp(input, "i");
+
+        const results = songs.filter(song => regex.test(song.title) || regex.test(song.album)  || regex.test(song.artist));
+        setfilteredSongs(results);
+    }
+
     return (
-        <View>
+        <SafeAreaView>
             <Picker
                 selectedValue={playlistId}
                 onValueChange={(itemValue) => onPlaylistChange(itemValue)}
@@ -105,7 +120,8 @@ export default function Library(){
                     <Picker.Item key={item.id} label={item.title} value={item.id} />
                 ))}
             </Picker>
-            <ScrollView>{displaySongs(songs)}</ScrollView>
-        </View>
+            <TextInput style={MainStyle.textInput} onChangeText={searchSong} value={searchInput}/>
+            <ScrollView>{displaySongs(filteredSongs)}</ScrollView>
+        </SafeAreaView>
     )
 }

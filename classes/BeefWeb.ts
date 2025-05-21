@@ -65,11 +65,11 @@ export default class Beefweb {
         }
     }
 
-    async playSong(playlistId:number, songId:number){
-        await this._post(this.combineUrl("player", "play", playlistId.toString(),songId.toString()))
+    async playSong(playlistId:string, songId:number){
+        await this._post(this.combineUrl("player", "play", playlistId,songId.toString()))
     }
 
-    async queueSong(playlistId:number, songId:number){
+    async queueSong(playlistId:string, songId:number){
        await this._post(this.combineUrl("playqueue", "add"), {plref: playlistId, itemIndex: songId})
     }
 
