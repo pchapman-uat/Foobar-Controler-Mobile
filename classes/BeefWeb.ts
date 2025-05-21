@@ -1,5 +1,6 @@
 import { Columns, PlayerResponse } from "./responses/Player";
 import { PlaylistItemsResponse } from "./responses/PlaylistItems";
+import { PlaylistsResponse } from "./responses/Playlists";
 import { WebRequest } from "./WebRequest";
 import axios, { AxiosResponse } from "axios";
 
@@ -46,10 +47,18 @@ export default class Beefweb {
         }
     }
 
-    async getPlaylistItems(playlistId:number){
-        const playlistInfo = await this._fetch(this.combineUrl("playlists", playlistId.toString()));
+    async getPlaylists(){
+        const response = await this._fetch(this.combineUrl("playlists"));
+        if(response){
+            const playlistsResponse = await WebRequest.create<PlaylistsResponse>(response, PlaylistsResponse);
+            return playlistsResponse;
+        }
+    }
+
+    async getPlaylistItems(playlistId:string){
+        const playlistInfo = await this._fetch(this.combineUrl("playlists", playlistId));
         if(playlistInfo && playlistInfo.data.itemCount){
-            const response = await this._fetch(this.combineUrl("playlists", playlistId.toString(), "items", `0:${playlistInfo.data.itemCount}`)+Columns.columnsQuery)
+            const response = await this._fetch(this.combineUrl("playlists", playlistId, "items", `0:${playlistInfo.data.itemCount}`)+Columns.columnsQuery)
             if(response){
                 return await WebRequest.create<PlaylistItemsResponse>(response, PlaylistItemsResponse)
             }

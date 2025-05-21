@@ -1,8 +1,10 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { useContext, useEffect, useState } from "react";
+import { Button, Modal, Pressable, ScrollView, Text, TextInput, TouchableOpacity, View} from "react-native";
+import { Picker } from '@react-native-picker/picker';
 import { RootStackParamList } from "../App";
-import { Button, Modal, Pressable, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { LibraryStyle } from "../style/StyleManager";
-import { useContext, useState } from "react";
+
 import { AppContext } from "../AppContext";
 import { Columns } from "../classes/responses/Player";
 
@@ -19,24 +21,15 @@ export default function Library(){
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedSong, setSelectedSong] = useState<Columns | null>(null);
     const [selectedIndex, setSelectedIndex] = useState<number>()
+    const [playlists, setPlaylists] = useState<{ id: string; title: string }[]>([]);
 
-    const onSearch = async () => {
+    const onPlaylistChange = async (playlistID:string) => {
+        setPlaylistId(playlistID)
         if(playlistId && playlistId != ""){
             console.log(playlistId)
-            try{
-                const id = Number.parseInt(playlistId);
-                console.log(id)
-                if(id !=null){
-                    const response = await ctx.BeefWeb.getPlaylistItems(id);
-                    if(response){
-                        setSongs(response.data.items)
-                    }
-                } else {
-                    console.log("Invalid ID")
-                }
-            }
-            catch {
-                console.log("Failed to parse")
+            const response = await ctx.BeefWeb.getPlaylistItems(playlistID);
+            if(response){
+                setSongs(response.data.items)
             }
         }
     }
@@ -92,10 +85,26 @@ export default function Library(){
             </View>
         );
     }
+    useEffect(() => {
+        const fetchPlaylists = async () => {
+            const res = await ctx.BeefWeb.getPlaylists();
+            if (res && res.data) {
+                setPlaylists(res.data);
+            }
+        };
+        fetchPlaylists();
+    }, []);
+
     return (
         <View>
-            <TextInput style={{width: '100%', borderWidth: 1, color:'red'}} onChangeText={setPlaylistId} keyboardType='number-pad' value={playlistId}></TextInput>
-            <Button title="Search" onPress={onSearch}/>
+            <Picker
+                selectedValue={playlistId}
+                onValueChange={(itemValue) => onPlaylistChange(itemValue)}
+            >
+                {playlists.map((item) => (
+                    <Picker.Item key={item.id} label={item.title} value={item.id} />
+                ))}
+            </Picker>
             <ScrollView>{displaySongs(songs)}</ScrollView>
         </View>
     )
