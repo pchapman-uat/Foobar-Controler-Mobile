@@ -4,6 +4,7 @@ import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { MainStyle } from "../style/MainStyle";
 import NavBar from "./NavBar";
 import React from "react";
+import StatusBar from "./Statusbar";
 
 type NavBarScreenProps = {
   navigation: NativeStackNavigationProp<RootStackParamList, any>;
@@ -14,6 +15,7 @@ const NavBarScreen: React.FC<NavBarScreenProps> = ({ navigation, children }) => 
   return (
     <SafeAreaProvider>
       <SafeAreaView style={MainStyle.view}>
+        <StatusBar/>
         <React.Fragment>
           {children}
         </React.Fragment>

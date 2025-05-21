@@ -12,7 +12,7 @@ export enum RequestStatus {
 }
 
 export class WebRequest<T> {
-    status: number;
+    status: RequestStatus;
     data: T;
 
     private constructor(status: number, data: T) {

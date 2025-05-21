@@ -3,8 +3,8 @@ export type RawColumns = [boolean, boolean, string, string, string, string, numb
 export class PlayerResponse {
     info: PlayerInfo;
     activeItem: ActiveItem;
-
-    constructor(info: PlayerInfo, activeItem: ActiveItem, columns: RawColumns) {
+    sameSong = false;
+        constructor(info: PlayerInfo, activeItem: ActiveItem, columns: RawColumns) {
         this.info = info;
         this.activeItem = activeItem;
         this.activeItem.columns = new Columns(columns)
@@ -13,6 +13,11 @@ export class PlayerResponse {
     static fromJSON(json: any): PlayerResponse {
         console.log("Creating from JSON")
         return new PlayerResponse(json.player.info, json.player.activeItem, json.player.activeItem.columns);
+    }
+    compare(old:PlayerResponse){
+        const oldColumns = old.activeItem.columns;
+        const newColumns = this.activeItem.columns;
+        return newColumns.path == oldColumns.path;
     }
 }
 export interface PlayerInfo {

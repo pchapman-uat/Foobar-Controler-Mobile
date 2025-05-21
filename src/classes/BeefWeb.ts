@@ -2,12 +2,13 @@ import { Columns, PlayerResponse } from "./responses/Player";
 import { PlaylistItemsResponse } from "./responses/PlaylistItems";
 import { PlaylistsResponse } from "./responses/Playlists";
 import PlayQueueResponse from "./responses/PlayQueue";
-import { WebRequest } from "./WebRequest";
+import { RequestStatus, WebRequest } from "./WebRequest";
 import axios, { AxiosResponse } from "axios";
 
-enum Status {
+export enum Status {
     Offline,
-    Online
+    Online,
+    Error
 }
 
 class Connection {
@@ -32,18 +33,33 @@ class Connection {
     getPort() {
         return this.port;
     }
+
 }
 
 export default class Beefweb {
     status = Status.Offline
     con = new Connection();
     readonly timeout = {timeout: 5000};
-
+    lastPlayer?:PlayerResponse
+    private fromRequestStatus(status: RequestStatus){
+        if(status == RequestStatus.OK) this.status = Status.Online;
+        else this.status = Status.Offline
+    }
+    private async createWebRequest<T>(response:AxiosResponse<any,any>, type: any):Promise<WebRequest<T>>{
+        const _response = await WebRequest.create<T>(response, type);
+        this.fromRequestStatus(_response.status);
+        return _response;
+    }
     async getPlayer(){
         const response = await this._fetch(this.combineUrl("player")+Columns.columnsQuery)
         console.log("done")
         if(response) {
-            const playerResponse = await WebRequest.create<PlayerResponse>(response, PlayerResponse);
+            const playerResponse = await this.createWebRequest<PlayerResponse>(response, PlayerResponse);
+            if(this.lastPlayer) {
+                playerResponse.data.sameSong = playerResponse.data.compare(this.lastPlayer)
+            }
+            this.lastPlayer = playerResponse.data;
+            
             return playerResponse;
         }
     }
@@ -51,7 +67,7 @@ export default class Beefweb {
     async getPlaylists(){
         const response = await this._fetch(this.combineUrl("playlists"));
         if(response){
-            const playlistsResponse = await WebRequest.create<PlaylistsResponse>(response, PlaylistsResponse);
+            const playlistsResponse = await this.createWebRequest<PlaylistsResponse>(response, PlaylistsResponse);
             return playlistsResponse;
         }
     }
@@ -61,7 +77,7 @@ export default class Beefweb {
         if(playlistInfo && playlistInfo.data.itemCount){
             const response = await this._fetch(this.combineUrl("playlists", playlistId, "items", `0:${playlistInfo.data.itemCount}`)+Columns.columnsQuery)
             if(response){
-                return await WebRequest.create<PlaylistItemsResponse>(response, PlaylistItemsResponse)
+                return await this.createWebRequest<PlaylistItemsResponse>(response, PlaylistItemsResponse)
             }
         }
     }
@@ -69,7 +85,7 @@ export default class Beefweb {
     async getPlaybackQueue(){
         const response = await this._fetch(this.combineUrl("playqueue")+Columns.columnsQuery);
         if(response){
-            return await WebRequest.create<PlayQueueResponse>(response, PlayQueueResponse);
+            return await this.createWebRequest<PlayQueueResponse>(response, PlayQueueResponse);
         }
     }
     async playSong(playlistId:string, songId:number){
@@ -102,13 +118,15 @@ export default class Beefweb {
             try {
                 const response = await axios.get(fullUrl, this.timeout)
                 return response;
-            } catch {
+            } catch (error) {
                 console.warn("Fetch Failed!")
-                console.log(fullUrl)
+                console.error(error)
+                this.status = Status.Error;
                 return null
             }
             
         }
+        this.status = Status.Error;
         return null;
     }
 
@@ -121,9 +139,11 @@ export default class Beefweb {
             } catch (error) {
                 console.warn("Post Failed!")
                 console.error(error)
+                this.status = Status.Error;
                 return null;
             }
         }
+        this.status = Status.Error;
         return null;
     }
 
