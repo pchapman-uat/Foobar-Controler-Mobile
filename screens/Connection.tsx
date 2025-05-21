@@ -64,6 +64,7 @@ export default function App({ navigation}: Props) {
       <Button title="Connect to Beefweb" onPress={connectToBeefweb} />
       <Button title="Now Playing" onPress={() => navigation.navigate('NowPlaying')} />
       <Button title='Library' onPress={() => navigation.navigate("Library")}/>
+      <Button title="Playback Queue" onPress={() => navigation.navigate("PlaybackQueue")}/>
     </View>
   );
 }

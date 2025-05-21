@@ -1,6 +1,7 @@
 import { Columns, PlayerResponse } from "./responses/Player";
 import { PlaylistItemsResponse } from "./responses/PlaylistItems";
 import { PlaylistsResponse } from "./responses/Playlists";
+import PlayQueueResponse from "./responses/PlayQueue";
 import { WebRequest } from "./WebRequest";
 import axios, { AxiosResponse } from "axios";
 
@@ -65,6 +66,12 @@ export default class Beefweb {
         }
     }
 
+    async getPlaybackQueue(){
+        const response = await this._fetch(this.combineUrl("playqueue")+Columns.columnsQuery);
+        if(response){
+            return await WebRequest.create<PlayQueueResponse>(response, PlayQueueResponse);
+        }
+    }
     async playSong(playlistId:string, songId:number){
         await this._post(this.combineUrl("player", "play", playlistId,songId.toString()))
     }
