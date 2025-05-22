@@ -3,7 +3,7 @@ import { useContext, useEffect, useState } from "react";
 import { Button, Modal, Pressable, SafeAreaView, ScrollView, Text, TextInput, TouchableOpacity, View} from "react-native";
 import { Picker } from '@react-native-picker/picker';
 import { RootStackParamList } from "../App";
-import { LibraryStyle, MainStyle } from "../managers/StyleManager";
+import { ModalStyle, MainStyle } from "../managers/StyleManager";
 
 import { AppContext } from "../AppContext";
 import { Columns } from "../classes/responses/Player";
@@ -64,11 +64,11 @@ export default function Library({ navigation}: Props){
         return (
             <View>
                 {songs.map((item, index) => (
-                    <Pressable key={"song-" + index} onLongPress={() => handleLongPress(item, index)}>
+                    <TouchableOpacity key={"song-" + index} onLongPress={() => handleLongPress(item, index)}>
                         <View>
                             <Text>{item.title}</Text>
                         </View>
-                    </Pressable>
+                    </TouchableOpacity>
                 ))}
 
                 <Modal
@@ -77,13 +77,13 @@ export default function Library({ navigation}: Props){
                     animationType="fade"
                     onRequestClose={() => setModalVisible(false)}
                 >
-                    <TouchableOpacity style={LibraryStyle.modalOverlay} onPress={() => setModalVisible(false)}>
-                        <View style={LibraryStyle.menu}>
+                    <TouchableOpacity style={ModalStyle.modalOverlay} onPress={() => setModalVisible(false)}>
+                        <View style={ModalStyle.menu}>
                             <TouchableOpacity onPress={() => playSong()}>
-                                <Text style={LibraryStyle.menuItem}>Play</Text>
+                                <Text style={ModalStyle.menuItem}>Play</Text>
                             </TouchableOpacity>
                             <TouchableOpacity onPress={() => queueSong()}>
-                                <Text style={LibraryStyle.menuItem}>Add to Playback Queue</Text>
+                                <Text style={ModalStyle.menuItem}>Add to Playback Queue</Text>
                             </TouchableOpacity>
                         </View>
                     </TouchableOpacity>

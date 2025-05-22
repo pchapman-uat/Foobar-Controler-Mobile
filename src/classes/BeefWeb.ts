@@ -103,10 +103,16 @@ export default class Beefweb {
     async skip(){
         await this._post(this.combineUrl("player", "next"))
     }
+    
+    async removeFromQueue(plref: string|number, itemIndex: number, queueIndex: number){
+        await this._post(this.combineUrl("playqueue", "remove"), {plref, itemIndex, queueIndex})
+    }
+
     get albumArtiURI() {
         const url = this.con.getUrl()
         return url ? this.combineUrl(url, "artwork", "current")+`?d=${Date.now()}` : ""
     }
+
     setConnection(ip: string, port:number){
         this.con.set(ip, port);
     }
