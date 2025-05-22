@@ -1,21 +1,12 @@
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useContext, useEffect, useState } from "react";
 import { Button, Modal, Pressable, SafeAreaView, ScrollView, Text, TextInput, TouchableOpacity, View} from "react-native";
 import { Picker } from '@react-native-picker/picker';
-import { RootStackParamList } from "../App";
 import { ModalStyle, MainStyle } from "../managers/StyleManager";
 
 import { AppContext } from "../AppContext";
 import { Columns } from "../classes/responses/Player";
-import NavBarScreen from "../elements/NavBarScreen";
 
-type LibraryNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Library'>;
-
-type Props = {
-    navigation: LibraryNavigationProp
-}
-
-export default function Library({ navigation}: Props){
+export default function Library(){
     const [playlistId, setPlaylistId] = useState<string>()
     const [searchInput, setSearchInput] = useState<string>()
     const [songs, setSongs] = useState<Columns[]>()
@@ -112,7 +103,7 @@ export default function Library({ navigation}: Props){
     }
 
     return (
-        <NavBarScreen navigation={navigation}>
+        <View style={{flex: 1}}>
             <Picker
                 selectedValue={playlistId}
                 onValueChange={(itemValue) => onPlaylistChange(itemValue)}
@@ -123,7 +114,7 @@ export default function Library({ navigation}: Props){
             </Picker>
             <TextInput style={MainStyle.textInput} onChangeText={searchSong} value={searchInput}/>
             <ScrollView>{displaySongs(filteredSongs)}</ScrollView>
-        </NavBarScreen>
+        </View>
             
     )
 }

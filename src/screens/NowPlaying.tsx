@@ -1,19 +1,10 @@
 import { View, Text, Button, Image, TouchableOpacity } from "react-native";
 import { NPStyle, MainStyle} from "../managers/StyleManager";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { RootStackParamList } from "../App";
 import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../AppContext";
-import NavBarScreen from "../elements/NavBarScreen";
 
 
-type NowPlayingNavigationProp = NativeStackNavigationProp<RootStackParamList, 'NowPlaying'>;
-
-type Props = {
-    navigation: NowPlayingNavigationProp
-}
-
-export default function NowPlaying({ navigation }: Props){
+export default function NowPlaying(){
     const ctx = useContext(AppContext);
 
     const [album, setAlbum] = useState("")
@@ -72,25 +63,21 @@ export default function NowPlaying({ navigation }: Props){
     }, [])
     
     return (
-        <NavBarScreen navigation={navigation}>
-            <View style={MainStyle.container}>
-                <View style={NPStyle.nowPlayingContainer}>
-                    <TouchableOpacity onPress={() => setAlbumArt(ctx.BeefWeb.albumArtiURI)}>
-                        {renderImage(albumArt)}
-                    </TouchableOpacity>
-                    <Text style={NPStyle.npText}>{title}</Text>
-                    <Text style={NPStyle.npText}>{artist}</Text>
-                    <Text style={NPStyle.npText}>{album}</Text>
-                </View>
-                {progressBar(elapsed, length)}
-                <Button title="Force Update" onPress={() => onUpdate()}></Button>
-                <View style={NPStyle.controlsContainer}>
-                    <Button title="Toggle" onPress={() => onToggle()}/>
-                    <Button title="Skip" onPress={() => onSkip()}/>
-                </View>
+        <View style={MainStyle.container}>
+            <View style={NPStyle.nowPlayingContainer}>
+                <TouchableOpacity onPress={() => setAlbumArt(ctx.BeefWeb.albumArtiURI)}>
+                    {renderImage(albumArt)}
+                </TouchableOpacity>
+                <Text style={NPStyle.npText}>{title}</Text>
+                <Text style={NPStyle.npText}>{artist}</Text>
+                <Text style={NPStyle.npText}>{album}</Text>
             </View>
-            
-        </NavBarScreen>
-        
+            {progressBar(elapsed, length)}
+            <Button title="Force Update" onPress={() => onUpdate()}></Button>
+            <View style={NPStyle.controlsContainer}>
+                <Button title="Toggle" onPress={() => onToggle()}/>
+                <Button title="Skip" onPress={() => onSkip()}/>
+            </View>
+        </View>   
     )
 }

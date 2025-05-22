@@ -1,20 +1,11 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { Button, Text, TextInput, View } from 'react-native';
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { MainStyle } from '../managers/StyleManager';
 import { AppContext } from '../AppContext';
 import { RequestStatus } from '../classes/WebRequest';
 import { PlayerResponse } from '../classes/responses/Player';
-import { RootStackParamList } from '../App';
-import NavBarScreen from '../elements/NavBarScreen';
 
-type ConnectionNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Connection'>
-
-type Props = {
-    navigation: ConnectionNavigationProp
-}
-
-export default function App({ navigation}: Props) {
+export default function App() {
   const ctx = useContext(AppContext);
 
   const [infoName, setInfoname] = useState<string>("");
@@ -49,7 +40,6 @@ export default function App({ navigation}: Props) {
   }
 
   return (
-    <NavBarScreen navigation={navigation}>
       <View style={MainStyle.container}>
         <View>
           <Text style={MainStyle.statusItem}>Status: {status}</Text>
@@ -63,6 +53,5 @@ export default function App({ navigation}: Props) {
         </View>
         <Button title="Connect to Beefweb" onPress={connectToBeefweb} />
       </View>
-    </NavBarScreen>
   );
 }

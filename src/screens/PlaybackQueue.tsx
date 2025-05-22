@@ -2,18 +2,10 @@ import { Button, SafeAreaView, View, Text, ScrollView, Modal, TouchableOpacity }
 import { AppContext } from "../AppContext";
 import { use, useContext, useState } from "react";
 import PlayQueueResponse from "../classes/responses/PlayQueue";
-import NavBarScreen from "../elements/NavBarScreen";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { RootStackParamList } from "../App";
 import { MainStyle, ModalStyle } from "../managers/StyleManager";
 import { Columns } from "../classes/responses/Player";
 
-type PlaybackQueueNavigationProp = NativeStackNavigationProp<RootStackParamList, "PlaybackQueue">;
-
-type Props = {
-    navigation: PlaybackQueueNavigationProp
-}
-export default function PlaybackQueue({ navigation}: Props){
+export default function PlaybackQueue(){
     const ctx = useContext(AppContext);
     const [playbackQueue, setPlaybackQueue] = useState<PlayQueueResponse>()
     const [modalVisible, setModalVisible] = useState(false);
@@ -74,13 +66,11 @@ export default function PlaybackQueue({ navigation}: Props){
         )
     }
     return (
-        <NavBarScreen navigation={navigation}>
-
-                <Button title="Get Queue" onPress={getPlaybackQueue}/>
-                <ScrollView>
-                    {createPlayqueueList(playbackQueue)}
-                </ScrollView>
-            
-        </NavBarScreen>
+        <View style={{flex: 1}}>
+            <Button title="Get Queue" onPress={getPlaybackQueue}/>
+            <ScrollView>
+                {createPlayqueueList(playbackQueue)}
+            </ScrollView>
+        </View>
     )
 }
