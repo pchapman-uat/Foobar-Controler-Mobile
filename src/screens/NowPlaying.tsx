@@ -1,7 +1,9 @@
-import { View, Text, Button, Image, TouchableOpacity } from "react-native";
+import { View, Text, Button, Image, TouchableOpacity, GestureResponderEvent } from "react-native";
 import { NPStyle, MainStyle} from "../managers/StyleManager";
-import { useContext, useEffect, useState } from "react";
+import { use, useContext, useEffect, useState } from "react";
 import { AppContext } from "../AppContext";
+import { Pressable } from "react-native";
+import Slider from "@react-native-community/slider";
 
 
 export default function NowPlaying(){
@@ -14,10 +16,17 @@ export default function NowPlaying(){
     const [elapsed, setElapsed] = useState(0);
     const [length, setLength] = useState(1)
 
+    const [isMuted, setIsMuted] = useState(false);
+    const [volumeMax, setVolumeMax] = useState(0);
+    const [volumeMin, setVolumeMin] = useState(0);
+    const [volumeType, setVolumeType] = useState("");
+    const [volumeValue, setVolumeValue] = useState<number>();
+
     const onUpdate = async () => {
         const response = await ctx.BeefWeb.getPlayer();
         if (response) {
-            const activeItem = response.data.activeItem;
+            const data = response.data
+            const activeItem = data.activeItem;
             const columns = activeItem.columns;
             setAlbum(columns.album);
             setArtist(columns.artist);
@@ -28,6 +37,11 @@ export default function NowPlaying(){
             if (!response.data.sameSong) {
                 setAlbumArt(ctx.BeefWeb.albumArtiURI);
             }
+            setIsMuted(data.volume.isMuted)
+            setVolumeMax(data.volume.max)
+            setVolumeMin(data.volume.min)
+            setVolumeType(data.volume.type)
+            setVolumeValue(data.volume.value)
         }
     };
 
@@ -47,13 +61,51 @@ export default function NowPlaying(){
         ctx.BeefWeb.skip();
     }
 
-    const progressBar = (elapsed: number, length: number) => {
-        const percentage = (elapsed/length) * 100
-        
+    const progressBar = (_elapsed: string|number, _length: string|number) => {
+        const elapsed = typeof _elapsed == 'string' ? Number.parseInt(_elapsed) :_elapsed;
+        const length = typeof _length == 'string' ? Number.parseInt(_length) :_length;
+        const onSeekChange = (pos: number) => {
+            console.warn("Seeking")
+            ctx.BeefWeb.setPosition(pos)
+        }
         return (
-            <View style={NPStyle.progressOuter}>
-                <View style={{...NPStyle.progressInner, width: `${percentage}%`}}></View>
-            </View>
+            <Slider
+                style={{width:'100%'}}
+                value={elapsed}
+                minimumValue={0}
+                maximumValue={length}
+                onSlidingComplete={onSeekChange}
+            />
+
+        )
+    }
+
+    const volumeBar = (max: number, min:number, value?:number, intensity:number = 0.45) => {
+        if(!value) return;
+        value = Math.max(min, Math.min(value, max));
+
+        const minGain = Math.pow(10, min / 20);
+        const maxGain = Math.pow(10, max / 20);
+        const valueGain = Math.pow(10, value / 20);
+
+        const normalized = ((valueGain - minGain) / (maxGain - minGain));
+        const percentage = Math.pow(normalized,intensity)
+        const onVolumeChanged = (sliderValue: number) => {
+            console.log("Volume Changed")
+            const adjusted = Math.pow(sliderValue, 1 / intensity);
+            const gain = minGain + adjusted * (maxGain - minGain);
+            const dB = 20 * Math.log10(gain);
+
+            ctx.BeefWeb.setVolume(dB)
+        }
+        return (
+            <Slider
+                style={{width:'100%'}}
+                value={percentage}
+                maximumValue={1}
+                minimumValue={0}
+                onValueChange={(v) => onVolumeChanged(v)}
+            />
         )
     }
 
@@ -78,6 +130,7 @@ export default function NowPlaying(){
                 <Button title="Toggle" onPress={() => onToggle()}/>
                 <Button title="Skip" onPress={() => onSkip()}/>
             </View>
+            {volumeBar(volumeMax, volumeMin, volumeValue)}
         </View>   
     )
 }

@@ -3,16 +3,18 @@ export type RawColumns = [boolean, boolean, string, string, string, string, numb
 export class PlayerResponse {
     info: PlayerInfo;
     activeItem: ActiveItem;
+    volume:Volume;
     sameSong = false;
-        constructor(info: PlayerInfo, activeItem: ActiveItem, columns: RawColumns) {
+        constructor(info: PlayerInfo, activeItem: ActiveItem, columns: RawColumns, volume:Volume) {
         this.info = info;
         this.activeItem = activeItem;
         this.activeItem.columns = new Columns(columns)
+        this.volume = volume;
     }
 
     static fromJSON(json: any): PlayerResponse {
         console.log("Creating from JSON")
-        return new PlayerResponse(json.player.info, json.player.activeItem, json.player.activeItem.columns);
+        return new PlayerResponse(json.player.info, json.player.activeItem, json.player.activeItem.columns, json.player.volume);
     }
     compare(old:PlayerResponse){
         const oldColumns = old.activeItem.columns;
@@ -76,4 +78,12 @@ export class Columns {
     static get columnsQuery() {
         return "?columns="+this.params.join(",")
     }
+}
+
+export interface Volume {
+    isMuted: boolean;
+    max: number;
+    min:number;
+    type:string;
+    value:number;
 }

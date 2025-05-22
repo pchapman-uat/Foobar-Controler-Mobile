@@ -108,6 +108,13 @@ export default class Beefweb {
         await this._post(this.combineUrl("playqueue", "remove"), {plref, itemIndex, queueIndex})
     }
 
+    async setVolume(volume: number) {
+        await this._post(this.combineUrl("player"), {volume})
+    }
+
+    async setPosition(position: number){
+        await this._post(this.combineUrl("player"), {position} )
+    }
     get albumArtiURI() {
         const url = this.con.getUrl()
         return url ? this.combineUrl(url, "artwork", "current")+`?d=${Date.now()}` : ""
