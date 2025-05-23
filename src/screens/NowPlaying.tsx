@@ -12,17 +12,16 @@ export default function NowPlaying(){
     const [album, setAlbum] = useState("")
     const [title, setTitle] = useState("")
     const [artist, setArtist] = useState("")
-    const [albumArt, setAlbumArt] = useState("")
-    const [elapsed, setElapsed] = useState(0);
-    const [length, setLength] = useState(1)
+    const [albumArt, setAlbumArt] = useState<string>()
+    const [elapsed, setElapsed] = useState<number>();
+    const [length, setLength] = useState<number>()
 
     const [isMuted, setIsMuted] = useState(false);
     const [volumeMax, setVolumeMax] = useState(0);
     const [volumeMin, setVolumeMin] = useState(0);
     const [volumeType, setVolumeType] = useState("");
     const [volumeValue, setVolumeValue] = useState<number>();
-
-    const onUpdate = async () => {
+    const onUpdate = async (firstTime: boolean) => {
         const response = await ctx.BeefWeb.getPlayer();
         if (response) {
             const data = response.data
@@ -34,18 +33,21 @@ export default function NowPlaying(){
             setElapsed(columns.elapsed);
             setLength(columns.length);
 
-            if (!response.data.sameSong) {
+            if (firstTime || !response.data.sameSong) {
                 setAlbumArt(ctx.BeefWeb.albumArtiURI);
+            } 
+            if(!firstTime){
+                setVolumeValue(data.volume.value)
             }
             setIsMuted(data.volume.isMuted)
             setVolumeMax(data.volume.max)
             setVolumeMin(data.volume.min)
             setVolumeType(data.volume.type)
-            setVolumeValue(data.volume.value)
+  
         }
     };
 
-    const renderImage = (url: string) => {
+    const renderImage = (url?: string) => {
         if (!url || url.trim() === '') {
             return <Image source={require('../assets/icon.png')}  style={NPStyle.alubmArt} />;
         }
@@ -61,7 +63,8 @@ export default function NowPlaying(){
         ctx.BeefWeb.skip();
     }
 
-    const progressBar = (_elapsed: string|number, _length: string|number) => {
+    const progressBar = (_elapsed?: string|number, _length?: string|number) => {
+        if(!_elapsed || !_length) return;
         const elapsed = typeof _elapsed == 'string' ? Number.parseInt(_elapsed) :_elapsed;
         const length = typeof _length == 'string' ? Number.parseInt(_length) :_length;
         const onSeekChange = (pos: number) => {
@@ -110,7 +113,8 @@ export default function NowPlaying(){
     }
 
     useEffect(()=> {
-        const intervalId = setInterval(onUpdate, 1000)
+        onUpdate(true)
+        const intervalId = setInterval(() => onUpdate(false), 1000)
         return () => clearInterval(intervalId)
     }, [])
     
@@ -125,7 +129,7 @@ export default function NowPlaying(){
                 <Text style={NPStyle.npText}>{album}</Text>
             </View>
             {progressBar(elapsed, length)}
-            <Button title="Force Update" onPress={() => onUpdate()}></Button>
+            <Button title="Force Update" onPress={() => onUpdate(true)}></Button>
             <View style={NPStyle.controlsContainer}>
                 <Button title="Toggle" onPress={() => onToggle()}/>
                 <Button title="Skip" onPress={() => onSkip()}/>
