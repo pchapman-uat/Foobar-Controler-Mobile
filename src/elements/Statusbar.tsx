@@ -3,6 +3,8 @@ import { AppContext } from "../AppContext";
 import { TouchableOpacity, View, Text } from "react-native";
 import { StatusBarStyle as SBS } from '../managers/StyleManager'
 import { Status } from "../classes/BeefWeb";
+import { WebRequest } from "../classes/WebRequest";
+import { PlayerResponse } from "../classes/responses/Player";
 type StatusBarProps = {
 
 }
@@ -14,10 +16,11 @@ const StatusBar: React.FC<StatusBarProps> = () => {
     const [title, setTitle] = useState("");
     const [album, setAlbum] = useState("");
 
-    const updateStatus = () => {
+    const onUpdate = (request: WebRequest<PlayerResponse> | undefined) => {
+        if(!request) return;
         console.log("Updating Status")
         setStatus(ctx.BeefWeb.status)
-        const columns = ctx.BeefWeb.lastPlayer?.activeItem.columns
+        const columns = request.data.activeItem.columns
         if(!columns) return;
         setTitle(columns.title)
         setAlbum(columns.album)
@@ -35,11 +38,18 @@ const StatusBar: React.FC<StatusBarProps> = () => {
         }
     }
 
-    useEffect(updateStatus)
+    const forceUpdate = async () => {
+        onUpdate(await ctx.BeefWeb.getPlayer())
+    }
+
+    useEffect(()=> {
+       ctx.BeefWeb.addEventListener('update', async (e) => onUpdate(await e))
+       forceUpdate();
+    }, [])
 
     return (
         <View style={SBS.StatusBarContainer}>
-            <TouchableOpacity onPress={updateStatus}>
+            <TouchableOpacity onPress={forceUpdate}>
                 <View style={{...SBS.StatusCircle, backgroundColor: getStatusColor(status)}}>
                 </View>
             </TouchableOpacity>

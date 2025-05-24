@@ -35,12 +35,62 @@ class Connection {
     }
 
 }
+type EventHandler<T = any> = (data: T) => void;
+
+export type BeefWebEvents = {
+    update: Promise<WebRequest<PlayerResponse> | undefined>
+}
 
 export default class Beefweb {
-    status = Status.Offline
+    status = Status.Offline;
     con = new Connection();
-    readonly timeout = {timeout: 5000};
-    lastPlayer?:PlayerResponse
+    readonly timeout = { timeout: 5000 };
+    lastPlayer?: PlayerResponse;
+
+    private listeners: {
+        [K in keyof BeefWebEvents]?: Array<EventHandler<BeefWebEvents[K]>>;
+    } = {};
+
+    private mainInterval?:number;
+
+    constructor(){
+        this.start()
+    }
+
+    addEventListener<K extends keyof BeefWebEvents>(
+        event: K,
+        handler: EventHandler<BeefWebEvents[K]>
+    ): void {
+        if (!this.listeners[event]) {
+            this.listeners[event] = [];
+        }
+        this.listeners[event]!.push(handler);
+    }
+
+    removeEventListener<K extends keyof BeefWebEvents>(
+        event: K,
+        handler: EventHandler<BeefWebEvents[K]>
+    ): void {
+        if (!this.listeners[event]) return;
+        this.listeners[event] = this.listeners[event]!.filter(h => h !== handler);
+    }
+
+    private dispatchEvent<K extends keyof BeefWebEvents>(
+        event: K,
+        data: BeefWebEvents[K]
+    ): void {
+        if (!this.listeners[event]) return;
+        this.listeners[event]!.forEach(handler => handler(data));
+    }
+
+    public start(){
+        if(!this.mainInterval) this.mainInterval = setInterval(() => this.onUpdate(), 1000) 
+    }   
+
+    private onUpdate(){
+        this.dispatchEvent("update", this.getPlayer())
+    }
+
     private fromRequestStatus(status: RequestStatus){
         if(status == RequestStatus.OK) this.status = Status.Online;
         else this.status = Status.Offline

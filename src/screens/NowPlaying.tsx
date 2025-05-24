@@ -4,6 +4,8 @@ import { use, useContext, useEffect, useState } from "react";
 import { AppContext } from "../AppContext";
 import { Pressable } from "react-native";
 import Slider from "@react-native-community/slider";
+import { WebRequest } from "../classes/WebRequest";
+import { PlayerResponse } from "../classes/responses/Player";
 
 
 export default function NowPlaying(){
@@ -21,8 +23,7 @@ export default function NowPlaying(){
     const [volumeMin, setVolumeMin] = useState(0);
     const [volumeType, setVolumeType] = useState("");
     const [volumeValue, setVolumeValue] = useState<number>();
-    const onUpdate = async (firstTime: boolean) => {
-        const response = await ctx.BeefWeb.getPlayer();
+    const onUpdate = async (response: WebRequest<PlayerResponse> | undefined, firstTime:boolean = false) => {
         if (response) {
             const data = response.data
             const activeItem = data.activeItem;
@@ -46,6 +47,10 @@ export default function NowPlaying(){
   
         }
     };
+
+    const forceUpdate =  async () => {
+        onUpdate(await ctx.BeefWeb.getPlayer(), true)
+    }
 
     const renderImage = (url?: string) => {
         if (!url || url.trim() === '') {
@@ -113,9 +118,8 @@ export default function NowPlaying(){
     }
 
     useEffect(()=> {
-        onUpdate(true)
-        const intervalId = setInterval(() => onUpdate(false), 1000)
-        return () => clearInterval(intervalId)
+       ctx.BeefWeb.addEventListener('update', async (e) => onUpdate(await e))
+       forceUpdate();
     }, [])
     
     return (
@@ -129,7 +133,7 @@ export default function NowPlaying(){
                 <Text style={NPStyle.npText}>{album}</Text>
             </View>
             {progressBar(elapsed, length)}
-            <Button title="Force Update" onPress={() => onUpdate(true)}></Button>
+            <Button title="Force Update" onPress={() => forceUpdate}></Button>
             <View style={NPStyle.controlsContainer}>
                 <Button title="Toggle" onPress={() => onToggle()}/>
                 <Button title="Skip" onPress={() => onSkip()}/>
