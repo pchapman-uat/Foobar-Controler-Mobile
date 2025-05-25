@@ -1,3 +1,4 @@
+import { AsyncWebPlayerResponse, WebPlayerResponse } from "../managers/TypeManager";
 import { Columns, PlayerResponse } from "./responses/Player";
 import { PlaylistItemsResponse } from "./responses/PlaylistItems";
 import { PlaylistsResponse } from "./responses/Playlists";
@@ -38,7 +39,7 @@ class Connection {
 type EventHandler<T = any> = (data: T) => void;
 
 export type BeefWebEvents = {
-    update: Promise<WebRequest<PlayerResponse> | undefined>
+    update: AsyncWebPlayerResponse
 }
 
 export default class Beefweb {
@@ -100,7 +101,7 @@ export default class Beefweb {
         this.fromRequestStatus(_response.status);
         return _response;
     }
-    async getPlayer(){
+    async getPlayer(): AsyncWebPlayerResponse{
         const response = await this._fetch(this.combineUrl("player")+Columns.columnsQuery)
         console.log("done")
         if(response) {

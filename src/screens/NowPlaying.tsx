@@ -1,11 +1,9 @@
 import { View, Text, Button, Image, TouchableOpacity, GestureResponderEvent } from "react-native";
 import { NPStyle, MainStyle} from "../managers/StyleManager";
-import { use, useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../AppContext";
-import { Pressable } from "react-native";
 import Slider from "@react-native-community/slider";
-import { WebRequest } from "../classes/WebRequest";
-import { PlayerResponse } from "../classes/responses/Player";
+import { WebPlayerResponse } from "../managers/TypeManager";
 
 
 export default function NowPlaying(){
@@ -23,7 +21,7 @@ export default function NowPlaying(){
     const [volumeMin, setVolumeMin] = useState(0);
     const [volumeType, setVolumeType] = useState("");
     const [volumeValue, setVolumeValue] = useState<number>();
-    const onUpdate = async (response: WebRequest<PlayerResponse> | undefined, firstTime:boolean = false) => {
+    const onUpdate = async (response: WebPlayerResponse, firstTime:boolean = false) => {
         if (response) {
             const data = response.data
             const activeItem = data.activeItem;
