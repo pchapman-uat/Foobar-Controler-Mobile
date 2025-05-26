@@ -5,6 +5,7 @@ import { StatusBarStyle as SBS } from '../managers/StyleManager'
 import { Status } from "../classes/BeefWeb";
 import { WebRequest } from "../classes/WebRequest";
 import { PlayerResponse } from "../classes/responses/Player";
+import { MenuSVG } from "../managers/SVGManager";
 type StatusBarProps = {
 
 }
@@ -54,6 +55,9 @@ const StatusBar: React.FC<StatusBarProps> = () => {
                 </View>
             </TouchableOpacity>
             <Text style={SBS.StatusText}>{title} - {album}</Text>
+            <TouchableOpacity>
+                <MenuSVG height={40} width={40}/>
+            </TouchableOpacity>
         </View>
     )
 }

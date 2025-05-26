@@ -1,9 +1,10 @@
 import { View, Text, Button, Image, TouchableOpacity, GestureResponderEvent } from "react-native";
-import { NPStyle, MainStyle} from "../managers/StyleManager";
+import { NPStyle, MainStyle} from "managers/StyleManager";
 import { useContext, useEffect, useState } from "react";
-import { AppContext } from "../AppContext";
+import { AppContext } from "AppContext";
 import Slider from "@react-native-community/slider";
-import { WebPlayerResponse } from "../managers/TypeManager";
+import { WebPlayerResponse } from "managers/TypeManager";
+import { Icon } from "managers/ImageManager";
 
 
 export default function NowPlaying(){
@@ -52,7 +53,7 @@ export default function NowPlaying(){
 
     const renderImage = (url?: string) => {
         if (!url || url.trim() === '') {
-            return <Image source={require('../assets/icon.png')}  style={NPStyle.alubmArt} />;
+            return <Image source={Icon}  style={NPStyle.alubmArt} />;
         }
 
         return <Image source={{ uri: url }} style={NPStyle.alubmArt} />;

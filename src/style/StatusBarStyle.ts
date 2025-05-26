@@ -4,6 +4,7 @@ export default StyleSheet.create({
     StatusBarContainer: {
         display: 'flex',
         flexDirection: 'row',
+        justifyContent: 'space-around'
     },
     StatusCircle: {
         width: 40,
@@ -13,5 +14,8 @@ export default StyleSheet.create({
     StatusText: {
         verticalAlign: 'middle',
         paddingLeft: '1%'
+    },
+    MenuIcon: {
+        width: 40
     }
 })

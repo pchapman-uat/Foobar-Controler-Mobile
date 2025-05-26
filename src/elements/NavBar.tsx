@@ -1,13 +1,12 @@
 import React from "react";
 import { TouchableOpacity, View } from "react-native";
 import NavBarStyle from "../style/NavBarStyle";
-import { items } from "../App";
+import { items,  } from "../classes/NavBar";
 
 type NavBarProps = {
   currentScreen: number;        
   onNavigate: (screen: number) => void;
 };
-
 const NavBar: React.FC<NavBarProps> = ({ currentScreen, onNavigate }) => {
 
 

@@ -1,9 +1,9 @@
 import { useState, useContext } from "react";
-import { AppContext } from "../../AppContext";
-import { Columns } from "../../classes/responses/Player";
+import { AppContext } from "AppContext";
+import { Columns } from "classes/responses/Player";
 import { View, Button, ScrollView, TextInput } from "react-native";
-import LibraryItems, { filterSongs } from "../../elements/LibraryItems";
-import { MainStyle } from "../../managers/StyleManager";
+import LibraryItems, { filterSongs } from "elements/LibraryItems";
+import { MainStyle } from "managers/StyleManager";
 
 export default function LibraryArtist() {
     const [searchInput, setSearchInput] = useState<string>()

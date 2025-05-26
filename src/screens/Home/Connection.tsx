@@ -1,9 +1,9 @@
 import React, { use, useCallback, useContext, useEffect, useState } from 'react';
 import { Button, Text, TextInput, View } from 'react-native';
-import { MainStyle } from '../managers/StyleManager';
-import { AppContext } from '../AppContext';
-import { RequestStatus } from '../classes/WebRequest';
-import { PlayerResponse } from '../classes/responses/Player';
+import { MainStyle } from 'managers/StyleManager';
+import { AppContext } from 'AppContext';
+import { RequestStatus } from 'classes/WebRequest';
+import { PlayerResponse } from 'classes/responses/Player';
 import { CheckBox } from 'react-native-elements'
 
 export default function App() {

@@ -1,10 +1,10 @@
 import { useContext, useEffect, useState } from "react";
 import {ScrollView, TextInput, View} from "react-native";
 import { Picker } from '@react-native-picker/picker';
-import {MainStyle } from "../../managers/StyleManager";
-import { AppContext } from "../../AppContext";
-import { Columns } from "../../classes/responses/Player";
-import LibraryItems, {filterSongs} from "../../elements/LibraryItems";
+import {MainStyle } from "managers/StyleManager";
+import { AppContext } from "AppContext";
+import { Columns } from "classes/responses/Player";
+import LibraryItems, {filterSongs} from "elements/LibraryItems";
 
 export default function LibraryPlaylist(){
     const [playlistId, setPlaylistId] = useState<string>()

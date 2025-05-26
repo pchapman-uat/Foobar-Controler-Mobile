@@ -55,7 +55,7 @@ export default class Beefweb {
     private mainInterval?:number;
 
     constructor(){
-        // this.start()
+        this.start()
     }
 
     addEventListener<K extends keyof BeefWebEvents>(
