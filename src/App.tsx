@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Animated, Dimensions, StyleSheet } from 'react-native';
 import Connection from './screens/Connection';
 import NowPlaying from './screens/NowPlaying';
-import Library from './screens/Library';
+import LibraryMain from './screens/LibraryMain';
 import PlaybackQueue from './screens/PlaybackQueue';
 import NavBarScreen from './elements/NavBarScreen';
 import { SvgProps } from 'react-native-svg';
@@ -32,7 +32,7 @@ class NavBarItem {
 
 export const items = [
     new NavBarItem(ConnectionSVG, "Connection", Connection),
-    new NavBarItem(LibrarySVG, "Library", Library),
+    new NavBarItem(LibrarySVG, "Library", LibraryMain),
     new NavBarItem(NowPlayingSVG, "NowPlaying", NowPlaying),
     new NavBarItem(PlaybackQueueSVG, "PlaybackQueue", PlaybackQueue),
 ];

@@ -8,7 +8,7 @@ export class PlayerResponse {
         constructor(info: PlayerInfo, activeItem: ActiveItem, columns: RawColumns, volume:Volume) {
         this.info = info;
         this.activeItem = activeItem;
-        this.activeItem.columns = new Columns(columns)
+        this.activeItem.columns = new Columns(columns, activeItem.playlistId)
         this.volume = volume;
     }
 
@@ -49,6 +49,7 @@ export class Columns {
     length: number;
     elapsed: number;
     path: string;
+    playlistId?: string;
 
     private static params = [
         "%isplaying%",
@@ -63,7 +64,7 @@ export class Columns {
         "%path%",
     ]
 
-    constructor(columns: RawColumns){
+    constructor(columns: RawColumns, playlistId?: string){
         this.isPlaying = columns[0];
         this.isPaused = columns[1];
         this.albumArtist = columns[2];
@@ -74,6 +75,7 @@ export class Columns {
         this.length = columns[7];
         this.elapsed = columns[8];
         this.path = columns[9];
+        this.playlistId = playlistId;
     }
     static get columnsQuery() {
         return "?columns="+this.params.join(",")

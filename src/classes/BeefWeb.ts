@@ -55,7 +55,7 @@ export default class Beefweb {
     private mainInterval?:number;
 
     constructor(){
-        this.start()
+        // this.start()
     }
 
     addEventListener<K extends keyof BeefWebEvents>(
@@ -139,6 +139,28 @@ export default class Beefweb {
             return await this.createWebRequest<PlayQueueResponse>(response, PlayQueueResponse);
         }
     }
+
+    async getAllSongs(): Promise<Columns[]> {
+        const playlists = await this.getPlaylists();
+        if (!playlists) return [];
+
+        const totalItems: Columns[] = [];
+
+        for (const playlist of playlists.data) {
+            const response = await this.getPlaylistItems(playlist.id);
+            if (!response) continue;
+            response.data.items.forEach(item => item.playlistId = playlist.id)
+            totalItems.push(...response.data.items);
+        }
+
+        return totalItems;
+    }
+
+    async getUniqueSongs(): Promise<Columns[]> {
+    const songs = await this.getAllSongs();
+    return [...new Map(songs.map(item => [item.path, item])).values()];
+    }
+
     async playSong(playlistId:string, songId:number){
         await this._post(this.combineUrl("player", "play", playlistId,songId.toString()))
     }
