@@ -9,7 +9,7 @@ type HomeNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Home'>
 type HomeProps = {
   navigation: HomeNavigationProp
 }
-export default () =>{
+export default ({navigation}: HomeProps) =>{
   const [currentScreen, setCurrentScreen] = useState<number>(0);
   const [prevScreen, setPrevScreen] = useState<number | null>(null);
 
@@ -37,7 +37,7 @@ export default () =>{
 
   let ScreenComponent = items[currentScreen].screen;
   return (
-     <NavBarScreen onNavigate={setCurrentScreen} currentScreen={currentScreen}>
+     <NavBarScreen onNavigate={setCurrentScreen} currentScreen={currentScreen} navigator={navigation}>
         <Animated.View style={[styles.screenContainer, { transform: [{ translateX: screenTranslateX }] }]}>
           <ScreenComponent />
         </Animated.View>

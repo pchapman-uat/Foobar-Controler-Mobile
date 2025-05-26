@@ -2,14 +2,15 @@ import { useState, useContext } from "react";
 import { View, TouchableOpacity, Modal, Text } from "react-native";
 import { AppContext } from "../AppContext";
 import { Columns } from "../classes/responses/Player";
-import LibraryStyle from "../style/LibraryStyle";
-import ModalStyle from "../style/ModalStyle";
+import ThemeContext from "ThemeContext";
+import { createStyle, useStyles } from "managers/StyleManager";
 
 export default function LibraryItems(playlistId?: string, songs?: Columns[]) {
         const [modalVisible, setModalVisible] = useState(false);
         const [selectedSong, setSelectedSong] = useState<Columns | null>(null);
         const [selectedIndex, setSelectedIndex] = useState<number>()
         const ctx = useContext(AppContext);
+        const Styles = useStyles('Main', 'Library', 'Modal')
         console.log("Displaying Songs")
         if(!songs){
             console.warn("Songs are null")
@@ -36,9 +37,9 @@ export default function LibraryItems(playlistId?: string, songs?: Columns[]) {
             <View>
                 {songs.map((item, index) => (
                     <TouchableOpacity key={"song-" + index} onLongPress={() => handleLongPress(item, index)}>
-                        <View style={LibraryStyle.item}>
-                            <Text>{item.title} - {item.artist}</Text>
-                            <Text>{item.album}</Text>
+                        <View style={Styles.Library.item}>
+                            <Text style={Styles.Library.itemText}>{item.title} - {item.artist}</Text>
+                            <Text style={Styles.Library.itemText}>{item.album}</Text>
                         </View>
                     </TouchableOpacity>
                 ))}
@@ -49,13 +50,13 @@ export default function LibraryItems(playlistId?: string, songs?: Columns[]) {
                     animationType="fade"
                     onRequestClose={() => setModalVisible(false)}
                 >
-                    <TouchableOpacity style={ModalStyle.modalOverlay} onPress={() => setModalVisible(false)}>
-                        <View style={ModalStyle.menu}>
+                    <TouchableOpacity style={Styles.Modal.modalOverlay} onPress={() => setModalVisible(false)}>
+                        <View style={Styles.Modal.menu}>
                             <TouchableOpacity onPress={() => playSong()}>
-                                <Text style={ModalStyle.menuItem}>Play</Text>
+                                <Text style={Styles.Modal.menuItem}>Play</Text>
                             </TouchableOpacity>
                             <TouchableOpacity onPress={() => queueSong()}>
-                                <Text style={ModalStyle.menuItem}>Add to Playback Queue</Text>
+                                <Text style={Styles.Modal.menuItem}>Add to Playback Queue</Text>
                             </TouchableOpacity>
                         </View>
                     </TouchableOpacity>

@@ -1,6 +1,8 @@
 import { StyleSheet } from "react-native";
+import { AppTheme } from "classes/Settings";
+import { getColor } from "managers/ThemeManager";
 
-export default StyleSheet.create({
+export default (theme: AppTheme) =>  StyleSheet.create({
     nowPlayingContainer: {
        
     },
@@ -11,16 +13,7 @@ export default StyleSheet.create({
     },
     npText: {
         textAlign: 'center',
-    },
-    progressOuter: {
-        height: 30,
-        width: '100%',
-        backgroundColor: 'red'
-    },
-    progressInner: {
-        backgroundColor: 'green',
-        width: '50%',
-        height: '100%'
+        color: getColor(theme, 'textPrimary')
     },
     controlsContainer: {
         width: '100%',
@@ -29,7 +22,4 @@ export default StyleSheet.create({
         justifyContent: 'space-around',
 
     },
-    controlItem: {
-
-    }
 })

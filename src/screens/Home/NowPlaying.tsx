@@ -1,15 +1,18 @@
-import { View, Text, Button, Image, TouchableOpacity, GestureResponderEvent } from "react-native";
-import { NPStyle, MainStyle} from "managers/StyleManager";
+import { View, Text, Image, TouchableOpacity } from "react-native";
 import { useContext, useEffect, useState } from "react";
 import { AppContext } from "AppContext";
 import Slider from "@react-native-community/slider";
 import { WebPlayerResponse } from "managers/TypeManager";
 import { Icon } from "managers/ImageManager";
-
+import ThemeContext from "ThemeContext";
+import { useStyles } from "managers/StyleManager";
+import { getColor } from "managers/ThemeManager";
+import { Button } from "react-native-elements";
 
 export default function NowPlaying(){
     const ctx = useContext(AppContext);
-
+    const {theme} = useContext(ThemeContext)
+    const Styles = useStyles('Main', 'NowPlaying')
     const [album, setAlbum] = useState("")
     const [title, setTitle] = useState("")
     const [artist, setArtist] = useState("")
@@ -53,10 +56,10 @@ export default function NowPlaying(){
 
     const renderImage = (url?: string) => {
         if (!url || url.trim() === '') {
-            return <Image source={Icon}  style={NPStyle.alubmArt} />;
+            return <Image source={Icon}  style={Styles.NowPlaying.alubmArt} />;
         }
 
-        return <Image source={{ uri: url }} style={NPStyle.alubmArt} />;
+        return <Image source={{ uri: url }} style={Styles.NowPlaying.alubmArt} />;
     };
 
     const onToggle = () => {
@@ -79,6 +82,8 @@ export default function NowPlaying(){
             <Slider
                 style={{width:'100%'}}
                 value={elapsed}
+                minimumTrackTintColor={getColor(theme, 'buttonPrimary')}
+                thumbTintColor={getColor(theme, 'buttonPrimary')}
                 minimumValue={0}
                 maximumValue={length}
                 onSlidingComplete={onSeekChange}
@@ -109,6 +114,8 @@ export default function NowPlaying(){
             <Slider
                 style={{width:'100%'}}
                 value={percentage}
+                minimumTrackTintColor={getColor(theme, 'buttonPrimary')}
+                thumbTintColor={getColor(theme, 'buttonPrimary')}
                 maximumValue={1}
                 minimumValue={0}
                 onValueChange={(v) => onVolumeChanged(v)}
@@ -122,20 +129,20 @@ export default function NowPlaying(){
     }, [])
     
     return (
-        <View style={MainStyle.container}>
-            <View style={NPStyle.nowPlayingContainer}>
+        <View style={Styles.Main.container}>
+            <View style={Styles.NowPlaying.nowPlayingContainer}>
                 <TouchableOpacity onPress={() => setAlbumArt(ctx.BeefWeb.albumArtiURI)}>
                     {renderImage(albumArt)}
                 </TouchableOpacity>
-                <Text style={NPStyle.npText}>{title}</Text>
-                <Text style={NPStyle.npText}>{artist}</Text>
-                <Text style={NPStyle.npText}>{album}</Text>
+                <Text style={Styles.NowPlaying.npText}>{title}</Text>
+                <Text style={Styles.NowPlaying.npText}>{artist}</Text>
+                <Text style={Styles.NowPlaying.npText}>{album}</Text>
             </View>
             {progressBar(elapsed, length)}
-            <Button title="Force Update" onPress={() => forceUpdate}></Button>
-            <View style={NPStyle.controlsContainer}>
-                <Button title="Toggle" onPress={() => onToggle()}/>
-                <Button title="Skip" onPress={() => onSkip()}/>
+            <Button buttonStyle={Styles.Main.button} title="Force Update" onPress={() => forceUpdate}></Button>
+            <View style={Styles.NowPlaying.controlsContainer}>
+                <Button buttonStyle={Styles.Main.button} title="Toggle" onPress={() => onToggle()}/>
+                <Button buttonStyle={Styles.Main.button} title="Skip" onPress={() => onSkip()}/>
             </View>
             {volumeBar(volumeMax, volumeMin, volumeValue)}
         </View>   

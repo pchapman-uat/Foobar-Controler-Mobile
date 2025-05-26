@@ -1,6 +1,7 @@
 import { StyleSheet } from "react-native";
+import { AppTheme } from "classes/Settings";
 
-export default StyleSheet.create({
+export default (theme: AppTheme) => StyleSheet.create({
      modalOverlay: {
         flex: 1,
         backgroundColor: 'rgba(0,0,0,0.4)',

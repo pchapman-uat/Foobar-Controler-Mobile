@@ -1,14 +1,18 @@
-import React, { use, useCallback, useContext, useEffect, useState } from 'react';
-import { Button, Text, TextInput, View } from 'react-native';
-import { MainStyle } from 'managers/StyleManager';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
+import { Text, TextInput, View } from 'react-native';
 import { AppContext } from 'AppContext';
 import { RequestStatus } from 'classes/WebRequest';
 import { PlayerResponse } from 'classes/responses/Player';
-import { CheckBox } from 'react-native-elements'
+import { CheckBox, Button } from 'react-native-elements'
+import { useStyles } from 'managers/StyleManager';
+import { getColor } from 'managers/ThemeManager';
+import ThemeContext from 'ThemeContext';
 
 export default function App() {
   const ctx = useContext(AppContext);
-
+  
+  const Styles = useStyles('Main')
+  const {theme} = useContext(ThemeContext);
   const [infoName, setInfoname] = useState<string>("");
   const [infoTitle, setInfoTitle] = useState<string>("");
   const [infoVersion, setInfoVersion] = useState<string>("");
@@ -61,19 +65,19 @@ export default function App() {
   }, [])
 
   return (
-      <View style={MainStyle.container}>
+      <View style={Styles.Main.container}>
         <View>
-          <Text style={MainStyle.statusItem}>Status: {status}</Text>
-          <Text style={MainStyle.statusItem}>Name: {infoName}</Text>
-          <Text style={MainStyle.statusItem}>Title: {infoTitle}</Text>
-          <Text style={MainStyle.statusItem}>Version: {infoVersion}</Text>
-          <Text style={MainStyle.statusItem}>Plugin Version: {infoPluginVersion}</Text>
+          <Text style={Styles.Main.statusItem}>Status: {status}</Text>
+          <Text style={Styles.Main.statusItem}>Name: {infoName}</Text>
+          <Text style={Styles.Main.statusItem}>Title: {infoTitle}</Text>
+          <Text style={Styles.Main.statusItem}>Version: {infoVersion}</Text>
+          <Text style={Styles.Main.statusItem}>Plugin Version: {infoPluginVersion}</Text>
         </View>
         <View>
-          <TextInput style={{...MainStyle.textInput, width: 200}} textContentType='URL' value={ipAddress} onChangeText={setIP}/>
-          <CheckBox title="Remember IP" checked={rememberIP} onPress={() => onRemeberChange(!(rememberIP ?? false))} />
+          <TextInput style={{...Styles.Main.textInput, width: 200}} textContentType='URL' value={ipAddress} onChangeText={setIP}/>
+          <CheckBox containerStyle={Styles.Main.checkBox} textStyle={Styles.Main.checkBox} checkedColor={getColor(theme, 'accent')} title="Remember IP" checked={rememberIP} onPress={() => onRemeberChange(!(rememberIP ?? false))} />
         </View>
-        <Button title="Connect to Beefweb" onPress={connectToBeefweb} />
+        <Button buttonStyle={Styles.Main.button} title="Connect to Beefweb" onPress={connectToBeefweb} />
       </View>
   );
 }

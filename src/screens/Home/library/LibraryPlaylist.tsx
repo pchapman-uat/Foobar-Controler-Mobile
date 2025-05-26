@@ -1,12 +1,16 @@
 import { useContext, useEffect, useState } from "react";
 import {ScrollView, TextInput, View} from "react-native";
 import { Picker } from '@react-native-picker/picker';
-import {MainStyle } from "managers/StyleManager";
 import { AppContext } from "AppContext";
 import { Columns } from "classes/responses/Player";
 import LibraryItems, {filterSongs} from "elements/LibraryItems";
+import { useStyles } from "managers/StyleManager";
+import { getColor } from "managers/ThemeManager";
+import ThemeContext from "ThemeContext";
 
 export default function LibraryPlaylist(){
+    const Styles = useStyles('Main')
+    const {theme} = useContext(ThemeContext)
     const [playlistId, setPlaylistId] = useState<string>()
     const [searchInput, setSearchInput] = useState<string>()
     const [songs, setSongs] = useState<Columns[]>()
@@ -47,12 +51,14 @@ export default function LibraryPlaylist(){
             <Picker
                 selectedValue={playlistId}
                 onValueChange={(itemValue) => onPlaylistChange(itemValue)}
+                dropdownIconColor={getColor(theme, 'textPrimary')}
+                style={Styles.Main.picker}
             >
                 {playlists.map((item) => (
                     <Picker.Item key={item.id} label={item.title} value={item.id} />
                 ))}
             </Picker>
-            <TextInput style={MainStyle.textInput} onChangeText={searchSongs} value={searchInput}/>
+            <TextInput style={Styles.Main.textInput} onChangeText={searchSongs} value={searchInput}/>
             <ScrollView>{LibraryItems(playlistId, filteredSongs)}</ScrollView>
         </View>
             

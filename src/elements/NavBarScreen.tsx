@@ -1,18 +1,24 @@
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
-import { MainStyle } from "../style/MainStyle";
 import NavBar from "./NavBar";
-import React from "react";
+import React, { useContext } from "react";
 import StatusBar from "./Statusbar";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { RootStackParamList } from "App";
+import ThemeContext from "ThemeContext";
+import { createStyle } from "managers/StyleManager";
 type NavBarScreenProps = {
   children: React.ReactNode;
   onNavigate: (screen: number) => void;
   currentScreen: number;
+  navigator:NativeStackNavigationProp<RootStackParamList, 'Home'>
 };
-const NavBarScreen: React.FC<NavBarScreenProps> = ({onNavigate, currentScreen, children}) => {
+const NavBarScreen: React.FC<NavBarScreenProps> = ({onNavigate, currentScreen, children, navigator}) => {
+  const {theme} = useContext(ThemeContext);
+  const Styles = createStyle(theme, 'Main')
   return (
     <SafeAreaProvider>
-      <SafeAreaView style={MainStyle.view}>
-        <StatusBar/>
+      <SafeAreaView style={Styles.Main.view}>
+        <StatusBar navigator={navigator}/>
         <React.Fragment>
           {children}
         </React.Fragment>

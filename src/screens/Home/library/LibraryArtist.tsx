@@ -3,9 +3,10 @@ import { AppContext } from "AppContext";
 import { Columns } from "classes/responses/Player";
 import { View, Button, ScrollView, TextInput } from "react-native";
 import LibraryItems, { filterSongs } from "elements/LibraryItems";
-import { MainStyle } from "managers/StyleManager";
+import { useStyles } from "managers/StyleManager";
 
 export default function LibraryArtist() {
+    const Styles = useStyles('Main')
     const [searchInput, setSearchInput] = useState<string>()
     const [songs, setSongs] = useState<Columns[]>()
     const [filteredSongs, setfilteredSongs] = useState<Columns[]>()
@@ -25,7 +26,7 @@ export default function LibraryArtist() {
     return ( 
         <View style={{flex: 1}}>
             <Button title="Get All Songs" onPress={getAllSongs}/>
-            <TextInput style={MainStyle.textInput} onChangeText={searchSongs} value={searchInput}/>
+            <TextInput style={Styles.Main.textInput} onChangeText={searchSongs} value={searchInput}/>
             <ScrollView>{LibraryItems(undefined, filteredSongs)}</ScrollView>
         </View>
     )

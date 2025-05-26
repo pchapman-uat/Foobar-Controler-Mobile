@@ -2,11 +2,13 @@ import { Button, SafeAreaView, View, Text, ScrollView, Modal, TouchableOpacity }
 import { AppContext } from "AppContext";
 import { use, useContext, useState } from "react";
 import PlayQueueResponse from "classes/responses/PlayQueue";
-import { MainStyle, ModalStyle } from "managers/StyleManager";
 import { Columns } from "classes/responses/Player";
+import ThemeContext from "ThemeContext";
+import { createStyle, useStyles } from "managers/StyleManager";
 
 export default function PlaybackQueue(){
     const ctx = useContext(AppContext);
+    const Styles = useStyles('Modal', 'Main')
     const [playbackQueue, setPlaybackQueue] = useState<PlayQueueResponse>()
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedSong, setSelectedSong] = useState<Columns | null>(null);
@@ -54,10 +56,10 @@ export default function PlaybackQueue(){
                     visible={modalVisible}
                     animationType="fade"
                     onRequestClose={() => setModalVisible(false)}>
-                    <TouchableOpacity style={ModalStyle.modalOverlay} onPress={() => setModalVisible(false)}>
-                        <View style={ModalStyle.menu}>
+                    <TouchableOpacity style={Styles.Modal.modalOverlay} onPress={() => setModalVisible(false)}>
+                        <View style={Styles.Modal.menu}>
                             <TouchableOpacity onPress={() => removeSong()}>
-                                <Text style={ModalStyle.menuItem}>Remove</Text>
+                                <Text style={Styles.Modal.menuItem}>Remove</Text>
                             </TouchableOpacity>
                         </View>
                     </TouchableOpacity>
@@ -66,7 +68,7 @@ export default function PlaybackQueue(){
         )
     }
     return (
-        <View style={{flex: 1}}>
+        <View style={Styles.Main.container}>
             <Button title="Get Queue" onPress={getPlaybackQueue}/>
             <ScrollView>
                 {createPlayqueueList(playbackQueue)}
