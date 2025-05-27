@@ -1,25 +1,30 @@
 import { useState, useContext, useEffect } from "react";
 import { AppContext } from "AppContext";
 import { Columns } from "classes/responses/Player";
-import { View, Button, ScrollView, TextInput } from "react-native";
+import { View, Button, ScrollView, TextInput, Animated } from "react-native";
 import LibraryItems, { filterSongs } from "elements/LibraryList";
 import { useStyles } from "managers/StyleManager";
 import LibraryGrid, { GridItem } from "elements/LibraryGrid";
 import { Picker } from "@react-native-picker/picker";
 import ThemeContext from "ThemeContext";
 import { getColor } from "managers/ThemeManager";
+import LottieView from "lottie-react-native";
+import updateColors, { LottieLoading } from "managers/LottiManager";
 type Views = 'grid'|'list'
 export default function LibraryArtist() {
     const Styles = useStyles('Main')
     const [searchInput, setSearchInput] = useState<string>()
     const ctx = useContext(AppContext);
+    const {theme} = useContext(ThemeContext)
     const [view, setView] = useState<Views>('grid')
     const [gridItems, setGridItems] = useState<GridItem[]>([]);
     const [songs, setSongs] = useState<Columns[]>()
     const [artist, setArtist] = useState<string>()
     const [filteredSongs, setfilteredSongs] = useState<Columns[]>([])
+    const [loading, setLoading] = useState(false)
     useEffect(() => {
         const getAllSongs = async () => {
+            setLoading(true)
             const {unique, songs} = await ctx.BeefWeb.getUniqueArtists();
             if(!unique) return;
             setGridItems(unique.map((item, i) => {return {
@@ -29,8 +34,9 @@ export default function LibraryArtist() {
                 songIndex: item.songIndex
             }}))
             setSongs(songs)
-            }
-            getAllSongs();
+            setLoading(false)
+        }
+        getAllSongs();
         }, []);
     const searchSongs = (text: string) => {
         setfilteredSongs(filterSongs(text, songs))
@@ -79,7 +85,14 @@ export default function LibraryArtist() {
                 return listView(playlists, artist, filteredSongs)
         }
     }
+     useEffect(() => {
+        updateColors(LottieLoading, getColor(theme, 'buttonPrimary'))
+    }, [theme])
      return (
-        <GetView view={view} playlists={gridItems} artist={artist} filteredSongs={filteredSongs}/>
+        <View>
+            {loading && <LottieView source={LottieLoading} autoPlay loop style={{width: 100, height: 100}}/>}
+            <GetView view={view} playlists={gridItems} artist={artist} filteredSongs={filteredSongs}/>
+        </View>
+        
     )
 }

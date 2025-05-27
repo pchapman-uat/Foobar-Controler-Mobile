@@ -4,6 +4,7 @@ import Playlist from './library/LibraryPlaylist';
 import LibraryArtist from './library/LibraryArtist';
 import { useStyles } from 'managers/StyleManager';
 import { Button } from 'react-native-elements';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export type LibraryProps = {   
   setCurrentScreen: (screen: number) => void;
@@ -39,10 +40,10 @@ export default function LibraryMain() {
     let ScreenComponent = items[currentScreen];
 
     return (
-      <View style={Styles.Main.container}>
+      <SafeAreaView style={Styles.Main.container}>
         <Button buttonStyle={Styles.Main.button} title='Back' onPress={() => setCurrentScreen(0)}/>
         <ScreenComponent setCurrentScreen={setCurrentScreen}/>
-      </View>
+      </SafeAreaView>
         
     )
 

@@ -18,7 +18,7 @@ export default (theme: AppTheme) => StyleSheet.create({
         height: 100
     },
     gridContainer: {
-        width: '100%'
+        width: '100%',
     }, 
     gridItemText: {
         color: getColor(theme, 'textPrimary'),

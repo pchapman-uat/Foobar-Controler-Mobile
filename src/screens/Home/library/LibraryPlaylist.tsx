@@ -7,8 +7,9 @@ import LibraryItems, {filterSongs} from "elements/LibraryList";
 import { useStyles } from "managers/StyleManager";
 import { getColor } from "managers/ThemeManager";
 import ThemeContext from "ThemeContext";
-import { Icon } from "managers/ImageManager";
 import LibraryGrid, { GridItem } from "elements/LibraryGrid";
+import LottieView from "lottie-react-native";
+import updateColors, { LottieLoading } from "managers/LottiManager";
 type Views = 'grid'|'list'
 export default function LibraryPlaylist(){
     const Styles = useStyles('Main', 'Library')
@@ -20,7 +21,8 @@ export default function LibraryPlaylist(){
     const ctx = useContext(AppContext);
     const [playlists, setPlaylists] = useState<{ id: string; title: string }[]>([]);
     const [view, setView] = useState<Views>('grid')
-
+    const [loading, setLoading] = useState(false)
+    
     const onPlaylistChange = async (playlistID: string) => {
         setPlaylistId(playlistID);
         setSearchInput("");
@@ -37,10 +39,12 @@ export default function LibraryPlaylist(){
 
     useEffect(() => {
         const fetchPlaylists = async () => {
+            setLoading(true)
             const res = await ctx.BeefWeb.getPlaylists();
             if (res && res.data) {
                 setPlaylists(res.data);
             }
+            setLoading(false)
         };
         fetchPlaylists();
     }, []);
@@ -88,7 +92,14 @@ export default function LibraryPlaylist(){
                 return listView(playlists, playlistId, filteredSongs)
         }
     }
+    useEffect(() => {
+        updateColors(LottieLoading, getColor(theme, 'buttonPrimary'))
+    }, [theme])
     return (
-        <GetView view={view} playlists={playlists} playlistId={playlistId} filteredSongs={filteredSongs}/>
+        <View>
+            {loading && <LottieView source={LottieLoading} autoPlay loop style={{width: 100, height: 100}}/>}
+            <GetView view={view} playlists={playlists} playlistId={playlistId} filteredSongs={filteredSongs}/>
+        </View>
+        
     )
 }

@@ -18,3 +18,8 @@ declare module "*.jpeg" {
   const content: number;
   export default content;
 }
+
+declare module "*.lottie.json" {
+  const content: Record<string, any>;
+  export default content
+}

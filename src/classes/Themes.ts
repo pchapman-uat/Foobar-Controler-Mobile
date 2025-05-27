@@ -21,6 +21,21 @@ export class Color {
     toArgbInt(){
         return ((this.a & 0xff) << 24) | ((this.r & 0xff) << 16) | ((this.g & 0xff) << 8) | (this.b & 0xff);
     }
+   static stringToLottie(rgba: string): [number, number, number, number] {
+    const regex = /rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?\)/;
+    const match = rgba.match(regex);
+
+    if (!match) {
+        throw new Error(`Invalid RGBA string: ${rgba}`);
+    }
+
+    const r = parseInt(match[1], 10) / 255;
+    const g = parseInt(match[2], 10) / 255;
+    const b = parseInt(match[3], 10) / 255;
+    const a = match[4] !== undefined ? parseFloat(match[4]) : 1;
+
+    return [r, g, b, a];
+}
 
 }
 
