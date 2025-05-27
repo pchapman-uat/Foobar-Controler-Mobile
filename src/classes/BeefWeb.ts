@@ -1,4 +1,5 @@
 import { AsyncWebPlayerResponse, WebPlayerResponse } from "../managers/TypeManager";
+import { items } from "./NavBar";
 import { Columns, PlayerResponse } from "./responses/Player";
 import { PlaylistItemsResponse } from "./responses/PlaylistItems";
 import { PlaylistsResponse } from "./responses/Playlists";
@@ -149,16 +150,32 @@ export default class Beefweb {
         for (const playlist of playlists.data) {
             const response = await this.getPlaylistItems(playlist.id);
             if (!response) continue;
-            response.data.items.forEach(item => item.playlistId = playlist.id)
+            response.data.items.forEach((item, index) => {
+                item.playlistId = playlist.id;
+                item.songIndex = index; 
+            }
+         
+            )
             totalItems.push(...response.data.items);
         }
 
         return totalItems;
     }
 
-    async getUniqueSongs(): Promise<Columns[]> {
+    async getUniqueSongs() {
+       return this.getUnique('path')
+    }
+
+    async getUniqueArtists(){
+        return this.getUnique('artist')
+    }
+
+    async getUnique(key: keyof Columns){
         const songs = await this.getAllSongs();
-        return [...new Map(songs.map(item => [item.path, item])).values()];
+        return {
+            songs,
+            unique: [...new Map(songs.map(item => [item[key], item])).values()]
+        };
     }
 
     async getArtwork(playlistId: string, index:number){

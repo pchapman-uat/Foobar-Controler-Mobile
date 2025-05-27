@@ -50,6 +50,7 @@ export class Columns {
     elapsed: number;
     path: string;
     playlistId?: string;
+    songIndex?: number
 
     private static params = [
         "%isplaying%",
@@ -64,7 +65,7 @@ export class Columns {
         "%path%",
     ]
 
-    constructor(columns: RawColumns, playlistId?: string){
+    constructor(columns: RawColumns, playlistId?: string, songIndex?: number){
         this.isPlaying = columns[0];
         this.isPaused = columns[1];
         this.albumArtist = columns[2];
@@ -76,6 +77,7 @@ export class Columns {
         this.elapsed = columns[8];
         this.path = columns[9];
         this.playlistId = playlistId;
+        this.songIndex = songIndex
     }
     static get columnsQuery() {
         return "?columns="+this.params.join(",")

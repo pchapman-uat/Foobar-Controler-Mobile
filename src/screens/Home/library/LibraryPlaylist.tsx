@@ -89,8 +89,6 @@ export default function LibraryPlaylist(){
         }
     }
     return (
-       <ScrollView style={{width: '100%'}}>
-            <GetView view={view} playlists={playlists} playlistId={playlistId} filteredSongs={filteredSongs}/>
-       </ScrollView>
+        <GetView view={view} playlists={playlists} playlistId={playlistId} filteredSongs={filteredSongs}/>
     )
 }

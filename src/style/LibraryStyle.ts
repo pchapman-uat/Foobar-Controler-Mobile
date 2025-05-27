@@ -18,11 +18,7 @@ export default (theme: AppTheme) => StyleSheet.create({
         height: 100
     },
     gridContainer: {
-        display: 'flex',
-        width: '100%',
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-        justifyContent: 'space-around',
+        width: '100%'
     }, 
     gridItemText: {
         color: getColor(theme, 'textPrimary'),

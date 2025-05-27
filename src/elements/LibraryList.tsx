@@ -28,7 +28,8 @@ export default function LibraryItems({playlistId, songs}: LibraryItemsProps) {
         const playSong = () => {
             const plref = playlistId ?? selectedSong?.playlistId
             if(!plref || !selectedIndex) return;
-            ctx.BeefWeb.playSong(plref, selectedIndex)
+            const index = selectedSong?.songIndex ?? selectedIndex
+            ctx.BeefWeb.playSong(plref, index)
             setModalVisible(false);
         }
         const queueSong = () => {
@@ -67,11 +68,11 @@ export default function LibraryItems({playlistId, songs}: LibraryItemsProps) {
             </View>
         );
     }
-export const filterSongs = (input?: string, songs?: Columns[]) => {
+export const filterSongs = (input?: string, songs?: Columns[], key?:keyof Columns) => {
     if(!songs) return [];
     if(!input || input == "") return songs;
 
     const regex = new RegExp(input, "i");
-
+    if(key) return songs.filter(song => song[key] == input)
     return songs.filter(song => regex.test(song.title) || regex.test(song.album)  || regex.test(song.artist));
 }

@@ -1,33 +1,85 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { AppContext } from "AppContext";
 import { Columns } from "classes/responses/Player";
 import { View, Button, ScrollView, TextInput } from "react-native";
 import LibraryItems, { filterSongs } from "elements/LibraryList";
 import { useStyles } from "managers/StyleManager";
-
+import LibraryGrid, { GridItem } from "elements/LibraryGrid";
+import { Picker } from "@react-native-picker/picker";
+import ThemeContext from "ThemeContext";
+import { getColor } from "managers/ThemeManager";
+type Views = 'grid'|'list'
 export default function LibraryArtist() {
     const Styles = useStyles('Main')
     const [searchInput, setSearchInput] = useState<string>()
-    const [songs, setSongs] = useState<Columns[]>()
-    const [filteredSongs, setfilteredSongs] = useState<Columns[]>()
     const ctx = useContext(AppContext);
-    const [playlists, setPlaylists] = useState<{ id: string; title: string }[]>([]);
-
-    const getAllSongs = async () => {
-        const uniqueSongs = await ctx.BeefWeb.getUniqueSongs();
-        if(!uniqueSongs) return;
-        setSongs(uniqueSongs)
-        setfilteredSongs(uniqueSongs)
-    }
-
+    const [view, setView] = useState<Views>('grid')
+    const [gridItems, setGridItems] = useState<GridItem[]>([]);
+    const [songs, setSongs] = useState<Columns[]>()
+    const [artist, setArtist] = useState<string>()
+    const [filteredSongs, setfilteredSongs] = useState<Columns[]>([])
+    useEffect(() => {
+        const getAllSongs = async () => {
+            const {unique, songs} = await ctx.BeefWeb.getUniqueArtists();
+            if(!unique) return;
+            setGridItems(unique.map((item, i) => {return {
+                id: i.toString(),
+                title:item.artist,
+                playlistId: item.playlistId,
+                songIndex: item.songIndex
+            }}))
+            setSongs(songs)
+            }
+            getAllSongs();
+        }, []);
     const searchSongs = (text: string) => {
         setfilteredSongs(filterSongs(text, songs))
     }
-    return ( 
-        <View style={{flex: 1}}>
-            <Button title="Get All Songs" onPress={getAllSongs}/>
-            <TextInput style={Styles.Main.textInput} onChangeText={searchSongs} value={searchInput}/>
-            <ScrollView><LibraryItems songs={filteredSongs}/></ScrollView>
-        </View>
+    const onArtistChange = async (artist: string) => {
+        setArtist(artist)
+        const newSongs = filterSongs(artist,songs, 'artist')
+        console.log(newSongs)
+        setSongs(newSongs)
+        setfilteredSongs(newSongs)
+    };
+    const listView = (playlists: GridItem[], artist:string | undefined, filteredSongs:Columns[]|undefined) => {
+        const {theme} = useContext(ThemeContext)
+        return(
+            <View style={{flex: 1}}>
+                <Picker
+                    selectedValue={artist}
+                    onValueChange={(itemValue) => onArtistChange(itemValue)}
+                    dropdownIconColor={getColor(theme, 'textPrimary')}
+                    style={Styles.Main.picker}
+                >
+                    {playlists.map((item) => (
+                        <Picker.Item key={item.id} label={item.title} value={item.id} />
+                    ))}
+                </Picker>
+                <TextInput style={Styles.Main.textInput} onChangeText={searchSongs} value={searchInput}/>
+                <ScrollView><LibraryItems songs={filteredSongs} /></ScrollView>
+            </View>
+        )
+    }
+       type GetViewProps = {
+        view: Views, 
+        playlists: GridItem[], 
+        artist?: string, 
+        filteredSongs?:Columns[]
+    }
+    const GetView = ({view, playlists, artist, filteredSongs}:GetViewProps) => {
+        const onGridPress = (item: GridItem) => {
+            onArtistChange(item.title)
+            setView('list')
+        }
+        switch(view){
+            case "grid":
+                return <LibraryGrid onGridPress={onGridPress} BeefWeb={ctx.BeefWeb} items={playlists}/>
+            case "list":
+                return listView(playlists, artist, filteredSongs)
+        }
+    }
+     return (
+        <GetView view={view} playlists={gridItems} artist={artist} filteredSongs={filteredSongs}/>
     )
 }
