@@ -1,6 +1,6 @@
 import { Picker } from "@react-native-picker/picker";
 import { AppContext } from "AppContext";
-import { AppTheme } from "classes/Settings";
+import { AppTheme, themes } from "classes/Settings";
 import { createStyle, useStyles } from "managers/StyleManager";
 import { getColor } from "managers/ThemeManager";
 import { useContext, useEffect, useState } from "react";
@@ -30,8 +30,9 @@ export default function SettingsScreen() {
         <SafeAreaView style={Styles.Main.container}>
             <View>
                 <Picker style={Styles.Main.picker} onValueChange={setTheme} dropdownIconColor={getColor(Theme.theme, 'textPrimary')} mode='dropdown' selectedValue={theme}>
-                    <Picker.Item label="Light" value={AppTheme.Light} />
-                    <Picker.Item label="Dark" value={AppTheme.Dark} />
+                    {themes.map((item, index) => (
+                        <Picker.Item key={'themes-'+item} label={item} value={index as AppTheme} />
+                    ))}
                 </Picker>
             </View>
             <Button buttonStyle={Styles.Main.button} title='Save' onPress={onSave}/>

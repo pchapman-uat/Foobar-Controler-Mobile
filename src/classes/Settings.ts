@@ -6,7 +6,10 @@ export default class Settings {
 enum AppTheme {
     Light,
     Dark,
+    LightRed,
+    DarkRed
 }
+const themes = Object.keys(AppTheme).filter(k => isNaN(Number(k))) as (keyof typeof AppTheme)[];
 
 const defaults = {
     IP_ADDRESS: "",
@@ -60,4 +63,4 @@ class SettingsProperty<T> {
 
 }
 
-export {AppTheme, defaults, SettingProps, SettingsProperty}
+export {AppTheme, defaults, SettingProps, SettingsProperty, themes}

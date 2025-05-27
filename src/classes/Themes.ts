@@ -1,6 +1,3 @@
-type RGB = { r: number; g: number; b: number };
-type HSL = { h: number; s: number; l: number };
-
 export class Color {
     private r: number;
     private g: number;
@@ -80,7 +77,7 @@ class Dark extends Theme{
     backgroundAccent = new Color(50,50,50);
 }
 class Light extends Theme{
-    name = "Dark";
+    name = "Light";
     primary = new Color(255,255,255);
     secondary= new Color(255,255,255);
     accent = new Color(30,144,255);
@@ -94,7 +91,40 @@ class Light extends Theme{
     border = new Color(0,0,0);
     shadow = new Color(0,0,0,0.5);
     overlay = new Color(0,0,0);
-
 }
 
-export default [new Light(), new Dark()]
+class DarkRed extends Theme{
+    name = "Dark";
+    primary = new Color(0,0,0);
+    secondary= new Color(0,0,0);
+    accent = new Color(194,6,47);
+    background = new Color(0,0,0);
+    textPrimary = new Color(255,255,255);
+    textSecondary = new Color(255,255,255);
+    textDisabled = new Color(100,100,100);
+    buttonPrimary = new Color(194,6,47);
+    buttonSecondary = new Color(0,0,0);
+    border = new Color(255,255,255);
+    shadow = new Color(255,255,255,0.5);
+    overlay = new Color(255,255,255);
+    backgroundAccent = new Color(50,50,50);
+}
+
+class LightRed extends Theme{
+    name = "Light";
+    primary = new Color(255,255,255);
+    secondary= new Color(255,255,255);
+    accent = new Color(194,6,47);
+    background = new Color(200,200,200);
+    backgroundAccent = new Color(255,255,255);
+    textPrimary = new Color(0,0,0);
+    textSecondary = new Color(0,0,0);
+    textDisabled = new Color(100,100,100);
+    buttonPrimary = new Color(194,6,47);
+    buttonSecondary = new Color(255,255,255);
+    border = new Color(0,0,0);
+    shadow = new Color(0,0,0,0.5);
+    overlay = new Color(0,0,0);
+}
+
+export default [new Light(), new Dark(), new LightRed(), new DarkRed()]
