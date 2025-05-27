@@ -2,10 +2,13 @@ import { useState, useContext } from "react";
 import { View, TouchableOpacity, Modal, Text } from "react-native";
 import { AppContext } from "../AppContext";
 import { Columns } from "../classes/responses/Player";
-import ThemeContext from "ThemeContext";
-import { createStyle, useStyles } from "managers/StyleManager";
+import { useStyles } from "managers/StyleManager";
 
-export default function LibraryItems(playlistId?: string, songs?: Columns[]) {
+type LibraryItemsProps = {
+    playlistId?: string;
+    songs?: Columns[];
+};
+export default function LibraryItems({playlistId, songs}: LibraryItemsProps) {
         const [modalVisible, setModalVisible] = useState(false);
         const [selectedSong, setSelectedSong] = useState<Columns | null>(null);
         const [selectedIndex, setSelectedIndex] = useState<number>()
@@ -65,7 +68,7 @@ export default function LibraryItems(playlistId?: string, songs?: Columns[]) {
         );
     }
 export const filterSongs = (input?: string, songs?: Columns[]) => {
-    if(!songs) return;
+    if(!songs) return [];
     if(!input || input == "") return songs;
 
     const regex = new RegExp(input, "i");

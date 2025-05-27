@@ -55,7 +55,7 @@ export default class Beefweb {
     private mainInterval?:number;
 
     constructor(){
-        this.start()
+        // this.start()
     }
 
     addEventListener<K extends keyof BeefWebEvents>(
@@ -157,8 +157,13 @@ export default class Beefweb {
     }
 
     async getUniqueSongs(): Promise<Columns[]> {
-    const songs = await this.getAllSongs();
-    return [...new Map(songs.map(item => [item.path, item])).values()];
+        const songs = await this.getAllSongs();
+        return [...new Map(songs.map(item => [item.path, item])).values()];
+    }
+
+    async getArtwork(playlistId: string, index:number){
+        const url = this.con.getUrl()
+        return url ? this.combineUrl(url, "artwork", playlistId, index.toString()) : null
     }
 
     async playSong(playlistId:string, songId:number){
