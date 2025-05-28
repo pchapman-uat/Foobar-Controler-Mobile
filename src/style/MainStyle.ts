@@ -38,4 +38,13 @@ export default (theme: AppTheme) => StyleSheet.create({
     color: getColor(theme, 'textPrimary')
   },
 
+  swtichLable: {
+    fontSize: 18, 
+    verticalAlign: 'middle',
+    color: getColor(theme, 'textPrimary')
+  },
+  switchContainer: {
+    display: 'flex', 
+    flexDirection: 'row', 
+    justifyContent: 'center'},
 }); 

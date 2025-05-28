@@ -6,6 +6,7 @@ export function getTheme(theme: AppTheme): Theme{
     return Themes[theme]
 }
 
-export function getColor(theme: AppTheme, property: keyof Theme){
+export function getColor(theme: AppTheme, property: keyof Theme, alpha?:number) : string{
+    if(alpha && property !== 'name') return getTheme(theme).get(property, 0.5)
     return getTheme(theme)[property].toString();
 }

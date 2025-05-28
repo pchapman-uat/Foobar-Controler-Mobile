@@ -7,7 +7,7 @@ enum AppTheme {
     Light,
     Dark,
     LightRed,
-    DarkRed
+    DarkRed,
 }
 const themes = Object.keys(AppTheme).filter(k => isNaN(Number(k))) as (keyof typeof AppTheme)[];
 
@@ -21,6 +21,7 @@ class SettingProps {
     readonly IP_ADDRESS = new SettingsProperty<string>("ip_address", defaults.IP_ADDRESS);
     readonly REMEMBER_IP = new SettingsProperty<boolean>("remember_ip", defaults.REMEMBER_IP);
     readonly THEME = new SettingsProperty<AppTheme>("app_theme", defaults.THEME);
+    readonly DYNAMIC_BACKGROUND = new SettingsProperty<boolean>("dynamic_background", false)
 }
 class SettingsProperty<T> {
     readonly key: string;

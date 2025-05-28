@@ -1,4 +1,4 @@
-import { View, Text, Image, TouchableOpacity } from "react-native";
+import { View, Text, Image, TouchableOpacity, ImageBackground } from "react-native";
 import { useContext, useEffect, useState } from "react";
 import { AppContext } from "AppContext";
 import Slider from "@react-native-community/slider";
@@ -12,6 +12,7 @@ import { Button } from "react-native-elements";
 export default function NowPlaying(){
     const ctx = useContext(AppContext);
     const {theme} = useContext(ThemeContext)
+    const [dynamicBackground, setDynamicBackground] = useState(false)
     const Styles = useStyles('Main', 'NowPlaying')
     const [album, setAlbum] = useState("")
     const [title, setTitle] = useState("")
@@ -124,27 +125,41 @@ export default function NowPlaying(){
     }
 
     useEffect(()=> {
-       ctx.BeefWeb.addEventListener('update', async (e) => onUpdate(await e))
+       ctx.BeefWeb.addEventListener('update', async (e) => onUpdate(await e));
+       ctx.Settings.PROPS.DYNAMIC_BACKGROUND.get().then(setDynamicBackground)
        forceUpdate();
     }, [])
-    
-    return (
-        <View style={Styles.Main.container}>
-            <View style={Styles.NowPlaying.nowPlayingContainer}>
-                <TouchableOpacity onPress={() => setAlbumArt(ctx.BeefWeb.albumArtiURI)}>
-                    {renderImage(albumArt)}
-                </TouchableOpacity>
-                <Text style={Styles.NowPlaying.npText}>{title}</Text>
-                <Text style={Styles.NowPlaying.npText}>{artist}</Text>
-                <Text style={Styles.NowPlaying.npText}>{album}</Text>
-            </View>
-            {progressBar(elapsed, length)}
-            <Button buttonStyle={Styles.Main.button} title="Force Update" onPress={() => forceUpdate}></Button>
-            <View style={Styles.NowPlaying.controlsContainer}>
-                <Button buttonStyle={Styles.Main.button} title="Toggle" onPress={() => onToggle()}/>
-                <Button buttonStyle={Styles.Main.button} title="Skip" onPress={() => onSkip()}/>
-            </View>
+
+    const content = () => (
+        <View style={Styles.NowPlaying.nowPlayingContainer}>
+                <View>
+                    <TouchableOpacity onPress={() => setAlbumArt(ctx.BeefWeb.albumArtiURI)}>
+                        {renderImage(albumArt)}
+                    </TouchableOpacity>
+                    <Text style={Styles.NowPlaying.npText}>{title}</Text>
+                    <Text style={Styles.NowPlaying.npText}>{artist}</Text>
+                    <Text style={Styles.NowPlaying.npText}>{album}</Text>
+                </View>
+                {progressBar(elapsed, length)}
+                <Button buttonStyle={Styles.Main.button} title="Force Update" onPress={() => forceUpdate}></Button>
+                <View style={Styles.NowPlaying.controlsContainer}>
+                    <Button buttonStyle={Styles.Main.button} title="Toggle" onPress={() => onToggle()}/>
+                    <Button buttonStyle={Styles.Main.button} title="Skip" onPress={() => onSkip()}/>
+                </View>
             {volumeBar(volumeMax, volumeMin, volumeValue)}
-        </View>   
+            </View>
+    )
+    return (
+        <View style={{width:'100%', height:'100%'}}>
+             {dynamicBackground && 
+             <ImageBackground
+                source={albumArt ? {uri: albumArt} : Icon}
+                blurRadius={100}
+                style={Styles.Main.container}
+             >
+                {content()}
+            </ImageBackground> || content()}
+        </View>
+       
     )
 }

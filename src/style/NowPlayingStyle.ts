@@ -4,7 +4,11 @@ import { getColor } from "managers/ThemeManager";
 
 export default (theme: AppTheme) =>  StyleSheet.create({
     nowPlayingContainer: {
-       
+        flex: 1,
+        backgroundColor: getColor(theme, 'background', 0.1),
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: '100%'
     },
     alubmArt: {
         height: 300,

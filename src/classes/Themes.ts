@@ -18,24 +18,43 @@ export class Color {
     toArgbInt(){
         return ((this.a & 0xff) << 24) | ((this.r & 0xff) << 16) | ((this.g & 0xff) << 8) | (this.b & 0xff);
     }
-   static stringToLottie(rgba: string): [number, number, number, number] {
-    const regex = /rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?\)/;
-    const match = rgba.match(regex);
+    static stringToLottie(rgba: string): [number, number, number, number] {
+        const regex = /rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?\)/;
+        const match = rgba.match(regex);
 
-    if (!match) {
-        throw new Error(`Invalid RGBA string: ${rgba}`);
+        if (!match) {
+            throw new Error(`Invalid RGBA string: ${rgba}`);
+        }
+
+        const r = parseInt(match[1], 10) / 255;
+        const g = parseInt(match[2], 10) / 255;
+        const b = parseInt(match[3], 10) / 255;
+        const a = match[4] !== undefined ? parseFloat(match[4]) : 1;
+
+        return [r, g, b, a];
     }
 
-    const r = parseInt(match[1], 10) / 255;
-    const g = parseInt(match[2], 10) / 255;
-    const b = parseInt(match[3], 10) / 255;
-    const a = match[4] !== undefined ? parseFloat(match[4]) : 1;
+    static fromHex(hex:string) {
+        hex = hex.replace(/^#/, '');
 
-    return [r, g, b, a];
+        if (hex.length === 3) {
+            hex = hex.split('').map(char => char + char).join('');
+        }
+
+        if (hex.length !== 6) {
+            throw new Error('Invalid hex color');
+        }
+
+        const r = parseInt(hex.slice(0, 2), 16);
+        const g = parseInt(hex.slice(2, 4), 16);
+        const b = parseInt(hex.slice(4, 6), 16);
+
+        return new Color(r,g,b)
+    }
+    public getAlpha(a:number){
+        return new Color(this.r,this.g,this.b,a)
+    }
 }
-
-}
-
 export abstract class Theme {
     abstract name: string;
 
@@ -56,7 +75,11 @@ export abstract class Theme {
     abstract border: Color;
     abstract shadow: Color;
 
-    get(val: keyof Theme){
+    get(val: keyof Theme, alpha?:number): string{
+        if(alpha && val != 'name'){
+            const color = this[val];
+            if(color instanceof Color) return color.getAlpha(alpha).toString()
+        }
         return this[val].toString();
     }
 }
