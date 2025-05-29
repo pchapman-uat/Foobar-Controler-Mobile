@@ -1,19 +1,17 @@
 import { useContext, useEffect, useState } from "react";
 import {Image, ScrollView, Text, TextInput, TouchableOpacity, View} from "react-native";
 import { Picker } from '@react-native-picker/picker';
-import { AppContext } from "AppContext";
+import AppContext from "AppContext";
 import { Columns } from "classes/responses/Player";
 import LibraryItems, {filterSongs} from "elements/LibraryList";
 import { useStyles } from "managers/StyleManager";
 import { getColor } from "managers/ThemeManager";
-import ThemeContext from "ThemeContext";
 import LibraryGrid, { GridItem } from "elements/LibraryGrid";
 import LottieView from "lottie-react-native";
 import updateColors, { LottieLoading } from "managers/LottiManager";
 type Views = 'grid'|'list'
 export default function LibraryPlaylist(){
     const Styles = useStyles('Main', 'Library')
-    const {theme} = useContext(ThemeContext)
     const [playlistId, setPlaylistId] = useState<string>()
     const [searchInput, setSearchInput] = useState<string>()
     const [songs, setSongs] = useState<Columns[]>()
@@ -59,7 +57,7 @@ export default function LibraryPlaylist(){
                 <Picker
                     selectedValue={playlistId}
                     onValueChange={(itemValue) => onPlaylistChange(itemValue)}
-                    dropdownIconColor={getColor(theme, 'textPrimary')}
+                    dropdownIconColor={getColor(ctx.theme, 'textPrimary')}
                     style={Styles.Main.picker}
                 >
                     {playlists.map((item) => (
@@ -93,8 +91,8 @@ export default function LibraryPlaylist(){
         }
     }
     useEffect(() => {
-        updateColors(LottieLoading, getColor(theme, 'buttonPrimary'))
-    }, [theme])
+        updateColors(LottieLoading, getColor(ctx.theme, 'buttonPrimary'))
+    }, [ctx])
     return (
         <View>
             {loading && <LottieView source={LottieLoading} autoPlay loop style={{width: 100, height: 100}}/>}

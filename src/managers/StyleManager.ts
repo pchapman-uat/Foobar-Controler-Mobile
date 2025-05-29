@@ -1,6 +1,4 @@
-import { StyleSheet, TextStyle, ViewStyle, ImageStyle } from "react-native";
 import { AppTheme } from "classes/Settings";
-
 import MainStyle from "../style/MainStyle";
 import NowPlayingStyle from "../style/NowPlayingStyle";
 import ModalStyle from "../style/ModalStyle";
@@ -8,7 +6,7 @@ import NavBarStyle from "../style/NavBarStyle";
 import StatusBarStyle from "../style/StatusBarStyle";
 import LibraryStyle from "../style/LibraryStyle";
 import { useContext, useMemo } from "react";
-import ThemeContext from "ThemeContext";
+import AppContext from "AppContext";
 
 type Styles = 'Main' | 'NowPlaying' | 'Modal' | 'Navbar' | 'StatusBar' | 'Library';
 
@@ -44,6 +42,6 @@ export function createStyle<T extends Styles>(
 }
 
 export function useStyles<T extends Styles>(...styles: T[]) {
-  const { theme } = useContext(ThemeContext);
+  const { theme } = useContext(AppContext);
   return useMemo(() => createStyle(theme, ...styles), [theme]);
 }

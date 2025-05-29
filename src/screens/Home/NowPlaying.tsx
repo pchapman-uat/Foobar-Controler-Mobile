@@ -1,17 +1,15 @@
 import { View, Text, Image, TouchableOpacity, ImageBackground } from "react-native";
 import { useContext, useEffect, useState } from "react";
-import { AppContext } from "AppContext";
+import AppContext from "AppContext";
 import Slider from "@react-native-community/slider";
 import { WebPlayerResponse } from "managers/TypeManager";
 import { Icon } from "managers/ImageManager";
-import ThemeContext from "ThemeContext";
 import { useStyles } from "managers/StyleManager";
 import { getColor } from "managers/ThemeManager";
 import { Button } from "react-native-elements";
 
 export default function NowPlaying(){
     const ctx = useContext(AppContext);
-    const {theme} = useContext(ThemeContext)
     const [dynamicBackground, setDynamicBackground] = useState(false)
     const Styles = useStyles('Main', 'NowPlaying')
     const [album, setAlbum] = useState("")
@@ -26,6 +24,7 @@ export default function NowPlaying(){
     const [volumeMin, setVolumeMin] = useState(0);
     const [volumeType, setVolumeType] = useState("");
     const [volumeValue, setVolumeValue] = useState<number>();
+
     const onUpdate = async (response: WebPlayerResponse, firstTime:boolean = false) => {
         if (response) {
             const data = response.data
@@ -83,8 +82,8 @@ export default function NowPlaying(){
             <Slider
                 style={{width:'100%'}}
                 value={elapsed}
-                minimumTrackTintColor={getColor(theme, 'buttonPrimary')}
-                thumbTintColor={getColor(theme, 'buttonPrimary')}
+                minimumTrackTintColor={getColor(ctx.theme, 'buttonPrimary')}
+                thumbTintColor={getColor(ctx.theme, 'buttonPrimary')}
                 minimumValue={0}
                 maximumValue={length}
                 onSlidingComplete={onSeekChange}
@@ -115,8 +114,8 @@ export default function NowPlaying(){
             <Slider
                 style={{width:'100%'}}
                 value={percentage}
-                minimumTrackTintColor={getColor(theme, 'buttonPrimary')}
-                thumbTintColor={getColor(theme, 'buttonPrimary')}
+                minimumTrackTintColor={getColor(ctx.theme, 'buttonPrimary')}
+                thumbTintColor={getColor(ctx.theme, 'buttonPrimary')}
                 maximumValue={1}
                 minimumValue={0}
                 onValueChange={(v) => onVolumeChanged(v)}

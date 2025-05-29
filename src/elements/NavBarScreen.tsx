@@ -4,8 +4,8 @@ import React, { useContext } from "react";
 import StatusBar from "./Statusbar";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "App";
-import ThemeContext from "ThemeContext";
 import { createStyle } from "managers/StyleManager";
+import AppContext from "AppContext";
 type NavBarScreenProps = {
   children: React.ReactNode;
   onNavigate: (screen: number) => void;
@@ -13,7 +13,7 @@ type NavBarScreenProps = {
   navigator:NativeStackNavigationProp<RootStackParamList, 'Home'>
 };
 const NavBarScreen: React.FC<NavBarScreenProps> = ({onNavigate, currentScreen, children, navigator}) => {
-  const {theme} = useContext(ThemeContext);
+  const {theme} = useContext(AppContext);
   const Styles = createStyle(theme, 'Main')
   return (
     <SafeAreaProvider>

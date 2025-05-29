@@ -1,18 +1,15 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { Text, TextInput, View } from 'react-native';
-import { AppContext } from 'AppContext';
+import AppContext from 'AppContext';
 import { RequestStatus } from 'classes/WebRequest';
 import { PlayerResponse } from 'classes/responses/Player';
 import { CheckBox, Button } from 'react-native-elements'
 import { useStyles } from 'managers/StyleManager';
 import { getColor } from 'managers/ThemeManager';
-import ThemeContext from 'ThemeContext';
 
 export default function App() {
   const ctx = useContext(AppContext);
-  
   const Styles = useStyles('Main')
-  const {theme} = useContext(ThemeContext);
   const [infoName, setInfoname] = useState<string>("");
   const [infoTitle, setInfoTitle] = useState<string>("");
   const [infoVersion, setInfoVersion] = useState<string>("");
@@ -75,7 +72,7 @@ export default function App() {
         </View>
         <View>
           <TextInput style={{...Styles.Main.textInput, width: 200}} textContentType='URL' value={ipAddress} onChangeText={setIP}/>
-          <CheckBox containerStyle={Styles.Main.checkBox} textStyle={Styles.Main.checkBox} checkedColor={getColor(theme, 'accent')} title="Remember IP" checked={rememberIP} onPress={() => onRemeberChange(!(rememberIP ?? false))} />
+          <CheckBox containerStyle={Styles.Main.checkBox} textStyle={Styles.Main.checkBox} checkedColor={getColor(ctx.theme, 'accent')} title="Remember IP" checked={rememberIP} onPress={() => onRemeberChange(!(rememberIP ?? false))} />
         </View>
         <Button buttonStyle={Styles.Main.button} title="Connect to Beefweb" onPress={connectToBeefweb} />
       </View>

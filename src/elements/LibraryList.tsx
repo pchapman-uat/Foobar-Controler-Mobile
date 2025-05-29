@@ -1,6 +1,6 @@
 import { useState, useContext } from "react";
 import { View, TouchableOpacity, Modal, Text } from "react-native";
-import { AppContext } from "../AppContext";
+import AppContext from "../AppContext";
 import { Columns } from "../classes/responses/Player";
 import { useStyles } from "managers/StyleManager";
 

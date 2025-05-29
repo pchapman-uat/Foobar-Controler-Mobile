@@ -1,15 +1,18 @@
 import React from 'react';
 import Beefweb from './classes/BeefWeb';
-import Settings from './classes/Settings';
+import Settings, { AppTheme } from './classes/Settings';
 
-interface AppContextType {
+export interface AppContextType {
   BeefWeb: Beefweb;
   Settings: Settings;
+  theme: AppTheme;
+  setTheme: (theme: AppTheme) => void;
 }
-
-const defaultContext: AppContextType = {
+ const defaultContext: AppContextType = {
   BeefWeb: new Beefweb(),
   Settings: new Settings(),
+  theme: AppTheme.Light,
+  setTheme: () => {},
 };
 
-export const AppContext = React.createContext<AppContextType>(defaultContext);
+export default React.createContext<AppContextType>(defaultContext);

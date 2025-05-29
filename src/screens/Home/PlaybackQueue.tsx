@@ -1,9 +1,8 @@
 import { Button, SafeAreaView, View, Text, ScrollView, Modal, TouchableOpacity } from "react-native";
-import { AppContext } from "AppContext";
+import AppContext from "AppContext";
 import { use, useContext, useState } from "react";
 import PlayQueueResponse from "classes/responses/PlayQueue";
 import { Columns } from "classes/responses/Player";
-import ThemeContext from "ThemeContext";
 import { createStyle, useStyles } from "managers/StyleManager";
 
 export default function PlaybackQueue(){

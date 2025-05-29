@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { AppContext } from "../AppContext";
+import AppContext from "../AppContext";
 import { TouchableOpacity, View, Text } from "react-native";
 import { Status } from "../classes/BeefWeb";
 import { WebRequest } from "../classes/WebRequest";
@@ -8,7 +8,6 @@ import { MenuSVG } from "../managers/SVGManager";
 import { RootStackParamList } from "App";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useStyles } from "managers/StyleManager";
-import ThemeContext from "ThemeContext";
 import { getColor } from "managers/ThemeManager";
 
 type StatusBarProps = {
@@ -17,7 +16,6 @@ type StatusBarProps = {
 
 const StatusBar: React.FC<StatusBarProps> = ({navigator}) => {
     const ctx = useContext(AppContext);
-    const {theme} = useContext(ThemeContext)
     const Style = useStyles('StatusBar')
     const [status, setStatus] = useState<Status>(Status.Offline)
     const [title, setTitle] = useState("");
@@ -61,7 +59,7 @@ const StatusBar: React.FC<StatusBarProps> = ({navigator}) => {
             </TouchableOpacity>
             <Text style={Style.StatusBar.StatusText}>{title} - {album}</Text>
             <TouchableOpacity>
-                <MenuSVG height={40} width={40} color={getColor(theme, 'textPrimary')} onPress={()=>navigator.navigate('Settings')}/>
+                <MenuSVG height={40} width={40} color={getColor(ctx.theme, 'textPrimary')} onPress={()=>navigator.navigate('Settings')}/>
             </TouchableOpacity>
         </View>
     )

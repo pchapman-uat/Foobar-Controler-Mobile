@@ -1,12 +1,11 @@
 import { useState, useContext, useEffect } from "react";
-import { AppContext } from "AppContext";
+import AppContext from "AppContext";
 import { Columns } from "classes/responses/Player";
 import { View, Button, ScrollView, TextInput, Animated } from "react-native";
 import LibraryItems, { filterSongs } from "elements/LibraryList";
 import { useStyles } from "managers/StyleManager";
 import LibraryGrid, { GridItem } from "elements/LibraryGrid";
 import { Picker } from "@react-native-picker/picker";
-import ThemeContext from "ThemeContext";
 import { getColor } from "managers/ThemeManager";
 import LottieView from "lottie-react-native";
 import updateColors, { LottieLoading } from "managers/LottiManager";
@@ -15,7 +14,6 @@ export default function LibraryArtist() {
     const Styles = useStyles('Main')
     const [searchInput, setSearchInput] = useState<string>()
     const ctx = useContext(AppContext);
-    const {theme} = useContext(ThemeContext)
     const [view, setView] = useState<Views>('grid')
     const [gridItems, setGridItems] = useState<GridItem[]>([]);
     const [songs, setSongs] = useState<Columns[]>()
@@ -49,13 +47,12 @@ export default function LibraryArtist() {
         setfilteredSongs(newSongs)
     };
     const listView = (playlists: GridItem[], artist:string | undefined, filteredSongs:Columns[]|undefined) => {
-        const {theme} = useContext(ThemeContext)
         return(
             <View style={{flex: 1}}>
                 <Picker
                     selectedValue={artist}
                     onValueChange={(itemValue) => onArtistChange(itemValue)}
-                    dropdownIconColor={getColor(theme, 'textPrimary')}
+                    dropdownIconColor={getColor(ctx.theme, 'textPrimary')}
                     style={Styles.Main.picker}
                 >
                     {playlists.map((item) => (
@@ -86,8 +83,8 @@ export default function LibraryArtist() {
         }
     }
      useEffect(() => {
-        updateColors(LottieLoading, getColor(theme, 'buttonPrimary'))
-    }, [theme])
+        updateColors(LottieLoading, getColor(ctx.theme, 'buttonPrimary'))
+    }, [ctx])
      return (
         <View>
             {loading && <LottieView source={LottieLoading} autoPlay loop style={{width: 100, height: 100}}/>}

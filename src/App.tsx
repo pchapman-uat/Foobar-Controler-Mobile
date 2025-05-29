@@ -3,9 +3,9 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
 import Home from './screens/Home';
 import SettingsScreen from 'screens/SettingsScreen';
-import { AppTheme, defaults } from 'classes/Settings';
-import ThemeContext from 'ThemeContext';
-import { AppContext } from 'AppContext';
+import Settings, { AppTheme, defaults } from 'classes/Settings';
+import AppContext, {AppContextType} from 'AppContext';
+import Beefweb from 'classes/BeefWeb';
 
 export type RootStackParamList = {
   Home: undefined,
@@ -21,11 +21,20 @@ export default function App() {
   const [theme, setTheme] = useState<AppTheme>(defaults.THEME);
 
   ctx.Settings.PROPS.THEME.get().then(setTheme)
-
-  // UseMemo to avoid re-creating the object unless theme changes
-  const themeContextValue = useMemo(() => ({ theme, setTheme }), [theme]);
+  
+  const beefWeb = useMemo(() => new Beefweb(), []);
+  const settings = useMemo(() => new Settings(), []);
+  const themeContextValue = useMemo<AppContextType>(
+  () => ({
+    BeefWeb: beefWeb,
+    Settings: settings,
+    theme,
+    setTheme
+  }),
+  [beefWeb, settings, theme, setTheme]
+);
   return (
-    <ThemeContext.Provider value={themeContextValue}>
+    <AppContext.Provider value={themeContextValue}>
       <NavigationContainer>
         <Stack.Navigator
         screenOptions={{headerShown: false}}>
@@ -38,7 +47,7 @@ export default function App() {
           options={{headerShown:false}}/>
         </Stack.Navigator>
       </NavigationContainer>
-    </ThemeContext.Provider>
+    </AppContext.Provider>
    
   );
 }
