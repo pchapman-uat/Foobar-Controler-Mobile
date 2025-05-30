@@ -4,6 +4,8 @@ import { Icon } from "managers/ImageManager";
 import { useStyles } from "managers/StyleManager";
 import Beefweb from "classes/BeefWeb";
 import { Columns } from "classes/responses/Player";
+import AppContext from "AppContext";
+import { WebPlayerResponse } from "managers/TypeManager";
 
 type LibraryGridPops = {
     onGridPress: (item:GridItem) => void;
@@ -26,7 +28,24 @@ export interface GridItem {
 export default function LibraryGrid({onGridPress, BeefWeb, items, actions}:LibraryGridPops){
     const Styles = useStyles('Main', 'Library', 'Modal');
     const [modalVisible, setModalVisible] = useState(false);
-    const [selectedItem, setSelectedItem] = useState<GridItem>()
+    const [selectedItem, setSelectedItem] = useState<GridItem>();
+    const [activePlaylistId, setActivePlaylistId] = useState<string>();
+    const ctx = useContext(AppContext);
+    useEffect(()=> {
+        const onBeefWebUpdate = async (e: any) => {
+            onUpdate(await e);
+        };
+        ctx.BeefWeb.addEventListener('update', onBeefWebUpdate);
+        return () => {
+            ctx.BeefWeb.removeEventListener('update', onBeefWebUpdate);
+        };
+    }, [])
+    const onUpdate = (response: WebPlayerResponse) => {
+        console.log(activePlaylistId)
+        if(response) {
+            setActivePlaylistId(response.data.activeItem.playlistId);
+        }
+    }
     const handleLongPress = (song: GridItem) => {
         console.log("Long Press")
         setSelectedItem(song);
@@ -58,7 +77,7 @@ export default function LibraryGrid({onGridPress, BeefWeb, items, actions}:Libra
     const renderItem = useCallback(({ item }:renderItemProps) => (
         <View>
             <TouchableOpacity
-                style={Styles.Library.gridItemContainer}
+                style={[Styles.Library.gridItemContainer, item.id == activePlaylistId ? Styles.Library.activeItem: {}]}
                 onPress={() => onGridPress(item)}
                 onLongPress={() => handleLongPress(item)}
             >
@@ -67,7 +86,7 @@ export default function LibraryGrid({onGridPress, BeefWeb, items, actions}:Libra
             </TouchableOpacity>
         </View>
        
-    ), [onGridPress]);
+    ), [onGridPress, activePlaylistId]);
 
     return (
         <View>

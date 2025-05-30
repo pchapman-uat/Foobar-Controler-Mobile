@@ -23,5 +23,9 @@ export default (theme: AppTheme) => StyleSheet.create({
     gridItemText: {
         color: getColor(theme, 'textPrimary'),
         textAlign: 'center'
+    },
+    activeItem: {
+        outlineColor: 'yellow',
+        outlineWidth: 3
     }
 })
