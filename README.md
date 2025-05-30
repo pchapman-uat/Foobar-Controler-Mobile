@@ -1,7 +1,13 @@
 # Foobar Controller Mobile (Name Pending)
 > **Warning:** This project is still in early testing and is not ready for release
 
-Foobar Controller Mobile is an app that uses the [BeefWeb API](https://github.com/hyperblast/beefweb) to allow users to control Foobar2000 remotely 
+Foobar Controller Mobile is an app that uses the [BeefWeb API](https://github.com/hyperblast/beefweb) to allow users to control Foobar2000 remotely.
+
+This project was created for Preston Chapmans Student Innovation Project (SIP) at the Univeristy of Advancing Technology (UAT). The SIP is UAT's equivalent of a master’s thesis, all students graduating with a bachalors are required to inovate and create a product. For more information view: https://www.uat.edu/student-innovation-projects.
+
+UAT does not have ownership of this project, however they have been granted a non-exclusive, royalty-free license to use, copy, display, describe, mark-on, modify, retain or make other use of the student’s work. For more information view: https://www.uat.edu/catalog.
+
+Information in the README and LICENSE may not properly reflect the above at the moment. 
 
 ## Setup
 > **Caution:** Due to this project being in early testing, the setup may be incomplete or inacurate.
@@ -10,6 +16,8 @@ Foobar Controller Mobile is an app that uses the [BeefWeb API](https://github.co
 - [Beefweb](https://github.com/hyperblast/beefweb) – Tested on v0.10
 
 ## References
+
+Bellow is information regarding the assets and libraries used for this project.
 
 ### Assets
 
@@ -24,9 +32,10 @@ Foobar Controller Mobile is an app that uses the [BeefWeb API](https://github.co
 - App Icon and Splash Screen – Expo Go provides default placeholder images for the app icon and splash screen when no custom assets are specified in [`app.json`](./app.json).
 
 ### Librarys
+> **Note:** Due to this project being early in development it is likely that the libraries bellow will be inacurate, please reference [`package.json`](./package.json) for exact modules. 
 
 - `@react-native-async-storage/async-storage`: `^2.1.2`,
-    - Sorage of settings
+    - Storage of settings
 - `@react-native-community/slider`: `^4.5.6`,
     - UI Element
 - `@react-native-picker/picker`: `^2.11.0`,
