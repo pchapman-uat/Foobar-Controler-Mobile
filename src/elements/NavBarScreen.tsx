@@ -1,11 +1,10 @@
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import NavBar from "./NavBar";
-import React, { useContext } from "react";
+import React from "react";
 import StatusBar from "./Statusbar";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "App";
-import { createStyle } from "managers/StyleManager";
-import AppContext from "AppContext";
+import { useStyles } from "managers/StyleManager";
 type NavBarScreenProps = {
   children: React.ReactNode;
   onNavigate: (screen: number) => void;
@@ -13,8 +12,7 @@ type NavBarScreenProps = {
   navigator:NativeStackNavigationProp<RootStackParamList, 'Home'>
 };
 const NavBarScreen: React.FC<NavBarScreenProps> = ({onNavigate, currentScreen, children, navigator}) => {
-  const {theme} = useContext(AppContext);
-  const Styles = createStyle(theme, 'Main')
+  const Styles = useStyles('Main')
   return (
     <SafeAreaProvider>
       <SafeAreaView style={Styles.Main.view}>

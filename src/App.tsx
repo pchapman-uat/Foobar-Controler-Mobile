@@ -6,6 +6,7 @@ import SettingsScreen from 'screens/SettingsScreen';
 import Settings, { AppTheme, defaults } from 'classes/Settings';
 import AppContext, {AppContextType} from 'AppContext';
 import Beefweb from 'classes/BeefWeb';
+import { useOrientation } from 'hooks/useOrientation';
 
 export type RootStackParamList = {
   Home: undefined,
@@ -24,31 +25,32 @@ export default function App() {
   
   const beefWeb = useMemo(() => new Beefweb(), []);
   const settings = useMemo(() => new Settings(), []);
-  const themeContextValue = useMemo<AppContextType>(
+  const orientation = useOrientation()
+  const contextValue = useMemo<AppContextType>(
   () => ({
     BeefWeb: beefWeb,
     Settings: settings,
     theme,
-    setTheme
+    setTheme,
+    orientation
   }),
-  [beefWeb, settings, theme, setTheme]
+  [theme, orientation]
 );
   return (
-    <AppContext.Provider value={themeContextValue}>
-      <NavigationContainer>
-        <Stack.Navigator
-        screenOptions={{headerShown: false}}>
-          <Stack.Screen 
-          name='Home'
-          component={Home}/>
+    <AppContext.Provider value={contextValue}>
+        <NavigationContainer>
+          <Stack.Navigator
+          screenOptions={{headerShown: false}}>
             <Stack.Screen 
-          name='Settings'
-          component={SettingsScreen}
-          options={{headerShown:false}}/>
-        </Stack.Navigator>
-      </NavigationContainer>
+            name='Home'
+            component={Home}/>
+              <Stack.Screen 
+            name='Settings'
+            component={SettingsScreen}
+            options={{headerShown:false}}/>
+          </Stack.Navigator>
+        </NavigationContainer>
     </AppContext.Provider>
-   
   );
 }
 

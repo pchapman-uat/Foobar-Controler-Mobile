@@ -131,22 +131,28 @@ export default function NowPlaying(){
 
     const content = () => (
         <View style={Styles.NowPlaying.nowPlayingContainer}>
+            <View>
+                <TouchableOpacity onPress={forceUpdate}>
+                    {renderImage(albumArt)}
+                </TouchableOpacity>
+            </View>
+            <View style={Styles.NowPlaying.interfaceControler}>
                 <View>
-                    <TouchableOpacity onPress={() => setAlbumArt(ctx.BeefWeb.albumArtiURI)}>
-                        {renderImage(albumArt)}
-                    </TouchableOpacity>
                     <Text style={Styles.NowPlaying.npText}>{title}</Text>
                     <Text style={Styles.NowPlaying.npText}>{artist}</Text>
                     <Text style={Styles.NowPlaying.npText}>{album}</Text>
                 </View>
-                {progressBar(elapsed, length)}
-                <Button buttonStyle={Styles.Main.button} title="Force Update" onPress={() => forceUpdate}></Button>
                 <View style={Styles.NowPlaying.controlsContainer}>
-                    <Button buttonStyle={Styles.Main.button} title="Toggle" onPress={() => onToggle()}/>
-                    <Button buttonStyle={Styles.Main.button} title="Skip" onPress={() => onSkip()}/>
+                    {progressBar(elapsed, length)}
+                    <View style={Styles.NowPlaying.buttonContainer}>
+                        <Button buttonStyle={Styles.Main.button} title="Toggle" onPress={() => onToggle()}/>
+                        <Button buttonStyle={Styles.Main.button} title="Skip" onPress={() => onSkip()}/>
+                    </View>
+                    {volumeBar(volumeMax, volumeMin, volumeValue)}
                 </View>
-            {volumeBar(volumeMax, volumeMin, volumeValue)}
             </View>
+           
+        </View>
     )
     return (
         <View style={{width:'100%', height:'100%'}}>

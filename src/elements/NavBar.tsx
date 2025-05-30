@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { TouchableOpacity, View } from "react-native";
 import { items,  } from "../classes/NavBar";
-import { createStyle } from "managers/StyleManager";
+import { useStyles } from "managers/StyleManager";
 import { getColor } from "managers/ThemeManager";
 import AppContext from "AppContext";
 
@@ -11,7 +11,7 @@ type NavBarProps = {
 };
 const NavBar: React.FC<NavBarProps> = ({ currentScreen, onNavigate }) => {
   const {theme} = useContext(AppContext);
-  const Style = createStyle(theme, 'Navbar')
+  const Style = useStyles('Navbar')
 
   return (
     <View style={Style.Navbar.navBarContainer}>

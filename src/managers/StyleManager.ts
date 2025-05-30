@@ -7,6 +7,7 @@ import StatusBarStyle from "../style/StatusBarStyle";
 import LibraryStyle from "../style/LibraryStyle";
 import { useContext, useMemo } from "react";
 import AppContext from "AppContext";
+import { Orientation } from "hooks/useOrientation";
 
 type Styles = 'Main' | 'NowPlaying' | 'Modal' | 'Navbar' | 'StatusBar' | 'Library';
 
@@ -20,7 +21,7 @@ type StyleMapType = {
   Library: ReturnType<typeof LibraryStyle>;
 };
 
-const styleMap: { [K in Styles]: (theme: AppTheme) => StyleMapType[K] } = {
+const styleMap: { [K in Styles]: (theme: AppTheme, orientation: Orientation) => StyleMapType[K] } = {
   Main: MainStyle,
   NowPlaying: NowPlayingStyle,
   Modal: ModalStyle,
@@ -31,17 +32,18 @@ const styleMap: { [K in Styles]: (theme: AppTheme) => StyleMapType[K] } = {
 
 export function createStyle<T extends Styles>(
   theme: AppTheme,
+  orientation: Orientation,
   ...styles: T[]
 ): Pick<StyleMapType, T> {
   console.log("updating style")
   const result = {} as Pick<StyleMapType, T>;
   for (const style of styles) {
-    result[style] = styleMap[style](theme);
+    result[style] = styleMap[style](theme, orientation);
   }
   return result;
 }
 
 export function useStyles<T extends Styles>(...styles: T[]) {
-  const { theme } = useContext(AppContext);
-  return useMemo(() => createStyle(theme, ...styles), [theme]);
+  const { theme ,orientation } = useContext(AppContext);
+  return useMemo(() => createStyle(theme, orientation, ...styles), [theme, orientation]);
 }
