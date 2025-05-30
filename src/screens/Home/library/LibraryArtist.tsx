@@ -39,12 +39,12 @@ export default function LibraryArtist() {
     const searchSongs = (text: string) => {
         setfilteredSongs(filterSongs(text, songs))
     }
-    const onArtistChange = async (artist: string) => {
+    const onArtistChange = (artist: string) => {
         setArtist(artist)
         const newSongs = filterSongs(artist,songs, 'artist')
         console.log(newSongs)
-        setSongs(newSongs)
         setfilteredSongs(newSongs)
+        return newSongs;
     };
     const listView = (playlists: GridItem[], artist:string | undefined, filteredSongs:Columns[]|undefined) => {
         return(
@@ -64,20 +64,27 @@ export default function LibraryArtist() {
             </View>
         )
     }
-       type GetViewProps = {
+    type GetViewProps = {
         view: Views, 
         playlists: GridItem[], 
         artist?: string, 
         filteredSongs?:Columns[]
     }
+
+    
     const GetView = ({view, playlists, artist, filteredSongs}:GetViewProps) => {
         const onGridPress = (item: GridItem) => {
             onArtistChange(item.title)
             setView('list')
         }
+        const playAll = async (item: GridItem) => {
+            const newSongs = onArtistChange(item.title)
+            await ctx.BeefWeb.addToMobilePlaylist(newSongs.map(item => item.path))
+            console.log("Done!")
+        }
         switch(view){
             case "grid":
-                return <LibraryGrid onGridPress={onGridPress} BeefWeb={ctx.BeefWeb} items={playlists}/>
+                return <LibraryGrid onGridPress={onGridPress} BeefWeb={ctx.BeefWeb} items={playlists} actions={[{text: 'Play All', onPress: playAll}]}/>
             case "list":
                 return listView(playlists, artist, filteredSongs)
         }

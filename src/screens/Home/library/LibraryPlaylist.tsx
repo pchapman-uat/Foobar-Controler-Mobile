@@ -79,13 +79,17 @@ export default function LibraryPlaylist(){
         filteredSongs?:Columns[]
     }
     const GetView = ({view, playlists, playlistId, filteredSongs}:GetViewProps) => {
+        console.log(playlists)
         const onGridPress = (item: GridItem) => {
             onPlaylistChange(item.id);
             setView('list')
         }
+        const loadPlaylist = (item: GridItem) => {
+            if(item.id) ctx.BeefWeb.playPlaylist(item.id)
+        }
         switch(view){
             case "grid":
-                return <LibraryGrid onGridPress={onGridPress} BeefWeb={ctx.BeefWeb} items={playlists}/>
+                return <LibraryGrid onGridPress={onGridPress} BeefWeb={ctx.BeefWeb} items={playlists} actions={[{text: 'Load Playlist', onPress: loadPlaylist}]}/>
             case "list":
                 return listView(playlists, playlistId, filteredSongs)
         }

@@ -1,5 +1,6 @@
 import { AsyncWebPlayerResponse, WebPlayerResponse } from "../managers/TypeManager";
 import { items } from "./NavBar";
+import { AddPlaylistResponse } from "./responses/AddPlaylist";
 import { Columns, PlayerResponse } from "./responses/Player";
 import { PlaylistItemsResponse } from "./responses/PlaylistItems";
 import { PlaylistsResponse } from "./responses/Playlists";
@@ -48,6 +49,7 @@ export default class Beefweb {
     con = new Connection();
     readonly timeout = { timeout: 5000 };
     lastPlayer?: PlayerResponse;
+    readonly mobilePlaylistTitle = "Mobile Playlist"
 
     private listeners: {
         [K in keyof BeefWebEvents]?: Array<EventHandler<BeefWebEvents[K]>>;
@@ -56,7 +58,7 @@ export default class Beefweb {
     private mainInterval?:number;
 
     constructor(){
-        this.start()
+        // this.start()
     }
 
     addEventListener<K extends keyof BeefWebEvents>(
@@ -209,6 +211,46 @@ export default class Beefweb {
 
     async setPosition(position: number){
         await this._post(this.combineUrl("player"), {position} )
+    }
+
+    async addPlaylist(title: string, setCurrent: boolean, index:number, columns?:Columns[]){
+        const response = await this._post(this.combineUrl("playlists", "add"), {title, index, setCurrent})
+        if(response && columns){
+            const result = await this.createWebRequest<AddPlaylistResponse>(response, AddPlaylistResponse)
+            this.addItemsToPlaylist(columns.map(item => item.path),result.data.id, false, true)
+            return result
+        }
+    }
+
+    async addItemsToPlaylist(items:string[], playlistId:string, replace = true, play = true){
+        await this._post(this.combineUrl('playlists', playlistId, 'items', 'add'), {index: 0, async:true, replace, play, items})
+    }
+
+    async addToMobilePlaylist(items: string[], replace = true, play = true){
+        const playlists = await this.getPlaylists();
+        if(playlists){
+            let id:string|null = null;
+           for(let item of playlists.data) {
+                if(item.title == this.mobilePlaylistTitle) {
+                    console.log("Found it!", item)
+                    id = item.id
+                    break;
+                }
+            }
+            if(!id){
+                const result = await this.addPlaylist(this.mobilePlaylistTitle, true, 999)
+                if(result){
+                    id = result.data.id
+                }
+            }
+            if(id){
+                this.addItemsToPlaylist(items, id)
+            }
+        }
+    }
+
+    async playPlaylist(playlistId: string, index=0){
+        await this._post(this.combineUrl('player', 'play', playlistId, index.toString()))
     }
     get albumArtiURI() {
         const url = this.con.getUrl()

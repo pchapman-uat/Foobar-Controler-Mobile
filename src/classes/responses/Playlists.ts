@@ -9,7 +9,7 @@ export class PlaylistsResponse extends Array<Playlist>{
 
 export interface Playlist {
     id:string;
-    inded:number;
+    index:number;
     title:string;
     isCurrent:boolean;
     itemCount:number;
