@@ -36,5 +36,13 @@ export default (theme: AppTheme, ori: Orientation) =>  {
     interfaceControler: {
         width: getOri(ori, 'landscape', '45%', '100%'),
         padding: 10
+    },
+    progressBarContainer: {
+
+    },
+    progressBarvalues: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between'
     }
 })}

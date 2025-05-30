@@ -7,6 +7,7 @@ import { Icon } from "managers/ImageManager";
 import { useStyles } from "managers/StyleManager";
 import { getColor } from "managers/ThemeManager";
 import { Button } from "react-native-elements";
+import { formatTime } from "helpers/helpers";
 
 export default function NowPlaying(){
     const ctx = useContext(AppContext);
@@ -143,7 +144,14 @@ export default function NowPlaying(){
                     <Text style={Styles.NowPlaying.npText}>{album}</Text>
                 </View>
                 <View style={Styles.NowPlaying.controlsContainer}>
-                    {progressBar(elapsed, length)}
+                    <View style={Styles.NowPlaying.progressBarContainer}>
+                        <View style={Styles.NowPlaying.progressBarvalues}>
+                            <Text style={Styles.NowPlaying.npText}>{formatTime(elapsed)}</Text>
+                            <Text style={Styles.NowPlaying.npText}>{formatTime(length)}</Text>
+                        </View>
+                        {progressBar(elapsed, length)}
+                    </View>
+                    
                     <View style={Styles.NowPlaying.buttonContainer}>
                         <Button buttonStyle={Styles.Main.button} title="Toggle" onPress={() => onToggle()}/>
                         <Button buttonStyle={Styles.Main.button} title="Skip" onPress={() => onSkip()}/>
