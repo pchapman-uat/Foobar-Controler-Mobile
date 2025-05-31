@@ -20,7 +20,15 @@
         "foregroundImage": "./src/assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "package": "com.pchapman.foobarcontollermobile",
+      "permissions": ["FOREGROUND_SERVICE"],
+      "services": {
+        "musicservice": {
+          "name": "MusicService",
+          "exported": true
+        }
+      }
     },
     "web": {
       "favicon": "./src/assets/favicon.png"
