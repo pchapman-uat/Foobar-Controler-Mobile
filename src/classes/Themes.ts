@@ -75,6 +75,9 @@ export abstract class Theme {
     abstract border: Color;
     abstract shadow: Color;
 
+    abstract rowEven: Color;
+    abstract rowOdd: Color
+
     get(val: keyof Theme, alpha?:number): string{
         if(alpha && val != 'name'){
             const color = this[val];
@@ -98,6 +101,8 @@ class Dark extends Theme{
     shadow = new Color(255,255,255,0.5);
     overlay = new Color(255,255,255);
     backgroundAccent = new Color(50,50,50);
+    rowOdd = new Color(100,100,100);
+    rowEven = new Color(75,75,75);
 }
 class Light extends Theme{
     name = "Light";
@@ -114,40 +119,20 @@ class Light extends Theme{
     border = new Color(0,0,0);
     shadow = new Color(0,0,0,0.5);
     overlay = new Color(0,0,0);
+    rowOdd = new Color(225,225,225);
+    rowEven = new Color(200,200,200);
 }
 
-class DarkRed extends Theme{
-    name = "Dark";
-    primary = new Color(0,0,0);
-    secondary= new Color(0,0,0);
+class DarkRed extends Dark{
+    name = "Dark Red";
     accent = new Color(194,6,47);
-    background = new Color(0,0,0);
-    textPrimary = new Color(255,255,255);
-    textSecondary = new Color(255,255,255);
-    textDisabled = new Color(100,100,100);
     buttonPrimary = new Color(194,6,47);
-    buttonSecondary = new Color(0,0,0);
-    border = new Color(255,255,255);
-    shadow = new Color(255,255,255,0.5);
-    overlay = new Color(255,255,255);
-    backgroundAccent = new Color(50,50,50);
 }
 
-class LightRed extends Theme{
-    name = "Light";
-    primary = new Color(255,255,255);
-    secondary= new Color(255,255,255);
+class LightRed extends Light{
+    name = "Light Red";
     accent = new Color(194,6,47);
-    background = new Color(200,200,200);
-    backgroundAccent = new Color(255,255,255);
-    textPrimary = new Color(0,0,0);
-    textSecondary = new Color(0,0,0);
-    textDisabled = new Color(100,100,100);
     buttonPrimary = new Color(194,6,47);
-    buttonSecondary = new Color(255,255,255);
-    border = new Color(0,0,0);
-    shadow = new Color(0,0,0,0.5);
-    overlay = new Color(0,0,0);
 }
 
 export default [new Light(), new Dark(), new LightRed(), new DarkRed()]

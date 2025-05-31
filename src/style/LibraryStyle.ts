@@ -7,7 +7,8 @@ export default (theme: AppTheme) => StyleSheet.create({
         margin: 5
     },
     itemText: {
-        color: getColor(theme, 'textPrimary')
+        color: getColor(theme, 'textPrimary'),
+        verticalAlign: 'middle'
     },
     gridItemContainer: {
         width: 100,
@@ -18,7 +19,7 @@ export default (theme: AppTheme) => StyleSheet.create({
         height: 100
     },
     gridContainer: {
-        width: '100%',
+        width: 'auto',
     }, 
     gridItemText: {
         color: getColor(theme, 'textPrimary'),
@@ -27,5 +28,20 @@ export default (theme: AppTheme) => StyleSheet.create({
     activeItem: {
         outlineColor: 'yellow',
         outlineWidth: 3
+    },
+    icon: {
+        width: 40,
+        height: 40,
+        marginRight: 10
+    },
+    itemRow: {
+        display: 'flex',
+        flexDirection: 'row',
+    },
+    rowEven : {
+        backgroundColor: getColor(theme, 'rowEven')
+    },
+    rowOdd: {
+        backgroundColor: getColor(theme, 'rowOdd')
     }
 })

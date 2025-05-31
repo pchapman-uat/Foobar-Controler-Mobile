@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { TouchableOpacity, View } from "react-native";
-import { items,  } from "../classes/NavBar";
+import { items } from "../classes/NavBar";
 import { useStyles } from "managers/StyleManager";
 import { getColor } from "managers/ThemeManager";
 import AppContext from "AppContext";

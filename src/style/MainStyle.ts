@@ -13,7 +13,10 @@ export default (theme: AppTheme) => StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-
+  containerBlock: {
+    height: '100%',
+    width: '100%'
+  },
   statusItem: {
     textAlign: 'center',
     color: getColor(theme, 'textPrimary')
@@ -46,5 +49,9 @@ export default (theme: AppTheme) => StyleSheet.create({
   switchContainer: {
     display: 'flex', 
     flexDirection: 'row', 
-    justifyContent: 'center'},
+    justifyContent: 'center'
+  },
+  primaryText: {
+    color: getColor(theme, 'textPrimary')
+  }
 }); 

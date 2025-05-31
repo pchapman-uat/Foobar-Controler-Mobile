@@ -40,7 +40,7 @@ export default function LibraryItems({playlistId, songs}: LibraryItemsProps) {
         return (
             <View>
                 {songs.map((item, index) => (
-                    <TouchableOpacity key={"song-" + index} onLongPress={() => handleLongPress(item, index)}>
+                    <TouchableOpacity key={"song-" + index} onLongPress={() => handleLongPress(item, index)} style={[Styles.Library.itemRow, Styles.Library[index % 2 === 0 ? 'rowEven' : 'rowOdd']]}>
                         <View style={Styles.Library.item}>
                             <Text style={Styles.Library.itemText}>{item.title} - {item.artist}</Text>
                             <Text style={Styles.Library.itemText}>{item.album}</Text>
