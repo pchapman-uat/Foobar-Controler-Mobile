@@ -175,7 +175,7 @@ export default class Beefweb {
     async getUnique(key: keyof Columns){
         const songs = await this.getAllSongs();
         return {
-            songs,
+            songs: [...new Map(songs.map(item => [item.path, item])).values()],
             unique: [...new Map(songs.map(item => [item[key], item])).values()]
         };
     }

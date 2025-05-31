@@ -5,6 +5,7 @@ import LibraryArtist from './library/LibraryArtist';
 import { useStyles } from 'managers/StyleManager';
 import { Button } from 'react-native-elements';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import LibraryAlbum from './library/LibraryAlbum';
 
 export type LibraryProps = {   
   setCurrentScreen: (screen: number) => void;
@@ -21,13 +22,15 @@ export default function LibraryMain() {
         <View>
             <Button buttonStyle={Styles.Main.button} title='Playlist' onPress={() => setCurrentScreen(1)}/>
             <Button buttonStyle={Styles.Main.button} title='Artist' onPress={() => setCurrentScreen(2)}/>
+            <Button buttonStyle={Styles.Main.button} title='Album' onPress={() => setCurrentScreen(3)}/>
         </View>
         )
     }
     const items = [
         Main,
         Playlist,
-        LibraryArtist
+        LibraryArtist,
+        LibraryAlbum
     ]
     useEffect(() => {
       if (prevScreen === null) {
