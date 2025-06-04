@@ -125,7 +125,7 @@ export default function NowPlaying(){
     }
 
     useEffect(()=> {
-       ctx.BeefWeb.addEventListener('update', async (e) => onUpdate(await e));
+       ctx.BeefWeb.addEventListener('update',onUpdate);
        ctx.Settings.PROPS.DYNAMIC_BACKGROUND.get().then(setDynamicBackground)
        forceUpdate();
     }, [])

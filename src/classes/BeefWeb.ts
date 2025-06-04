@@ -7,7 +7,15 @@ import { PlaylistsResponse } from "./responses/Playlists";
 import PlayQueueResponse from "./responses/PlayQueue";
 import { RequestStatus, WebRequest } from "./WebRequest";
 import axios, { AxiosResponse } from "axios";
-
+import { AudioPro, AudioProContentType, AudioProEvent, AudioProEventType,  } from "react-native-audio-pro";
+type AudioProTrack = {
+    id:string;
+    url:string|number;
+    title:string;
+    artwork:string;
+    album:string;
+    artist:string;
+}
 export enum Status {
     Offline,
     Online,
@@ -41,7 +49,8 @@ class Connection {
 type EventHandler<T = any> = (data: T) => void;
 
 export type BeefWebEvents = {
-    update: AsyncWebPlayerResponse
+    update: WebPlayerResponse
+    songChange: WebPlayerResponse
 }
 
 export default class Beefweb {
@@ -58,7 +67,20 @@ export default class Beefweb {
     private mainInterval?:number;
 
     constructor(){
-        // this.start()
+        this.start()
+        AudioPro.configure({
+            contentType: AudioProContentType.SPEECH,
+            debug: true
+        })
+        this.addEventListener('songChange', (e) => this.updateNotificationPannel(e, this.albumArtiURI))
+        AudioPro.addEventListener(event => {
+            switch(event.type){
+                case AudioProEventType.REMOTE_NEXT:
+                    this.onNotificationSkip(event.payload);
+                case AudioProEventType.REMOTE_PREV:
+                    this.onNotificationBack(event.payload)
+            }
+        })
     }
 
     addEventListener<K extends keyof BeefWebEvents>(
@@ -91,8 +113,47 @@ export default class Beefweb {
         if(!this.mainInterval) this.mainInterval = setInterval(() => this.onUpdate(), 1000) 
     }   
 
-    private onUpdate(){
-        this.dispatchEvent("update", this.getPlayer())
+    private async onUpdate(){
+        const player = await this.getPlayer()
+        if(!player) return
+        this.dispatchEvent("update",player)
+    }
+    private async updateNotificationPannel(player: WebPlayerResponse, albumArtiURI: string){
+        console.log("Updating Notification")
+        if(!player) return
+        const activeItem = player.data.activeItem
+        const columns = activeItem.columns
+        const track = this.createTrackNotification({
+            id: 'track-' + activeItem.index,
+            url: require('../assets/audio/silence.mp3'),
+            title: columns.title,
+            artwork: albumArtiURI,
+            artist: columns.artist,
+            album: columns.album
+        })
+        if(track) {
+            AudioPro.play(track, {autoPlay: false})
+        }
+        else console.warn("Invalid Track")
+    }
+    private createTrackNotification(track: AudioProTrack){
+        const validate = (value?: string|number) => typeof value !== 'undefined' && value !== null && value !== ""    
+        if(
+            validate(track.album) &&
+            validate(track.artist) &&
+            validate(track.artwork) &&
+            validate(track.id) &&
+            validate(track.title) &&
+            validate(track.url) 
+        ) return track;
+        return null
+    }
+
+    private onNotificationSkip(event: AudioProEvent["payload"] ){
+        this.skip()
+    }
+    private onNotificationBack(event: AudioProEvent["payload"]){
+        this.back()
     }
 
     private fromRequestStatus(status: RequestStatus){
@@ -111,6 +172,8 @@ export default class Beefweb {
             const playerResponse = await this.createWebRequest<PlayerResponse>(response, PlayerResponse);
             if(this.lastPlayer) {
                 playerResponse.data.sameSong = playerResponse.data.compare(this.lastPlayer)
+                console.log("lookat me please:", playerResponse.data.sameSong)
+                if(!playerResponse.data.sameSong) this.dispatchEvent("songChange", playerResponse)
             }
             this.lastPlayer = playerResponse.data;
             
@@ -201,6 +264,9 @@ export default class Beefweb {
         await this._post(this.combineUrl("player", "next"))
     }
     
+    async back(){
+        await this._post(this.combineUrl("player", "previous"))
+    }
     async removeFromQueue(plref: string|number, itemIndex: number, queueIndex: number){
         await this._post(this.combineUrl("playqueue", "remove"), {plref, itemIndex, queueIndex})
     }
