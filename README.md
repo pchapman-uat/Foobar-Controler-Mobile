@@ -1,5 +1,6 @@
 # Foobar Controller Mobile (Name Pending)
-> **Warning:** This project is still in early testing and is not ready for release
+> [!WARNING]
+> This project is still in early testing and is not ready for release
 
 Foobar Controller Mobile is an app that uses the [BeefWeb API](https://github.com/hyperblast/beefweb) to allow users to control Foobar2000 remotely.
 
@@ -10,7 +11,8 @@ UAT does not own this project; however, it has been granted a non-exclusive, roy
 Information in the README and LICENSE may not properly reflect the above at the moment. 
 
 ## Setup
-> **Caution:** Due to this project being in early testing, the setup may be incomplete or inaccurate.
+> [!CAUTION]
+>  Due to this project being in early testing, the setup may be incomplete or inaccurate.
 
 - [Foobar2000](https://www.foobar2000.org) – Tested on v2.23.5 32-bit
 - [Beefweb](https://github.com/hyperblast/beefweb) – Tested on v0.10
@@ -21,7 +23,8 @@ Below is information regarding the assets and libraries used for this project.
 
 ### Assets
 
-> **Note:** Assets are subject to change. All rights belong to their original owners. This application is not ready for release, so its license may prohibit the use of these icons.
+> [!NOTE]
+> Assets are subject to change. All rights belong to their original owners. This application is not ready for release, so its license may prohibit the use of these icons.
 
 - [Connection](./src/assets/navigation/connection.svg) – [SVG Repo](https://www.svgrepo.com/svg/513070/wifi-1029) *(Public Domain)*
 - [Library](./src/assets/navigation/library.svg) – [SVG Repo](https://www.svgrepo.com/svg/532810/folder) *(CC Attribution License)*
@@ -34,7 +37,8 @@ Below is information regarding the assets and libraries used for this project.
 - App Icon and Splash Screen – Expo Go provides default placeholder images for the app icon and splash screen when no custom assets are specified in [`app.json`](./app.json).
 
 ### Libraries
-> **Note:** Due to this project being early in development the libraries below will likely be inaccurate, please reference [`package.json`](./package.json) for exact modules. 
+> [!NOTE]
+>  Due to this project being early in development the libraries below will likely be inaccurate, please reference [`package.json`](./package.json) for exact modules. 
 
 - `@react-native-async-storage/async-storage`: `^2.1.2`,
     - Storage of settings
