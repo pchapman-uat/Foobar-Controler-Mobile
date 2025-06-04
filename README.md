@@ -28,8 +28,9 @@ Below is information regarding the assets and libraries used for this project.
 - [Now Playing](./src/assets/navigation/nowPlaying.svg) – [SVG Repo](https://www.svgrepo.com/svg/532708/music) *(CC Attribution License)*
 - [Playback Queue](./src/assets/navigation/playbackQueue.svg) – [SVG Repo](https://www.svgrepo.com/svg/362993/queue-bold) *(MIT License)*
 - [Menu](./src/assets/menu.svg) – [SVG Repo](https://www.svgrepo.com/svg/532195/menu) *(CC Attribution License)*
+- [Album](./src/assets/library/album.svg) - [SVG Repo](https://www.svgrepo.com/svg/324902/album-open) *(MIT License)*
 - [Loading](./src/assets/lottie/loading.lottie.json) – [LottieFiles](https://lottiefiles.com/free-animation/music-play-Izr4xf80lB) *(Lottie Simple License)*
-<!-- https://www.svgrepo.com/svg/324902/album-open -->
+
 - App Icon and Splash Screen – Expo Go provides default placeholder images for the app icon and splash screen when no custom assets are specified in [`app.json`](./app.json).
 
 ### Libraries
@@ -49,6 +50,8 @@ Below is information regarding the assets and libraries used for this project.
     - Web Request to the Beefweb API
 - `expo`: `~53.0.9`,
     - Framework
+- `expo-dev-client`: `^5.1.8`
+    - Dev Backend
 - `expo-screen-orientation`: `^8.1.6`, 
     - Horizontal and Vertical views
 - `lottie-react-native`: `^7.2.2`,
@@ -57,8 +60,12 @@ Below is information regarding the assets and libraries used for this project.
     - Framework
 - `react-native`: `0.79.2`,
     - Framework
+- `react-native-audio-pro`: `^9.9.1`,
+    - Audio Controler in notification bar/lock screen
 - `react-native-elements`: `^3.4.3`,
     - UI Elements
+- `react-native-network-info`: `^5.2.1`,
+    - Finding aviaiable servers
 - `react-native-safe-area-context`: `^5.4.0`,
     - UI Elements
 - `react-native-svg`: `^15.12.0`,
