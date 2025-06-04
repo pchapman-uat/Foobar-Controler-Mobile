@@ -3,7 +3,6 @@ import { TouchableOpacity, Image, View, Text, FlatList, Modal } from "react-nati
 import { Icon } from "managers/ImageManager";
 import { useStyles } from "managers/StyleManager";
 import Beefweb from "classes/BeefWeb";
-import { Columns } from "classes/responses/Player";
 import AppContext from "AppContext";
 import { WebPlayerResponse } from "managers/TypeManager";
 

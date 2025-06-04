@@ -1,5 +1,5 @@
+import { NetworkInfo } from "react-native-network-info";
 import { AsyncWebPlayerResponse, WebPlayerResponse } from "../managers/TypeManager";
-import { items } from "./NavBar";
 import { AddPlaylistResponse } from "./responses/AddPlaylist";
 import { Columns, PlayerResponse } from "./responses/Player";
 import { PlaylistItemsResponse } from "./responses/PlaylistItems";
@@ -67,7 +67,7 @@ export default class Beefweb {
     private mainInterval?:number;
 
     constructor(){
-        this.start()
+        // this.start()
         AudioPro.configure({
             contentType: AudioProContentType.SPEECH,
             debug: true
@@ -82,7 +82,39 @@ export default class Beefweb {
             }
         })
     }
+    async findBeefwebServer(port = 8880) {
+        const base = await this.getLocalSubnetBase();
+        const ips = [];
 
+        for (let i = 1; i <= 254; i++) {
+            ips.push(`${base}.${i}`);
+        }
+        
+        const checkPromises = ips.map((ip) => this.checkServer(ip, port));
+
+        const results = await Promise.all(checkPromises);
+        const found = results.filter((ip) => ip !== null);
+        return found
+    }
+    private async getLocalSubnetBase() {
+        const ipAddress = await NetworkInfo.getIPV4Address();
+        if (!ipAddress) throw new Error('Unable to get local IP address.');
+        const base = ipAddress.split('.').slice(0, 3).join('.');
+        return base;
+    }
+    private async checkServer(ip:string, port = 8880, timeout = 500) {
+        try {
+            const response = await axios.get(`http://${ip}:${port}/api/player`, {
+                timeout,
+            });
+            if (response?.data?.player?.info?.name) {
+                return ip;
+            }
+        } catch (e) {
+
+        }
+        return null;
+    }
     addEventListener<K extends keyof BeefWebEvents>(
         event: K,
         handler: EventHandler<BeefWebEvents[K]>
