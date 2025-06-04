@@ -5,15 +5,20 @@ import LibraryMain from "../screens/home/LibraryMain";
 import NowPlaying from "../screens/home/NowPlaying";
 import PlaybackQueue from "../screens/home/PlaybackQueue";
 
-export type ScreenName = 'Connection' | 'NowPlaying' | 'Library' | 'PlaybackQueue';
+export enum Screens {
+  Connection,
+  Library,
+  NowPlaying,
+  PlaybackQueue,
+} 
 
 type Icon = React.FC<SvgProps>;
 
 class NavBarItem {
   icon: Icon;
-  location: ScreenName;
+  location: string;
   screen: () => React.JSX.Element
-  constructor(icon: Icon, location: ScreenName, screen: () => React.JSX.Element ) {
+  constructor(icon: Icon, location: string, screen: () => React.JSX.Element ) {
     this.icon = icon;
     this.location = location;
     this.screen = screen;

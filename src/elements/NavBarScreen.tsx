@@ -16,7 +16,7 @@ const NavBarScreen: React.FC<NavBarScreenProps> = ({onNavigate, currentScreen, c
   return (
     <SafeAreaProvider>
       <SafeAreaView style={Styles.Main.view}>
-        <StatusBar navigator={navigator}/>
+        <StatusBar navigator={navigator} onNavigate={onNavigate}/>
         <React.Fragment>
           {children}
         </React.Fragment>

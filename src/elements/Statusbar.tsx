@@ -9,12 +9,14 @@ import { RootStackParamList } from "App";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useStyles } from "managers/StyleManager";
 import { getColor } from "managers/ThemeManager";
+import { Screens } from "classes/NavBar";
 
 type StatusBarProps = {
     navigator: NativeStackNavigationProp<RootStackParamList, 'Home'>
+    onNavigate: (screen: number) => void;
 }
 
-const StatusBar: React.FC<StatusBarProps> = ({navigator}) => {
+const StatusBar: React.FC<StatusBarProps> = ({navigator, onNavigate}) => {
     const ctx = useContext(AppContext);
     const Style = useStyles('StatusBar')
     const [status, setStatus] = useState<Status>(Status.Offline)
@@ -53,11 +55,13 @@ const StatusBar: React.FC<StatusBarProps> = ({navigator}) => {
 
     return (
         <View style={Style.StatusBar.StatusBarContainer}>
-            <TouchableOpacity onPress={forceUpdate}>
+            <TouchableOpacity onPress={forceUpdate} >
                 <View style={{...Style.StatusBar.StatusCircle, backgroundColor: getStatusColor(status)}}>
                 </View>
             </TouchableOpacity>
-            <Text style={Style.StatusBar.StatusText}>{title} - {album}</Text>
+            <TouchableOpacity onPress={()=> onNavigate(Screens.NowPlaying)} style={{ flex: 1 }}>
+                <Text style={Style.StatusBar.StatusText}>{title} - {album}</Text>
+            </TouchableOpacity>
             <TouchableOpacity>
                 <MenuSVG height={40} width={40} color={getColor(ctx.theme, 'textPrimary')} onPress={()=>navigator.navigate('Settings')}/>
             </TouchableOpacity>

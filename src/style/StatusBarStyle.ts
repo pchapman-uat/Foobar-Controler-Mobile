@@ -1,5 +1,5 @@
 import { AppTheme } from "classes/Settings";
-import { getColor, getTheme } from "managers/ThemeManager";
+import { getColor } from "managers/ThemeManager";
 import { StyleSheet } from "react-native";
 
 export default (theme: AppTheme) => StyleSheet.create({
@@ -19,8 +19,6 @@ export default (theme: AppTheme) => StyleSheet.create({
         verticalAlign: 'middle',
         paddingLeft: '1%',
         color: getColor(theme, 'textPrimary'),
-        flex: 1,
-        flexShrink: 1,
     },
     MenuIcon: {
         width: 40
