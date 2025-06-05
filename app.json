@@ -2,7 +2,7 @@
   "expo": {
     "name": "Foobar Controler Mobile",
     "slug": "fooobar-controler-mobile",
-    "version": "1.0.0",
+    "version": "0.1.0",
     "orientation": "default",
     "icon": "./src/assets/icon.png",
     "userInterfaceStyle": "light",
@@ -22,7 +22,9 @@
       },
       "edgeToEdgeEnabled": true,
       "package": "com.pchapman.foobarcontollermobile",
-      "permissions": ["FOREGROUND_SERVICE"],
+      "permissions": [
+        "FOREGROUND_SERVICE"
+      ],
       "services": {
         "musicservice": {
           "name": "MusicService",
@@ -32,6 +34,11 @@
     },
     "web": {
       "favicon": "./src/assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "79fec63c-c71e-41ab-8eb3-4e959253baae"
+      }
     }
   }
 }

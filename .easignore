@@ -1,0 +1,19 @@
+node_modules
+
+# iOS and Android folders
+ios
+android
+
+# Logs and cache
+npm-debug.log
+yarn-error.log
+.expo
+.expo-shared
+
+# Build artifacts
+dist
+build
+web-build
+
+# IDE/editor configs
+.vscode
