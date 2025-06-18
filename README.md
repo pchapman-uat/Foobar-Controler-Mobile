@@ -32,6 +32,7 @@ Below is information regarding the assets and libraries used for this project.
 - [Playback Queue](./src/assets/navigation/playbackQueue.svg) – [SVG Repo](https://www.svgrepo.com/svg/362993/queue-bold) *(MIT License)*
 - [Menu](./src/assets/menu.svg) – [SVG Repo](https://www.svgrepo.com/svg/532195/menu) *(CC Attribution License)*
 - [Album](./src/assets/library/album.svg) - [SVG Repo](https://www.svgrepo.com/svg/324902/album-open) *(MIT License)*
+- [Stars](./src/assets/stars/) - [Google Fonts](https://fonts.google.com/icons?selected=Material+Symbols+Rounded:star_half:FILL@1;wght@400;GRAD@0;opsz@24&icon.query=star&icon.size=24&icon.color=%23000000&icon.platform=web&icon.style=Rounded) *(Apache License Version 2.0)*
 - [Loading](./src/assets/lottie/loading.lottie.json) – [LottieFiles](https://lottiefiles.com/free-animation/music-play-Izr4xf80lB) *(Lottie Simple License)*
 
 - App Icon and Splash Screen – Expo Go provides default placeholder images for the app icon and splash screen when no custom assets are specified in [`app.json`](./app.json).

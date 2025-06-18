@@ -8,6 +8,7 @@ import { useStyles } from "managers/StyleManager";
 import { getColor } from "managers/ThemeManager";
 import { Button } from "react-native-elements";
 import { formatTime } from "helpers/helpers";
+import { EmptyStar, FullStar, HalfStar } from "managers/SVGManager";
 
 export default function NowPlaying(){
     const ctx = useContext(AppContext);
@@ -21,10 +22,12 @@ export default function NowPlaying(){
     const [length, setLength] = useState<number>()
 
     const [isMuted, setIsMuted] = useState(false);
-    const [volumeMax, setVolumeMax] = useState(0);
-    const [volumeMin, setVolumeMin] = useState(0);
+    const [volumeMax, setVolumeMax] = useState<number>();
+    const [volumeMin, setVolumeMin] = useState<number>();
     const [volumeType, setVolumeType] = useState("");
     const [volumeValue, setVolumeValue] = useState<number>();
+    const [rating, setRating] = useState<number>()
+    
 
     const onUpdate = async (response: WebPlayerResponse, firstTime:boolean = false) => {
         if (response) {
@@ -45,6 +48,7 @@ export default function NowPlaying(){
             setVolumeMax(data.volume.max)
             setVolumeMin(data.volume.min)
             setVolumeType(data.volume.type)
+            setRating(activeItem.columns.rating)
   
         }
     };
@@ -79,7 +83,7 @@ export default function NowPlaying(){
         }
         return (
             <Slider
-                style={{width:'100%'}}
+                style={{width: '100%',flexShrink: 1}}
                 value={elapsed}
                 minimumTrackTintColor={getColor(ctx.theme, 'buttonPrimary')}
                 thumbTintColor={getColor(ctx.theme, 'buttonPrimary')}
@@ -91,8 +95,8 @@ export default function NowPlaying(){
         )
     }
 
-    const volumeBar = (max: number, min:number, value?:number, intensity:number = 0.45) => {
-        if (value == null) return;
+    const volumeBar = (max?: number, min?:number, value?:number, intensity:number = 0.45) => {
+        if (value == null || max == null || min == null) return;
         value = Math.max(min, Math.min(value, max));
 
         const minGain = Math.pow(10, min / 20);
@@ -122,6 +126,29 @@ export default function NowPlaying(){
         )
     }
 
+    const ratingEle = (rating: number = 0) => {
+        var stars = [] 
+        const size = Styles.NowPlaying.ratingStar.width;
+        for(let i=0; i<5; i++){
+            var _rating = rating - i
+            if(_rating >= 1) stars.push((
+                <FullStar width={size} height={size} key={i} color={getColor(ctx.theme, 'buttonPrimary')}/>
+            ));
+            else if(_rating > 0) stars.push((
+                <HalfStar width={size} height={size} key={i} color={getColor(ctx.theme, 'buttonPrimary')}/>
+            ));
+            else stars.push((
+                <EmptyStar  width={size} height={size} key={i} color={getColor(ctx.theme, 'buttonPrimary')}/>
+            ));
+        }
+        return (
+            <View style={Styles.NowPlaying.ratingContainer}>
+                {stars}
+            </View>
+            
+        )
+    }
+
     useEffect(()=> {
         ctx.BeefWeb.addEventListener('update',onUpdate);
         ctx.Settings.PROPS.DYNAMIC_BACKGROUND.get().then(setDynamicBackground)
@@ -144,13 +171,15 @@ export default function NowPlaying(){
                     <Text style={Styles.NowPlaying.npText}>{artist}</Text>
                     <Text style={Styles.NowPlaying.npText}>{album}</Text>
                 </View>
+                {ratingEle(rating)}
                 <View style={Styles.NowPlaying.controlsContainer}>
                     <View style={Styles.NowPlaying.progressBarContainer}>
                         <View style={Styles.NowPlaying.progressBarvalues}>
                             <Text style={Styles.NowPlaying.npText}>{formatTime(elapsed)}</Text>
+                            {progressBar(elapsed, length)}
                             <Text style={Styles.NowPlaying.npText}>{formatTime(length)}</Text>
                         </View>
-                        {progressBar(elapsed, length)}
+                        
                     </View>
                     
                     <View style={Styles.NowPlaying.buttonContainer}>

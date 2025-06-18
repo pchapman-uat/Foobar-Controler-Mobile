@@ -38,11 +38,20 @@ export default (theme: AppTheme, ori: Orientation) =>  {
         padding: 10
     },
     progressBarContainer: {
-
+        display: 'flex'
     },
     progressBarvalues: {
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-between'
+    },
+    ratingContainer: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'center',
+    },
+    ratingStar: {
+        width: 30,
+        height: 30
     }
 })}

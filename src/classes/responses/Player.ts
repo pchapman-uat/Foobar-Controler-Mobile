@@ -1,4 +1,4 @@
-export type RawColumns = [boolean, boolean, string, string, string, string, number,number, number, string]
+export type RawColumns = [boolean, boolean, string, string, string, string, number,number, number, string, number]
 export type PlaybackState = 'stopped' | 'playing' | 'paused' | undefined
 export class PlayerResponse {
     info: PlayerInfo;
@@ -53,6 +53,7 @@ export class Columns {
     path: string;
     playlistId?: string;
     songIndex?: number
+    rating?:number
 
     private static params = [
         "%isplaying%",
@@ -65,6 +66,7 @@ export class Columns {
         "%length_seconds%",
         "%playback_time_seconds%",
         "%path%",
+        "%rating%"
     ]
 
     constructor(columns: RawColumns, playlistId?: string, songIndex?: number){
@@ -78,6 +80,7 @@ export class Columns {
         this.length = columns[7];
         this.elapsed = columns[8];
         this.path = columns[9];
+        this.rating = columns[10];
         this.playlistId = playlistId;
         this.songIndex = songIndex
     }
