@@ -40,9 +40,7 @@ export default function NowPlaying(){
             if (firstTime || !response.data.sameSong) {
                 setAlbumArt(ctx.BeefWeb.albumArtiURI);
             } 
-            if(!firstTime){
-                setVolumeValue(data.volume.value)
-            }
+            setVolumeValue(data.volume.value)
             setIsMuted(data.volume.isMuted)
             setVolumeMax(data.volume.max)
             setVolumeMin(data.volume.min)
@@ -72,7 +70,7 @@ export default function NowPlaying(){
     }
 
     const progressBar = (_elapsed?: string|number, _length?: string|number) => {
-        if(!_elapsed || !_length) return;
+        if (_elapsed == null || _length == null) return;
         const elapsed = typeof _elapsed == 'string' ? Number.parseFloat(_elapsed) :_elapsed;
         const length = typeof _length == 'string' ? Number.parseFloat(_length) :_length;
         const onSeekChange = (pos: number) => {
@@ -94,7 +92,7 @@ export default function NowPlaying(){
     }
 
     const volumeBar = (max: number, min:number, value?:number, intensity:number = 0.45) => {
-        if(!value) return;
+        if (value == null) return;
         value = Math.max(min, Math.min(value, max));
 
         const minGain = Math.pow(10, min / 20);
