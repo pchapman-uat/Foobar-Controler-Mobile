@@ -55,18 +55,17 @@ export default function App() {
     ctx.Settings.PROPS.REMEMBER_IP.set(value)
   }
   useEffect(() => {
-    console.log("Running")
-    const PROPS = ctx.Settings.PROPS;
-    PROPS.REMEMBER_IP.get().then(e => {
-      setRememberIp(e ??false)
-      if(e){
-        PROPS.IP_ADDRESS.get().then(e => {
-          setIP(e ?? "");
-          PROPS.AUTOMATIC_UPDATES.get().then(e => ctx.BeefWeb.setState(e))
-        })
-      }
-    })
-  }, [])
+    console.log("Running");
+    const Settings = ctx.Settings;
+
+    (async () => {
+      setRememberIp(await Settings.get("REMEMBER_IP"));
+      setIP((await Settings.get("IP_ADDRESS")) ?? "");
+      ctx.BeefWeb.updateFrequency = await Settings.get("UPDATE_FREQUENCY")
+      ctx.BeefWeb.setState(await Settings.get("AUTOMATIC_UPDATES"));
+    })();
+  }, []);
+
   const startScan = async () => {
     setModalVisible(true)
     const result = await ctx.BeefWeb.findBeefwebServer();

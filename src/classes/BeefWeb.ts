@@ -8,6 +8,7 @@ import PlayQueueResponse from "./responses/PlayQueue";
 import { RequestStatus, WebRequest } from "./WebRequest";
 import axios, { AxiosResponse } from "axios";
 import { AudioPro, AudioProContentType, AudioProEvent, AudioProEventType,  } from "react-native-audio-pro";
+import { SettingsDefaults } from "./Settings";
 type AudioProTrack = {
     id:string;
     url:string|number;
@@ -64,6 +65,7 @@ export default class Beefweb {
     con = new Connection();
     state = State.Disconnected
     readonly timeout = { timeout: 5000 };
+    updateFrequency = SettingsDefaults.UPDATE_FREQUENCY
     lastPlayer?: PlayerResponse;
     readonly mobilePlaylistTitle = "Mobile Playlist"
 
@@ -71,40 +73,41 @@ export default class Beefweb {
         [K in keyof BeefWebEvents]?: Array<EventHandler<BeefWebEvents[K]>>;
     } = {};
 
-    private mainInterval?:number;
+    private mainInterval?:ReturnType<typeof setInterval>;
 
     constructor(){
         this.init()
     }
 
-    public start(){
-        console.log(this)
+    private start(){
+        console.warn(this.updateFrequency)
         if(!this.mainInterval) {
-            this.mainInterval = setInterval(() => this.onUpdate(), 1000);
+            this.mainInterval = setInterval(() => this.onUpdate(), this.updateFrequency);
             this.state = State.Running;
         }
     }   
 
-    public stop(restart = false){
-        console.log(this.mainInterval)
-        if(this.mainInterval) {
-            clearInterval(this.mainInterval)
-            this.mainInterval = undefined;
-            console.warn("Clearing interval")
-        }
+    private stop(interval?:ReturnType<typeof setInterval>,restart = false){
+        console.log("HELLO??",interval)
+        if(interval) clearInterval(interval)
         this.state = State.Stopped
-        this.onUpdate()
+        // this.onUpdate()
         if(restart) this.start()
     }
 
-    public setState(t: boolean){
+    setState = (t: boolean) => {
+        console.warn("LOOK AT ME!!!", this.mainInterval)
         try {
             if(t) this.start();
-            else this.stop()
+            else this.stop(this.mainInterval)
         } catch(e) {
             console.error(e)
         }
 
+    }
+
+    restart = () => {
+        this.stop(this.mainInterval, true)
     }
 
     private init(){

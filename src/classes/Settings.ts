@@ -22,12 +22,13 @@ enum AppTheme {
 }
 const themes = Object.keys(AppTheme).filter(k => isNaN(Number(k))) as (keyof typeof AppTheme)[];
 
-const defaults = {
+const SettingsDefaults = {
     IP_ADDRESS: "",
     REMEMBER_IP: false,
     THEME: AppTheme.Light,
     DYNAMIC_BACKGROUND: false,
-    AUTOMATIC_UPDATES: true
+    AUTOMATIC_UPDATES: true,
+    UPDATE_FREQUENCY: 1000
 }
 
 interface SettingPropTypes {
@@ -36,15 +37,17 @@ interface SettingPropTypes {
     THEME: AppTheme;
     DYNAMIC_BACKGROUND: boolean;
     AUTOMATIC_UPDATES: boolean;
+    UPDATE_FREQUENCY: number;
 }
 
 
 class SettingProps {
-    readonly IP_ADDRESS = new SettingsProperty<string>("ip_address", defaults.IP_ADDRESS);
-    readonly REMEMBER_IP = new SettingsProperty<boolean>("remember_ip", defaults.REMEMBER_IP);
-    readonly THEME = new SettingsProperty<AppTheme>("app_theme", defaults.THEME);
-    readonly DYNAMIC_BACKGROUND = new SettingsProperty<boolean>("dynamic_background", defaults.DYNAMIC_BACKGROUND);
-    readonly AUTOMATIC_UPDATES = new SettingsProperty<boolean>("automatic_updates", defaults.AUTOMATIC_UPDATES);
+    readonly IP_ADDRESS = new SettingsProperty<string>("ip_address", SettingsDefaults.IP_ADDRESS);
+    readonly REMEMBER_IP = new SettingsProperty<boolean>("remember_ip", SettingsDefaults.REMEMBER_IP);
+    readonly THEME = new SettingsProperty<AppTheme>("app_theme", SettingsDefaults.THEME);
+    readonly DYNAMIC_BACKGROUND = new SettingsProperty<boolean>("dynamic_background", SettingsDefaults.DYNAMIC_BACKGROUND);
+    readonly AUTOMATIC_UPDATES = new SettingsProperty<boolean>("automatic_updates", SettingsDefaults.AUTOMATIC_UPDATES);
+    readonly UPDATE_FREQUENCY = new SettingsProperty<number>('update_frequency', SettingsDefaults.UPDATE_FREQUENCY)
 }
 class SettingsProperty<T> {
     readonly key: string;
@@ -88,4 +91,4 @@ class SettingsProperty<T> {
 
 }
 
-export {AppTheme, defaults, SettingProps, SettingsProperty, themes}
+export {AppTheme, SettingsDefaults, SettingProps, SettingsProperty, themes}

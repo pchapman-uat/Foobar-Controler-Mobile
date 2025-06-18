@@ -34,7 +34,7 @@ export default function NowPlaying(){
             setAlbum(columns.album);
             setArtist(columns.artist);
             setTitle(columns.title);
-            setElapsed(columns.elapsed);
+            setElapsed(activeItem.position);
             setLength(columns.length);
 
             if (firstTime || !response.data.sameSong) {
@@ -73,8 +73,8 @@ export default function NowPlaying(){
 
     const progressBar = (_elapsed?: string|number, _length?: string|number) => {
         if(!_elapsed || !_length) return;
-        const elapsed = typeof _elapsed == 'string' ? Number.parseInt(_elapsed) :_elapsed;
-        const length = typeof _length == 'string' ? Number.parseInt(_length) :_length;
+        const elapsed = typeof _elapsed == 'string' ? Number.parseFloat(_elapsed) :_elapsed;
+        const length = typeof _length == 'string' ? Number.parseFloat(_length) :_length;
         const onSeekChange = (pos: number) => {
             console.warn("Seeking")
             ctx.BeefWeb.setPosition(pos)
