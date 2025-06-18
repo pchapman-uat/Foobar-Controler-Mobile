@@ -1,20 +1,22 @@
 export type RawColumns = [boolean, boolean, string, string, string, string, number,number, number, string]
-
+export type PlaybackState = 'stopped' | 'playing' | 'paused' | undefined
 export class PlayerResponse {
     info: PlayerInfo;
     activeItem: ActiveItem;
     volume:Volume;
+    playbackState: PlaybackState
     sameSong = false;
-        constructor(info: PlayerInfo, activeItem: ActiveItem, columns: RawColumns, volume:Volume) {
+        constructor(info: PlayerInfo, activeItem: ActiveItem, columns: RawColumns, volume:Volume, playbackState:PlaybackState) {
         this.info = info;
         this.activeItem = activeItem;
         this.activeItem.columns = new Columns(columns, activeItem.playlistId)
         this.volume = volume;
+        this.playbackState = playbackState
     }
 
     static fromJSON(json: any): PlayerResponse {
         console.log("Creating from JSON")
-        return new PlayerResponse(json.player.info, json.player.activeItem, json.player.activeItem.columns, json.player.volume);
+        return new PlayerResponse(json.player.info, json.player.activeItem, json.player.activeItem.columns, json.player.volume, json.player.playbackState);
     }
     compare(old:PlayerResponse){
         const oldColumns = old.activeItem.columns;

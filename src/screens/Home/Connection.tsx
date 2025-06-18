@@ -54,13 +54,16 @@ export default function App() {
     if(value) ctx.Settings.PROPS.IP_ADDRESS.set("")
     ctx.Settings.PROPS.REMEMBER_IP.set(value)
   }
-  const onLoad = useEffect(() => {
+  useEffect(() => {
     console.log("Running")
     const PROPS = ctx.Settings.PROPS;
     PROPS.REMEMBER_IP.get().then(e => {
       setRememberIp(e ??false)
       if(e){
-        PROPS.IP_ADDRESS.get().then(e => setIP(e ?? ""))
+        PROPS.IP_ADDRESS.get().then(e => {
+          setIP(e ?? "");
+          PROPS.AUTOMATIC_UPDATES.get().then(e => ctx.BeefWeb.setState(e))
+        })
       }
     })
   }, [])

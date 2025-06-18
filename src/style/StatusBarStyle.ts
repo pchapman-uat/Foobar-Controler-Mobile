@@ -22,5 +22,10 @@ export default (theme: AppTheme) => StyleSheet.create({
     },
     MenuIcon: {
         width: 40
+    },
+    StatusTextContainer: { 
+        flex: 1, 
+        flexDirection: 'row', 
+        justifyContent: 'center' 
     }
 })

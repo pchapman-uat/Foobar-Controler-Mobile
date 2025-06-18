@@ -11,6 +11,7 @@ import { Button, Switch } from "react-native-elements";
 export default function SettingsScreen() {
     const [theme, setTheme] = useState<AppTheme>()
     const [dynamicBackground, setDynamicBackground] = useState<boolean>()
+    const [automaticUpdates, setAutomaticUpdates] = useState<boolean>()
     const Styles = useStyles('Main')
     const ctx = useContext(AppContext);
 
@@ -22,11 +23,14 @@ export default function SettingsScreen() {
         ctx.setTheme(theme);
         if(dynamicBackground == null) return
         PROPS.DYNAMIC_BACKGROUND.set(dynamicBackground)
-
+        ctx.BeefWeb.setState(automaticUpdates??ctx.Settings.getDefault('AUTOMATIC_UPDATES'))
+        PROPS.AUTOMATIC_UPDATES.set(automaticUpdates)
     }
+
     useEffect(() => {
-        ctx.Settings.PROPS.THEME.get().then(val => setTheme(val));
-        ctx.Settings.PROPS.DYNAMIC_BACKGROUND.get().then(setDynamicBackground)
+        ctx.Settings.get('THEME').then(setTheme);
+        ctx.Settings.get('DYNAMIC_BACKGROUND').then(setDynamicBackground)
+        ctx.Settings.get('AUTOMATIC_UPDATES').then(setAutomaticUpdates)
     }, []);
 
     return (
@@ -46,7 +50,15 @@ export default function SettingsScreen() {
                         trackColor={{true: getColor(ctx.theme, 'buttonPrimary')}}
                     />
                 </View>
-               
+                <View style={Styles.Main.switchContainer}>
+                    <Text style={Styles.Main.swtichLable}>Automatic Updates</Text>
+                    <Switch
+                        thumbColor={getColor(ctx.theme, 'buttonPrimary')}
+                        value={automaticUpdates}
+                        onValueChange={setAutomaticUpdates}
+                        trackColor={{true: getColor(ctx.theme, 'buttonPrimary')}}
+                    />
+                </View>
             </View>
             <Button buttonStyle={Styles.Main.button} title='Save' onPress={onSave}/>
         </SafeAreaView>

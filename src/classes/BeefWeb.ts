@@ -22,6 +22,12 @@ export enum Status {
     Error
 }
 
+export enum State {
+    Running,
+    Stopped,
+    Disconnected
+}
+export
 class Connection {
     protected ip?: string;
     protected port?: number;
@@ -56,6 +62,7 @@ export type BeefWebEvents = {
 export default class Beefweb {
     status = Status.Offline;
     con = new Connection();
+    state = State.Disconnected
     readonly timeout = { timeout: 5000 };
     lastPlayer?: PlayerResponse;
     readonly mobilePlaylistTitle = "Mobile Playlist"
@@ -67,7 +74,40 @@ export default class Beefweb {
     private mainInterval?:number;
 
     constructor(){
-        // this.start()
+        this.init()
+    }
+
+    public start(){
+        console.log(this)
+        if(!this.mainInterval) {
+            this.mainInterval = setInterval(() => this.onUpdate(), 1000);
+            this.state = State.Running;
+        }
+    }   
+
+    public stop(restart = false){
+        console.log(this.mainInterval)
+        if(this.mainInterval) {
+            clearInterval(this.mainInterval)
+            this.mainInterval = undefined;
+            console.warn("Clearing interval")
+        }
+        this.state = State.Stopped
+        this.onUpdate()
+        if(restart) this.start()
+    }
+
+    public setState(t: boolean){
+        try {
+            if(t) this.start();
+            else this.stop()
+        } catch(e) {
+            console.error(e)
+        }
+
+    }
+
+    private init(){
         AudioPro.configure({
             contentType: AudioProContentType.SPEECH,
             debug: true
@@ -141,11 +181,8 @@ export default class Beefweb {
         this.listeners[event]!.forEach(handler => handler(data));
     }
 
-    public start(){
-        if(!this.mainInterval) this.mainInterval = setInterval(() => this.onUpdate(), 1000) 
-    }   
-
     private async onUpdate(){
+        console.warn("Look at me!")
         const player = await this.getPlayer()
         if(!player) return
         this.dispatchEvent("update",player)

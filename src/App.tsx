@@ -27,15 +27,15 @@ export default function App() {
   const settings = useMemo(() => new Settings(), []);
   const orientation = useOrientation()
   const contextValue = useMemo<AppContextType>(
-  () => ({
-    BeefWeb: beefWeb,
-    Settings: settings,
-    theme,
-    setTheme,
-    orientation
-  }),
-  [theme, orientation]
-);
+    () => ({
+      BeefWeb: beefWeb,
+      Settings: settings,
+      theme,
+      setTheme,
+      orientation
+    }),
+    [theme, orientation]
+  );
   return (
     <AppContext.Provider value={contextValue}>
         <NavigationContainer>
