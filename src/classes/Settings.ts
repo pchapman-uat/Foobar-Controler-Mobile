@@ -1,4 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Screens } from "enum/Screens";
 class Settings {
     readonly PROPS: { [K in keyof SettingPropTypes]: SettingsProperty<SettingPropTypes[K]> } = new SettingProps() as any;
 
@@ -28,7 +29,8 @@ const SettingsDefaults = {
     THEME: AppTheme.Light,
     DYNAMIC_BACKGROUND: false,
     AUTOMATIC_UPDATES: true,
-    UPDATE_FREQUENCY: 1000
+    UPDATE_FREQUENCY: 1000,
+    DEFAULT_SCREEN: Screens.Connection
 }
 
 interface SettingPropTypes {
@@ -38,6 +40,7 @@ interface SettingPropTypes {
     DYNAMIC_BACKGROUND: boolean;
     AUTOMATIC_UPDATES: boolean;
     UPDATE_FREQUENCY: number;
+    DEFAULT_SCREEN: Screens
 }
 
 
@@ -48,6 +51,7 @@ class SettingProps {
     readonly DYNAMIC_BACKGROUND = new SettingsProperty<boolean>("dynamic_background", SettingsDefaults.DYNAMIC_BACKGROUND);
     readonly AUTOMATIC_UPDATES = new SettingsProperty<boolean>("automatic_updates", SettingsDefaults.AUTOMATIC_UPDATES);
     readonly UPDATE_FREQUENCY = new SettingsProperty<number>('update_frequency', SettingsDefaults.UPDATE_FREQUENCY)
+    readonly DEFAULT_SCREEN = new SettingsProperty<Screens>('default_screen', SettingsDefaults.DEFAULT_SCREEN)
 }
 class SettingsProperty<T> {
     readonly key: string;

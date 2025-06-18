@@ -1,18 +1,20 @@
 import { Picker } from "@react-native-picker/picker";
 import AppContext from "AppContext";
-import { AppTheme, themes } from "classes/Settings";
+import { AppTheme, SettingsDefaults, themes } from "classes/Settings";
 import { useStyles } from "managers/StyleManager";
 import { getColor } from "managers/ThemeManager";
 import { useContext, useEffect, useState } from "react";
 import { View, Text, TextInput } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Button, Switch } from "react-native-elements";
+import { Screens } from "enum/Screens";
 
 export default function SettingsScreen() {
     const [theme, setTheme] = useState<AppTheme>()
     const [dynamicBackground, setDynamicBackground] = useState<boolean>()
     const [automaticUpdates, setAutomaticUpdates] = useState<boolean>()
     const [updateFrequency, setUpdateFrequency] = useState<string>()
+    const [defaultScreen, setDefaultScreen ] = useState<Screens>()
 
     const Styles = useStyles('Main')
     const ctx = useContext(AppContext);
@@ -28,6 +30,7 @@ export default function SettingsScreen() {
         ctx.BeefWeb.setState(automaticUpdates??ctx.Settings.getDefault('AUTOMATIC_UPDATES'))
         PROPS.AUTOMATIC_UPDATES.set(automaticUpdates)
         console.warn("Look at this!", updateFrequency)
+        ctx.Settings.PROPS.DEFAULT_SCREEN.set(defaultScreen ?? ctx.Settings.getDefault('DEFAULT_SCREEN'))
         if(updateFrequency){
             const freq = Number.parseInt(updateFrequency)
             if (!isNaN(freq)) {
@@ -43,6 +46,7 @@ export default function SettingsScreen() {
         ctx.Settings.get('DYNAMIC_BACKGROUND').then(setDynamicBackground)
         ctx.Settings.get('AUTOMATIC_UPDATES').then(setAutomaticUpdates)
         ctx.Settings.get('UPDATE_FREQUENCY').then((e)=> setUpdateFrequency(e.toString()))
+        ctx.Settings.get('DEFAULT_SCREEN').then(setDefaultScreen)
     }, []);
 
     return (
@@ -68,6 +72,15 @@ export default function SettingsScreen() {
                         thumbColor={getColor(ctx.theme, 'buttonPrimary')}
                         value={automaticUpdates}
                         onValueChange={setAutomaticUpdates}
+                        trackColor={{true: getColor(ctx.theme, 'buttonPrimary')}}
+                    />
+                </View>
+                   <View style={Styles.Main.switchContainer}>
+                    <Text style={Styles.Main.swtichLable}>Default NP</Text>
+                    <Switch
+                        thumbColor={getColor(ctx.theme, 'buttonPrimary')}
+                        value={defaultScreen == Screens.NowPlaying}
+                        onValueChange={(e)=>setDefaultScreen(e ? Screens.NowPlaying : undefined)}
                         trackColor={{true: getColor(ctx.theme, 'buttonPrimary')}}
                     />
                 </View>

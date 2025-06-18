@@ -1,16 +1,9 @@
 import { SvgProps } from "react-native-svg";
 import { ConnectionSVG, LibrarySVG, NowPlayingSVG, PlaybackQueueSVG } from "../managers/SVGManager";
-import Connection from "../screens/home/Connection";
-import LibraryMain from "../screens/home/LibraryMain";
-import NowPlaying from "../screens/home/NowPlaying";
-import PlaybackQueue from "../screens/home/PlaybackQueue";
-
-export enum Screens {
-  Connection,
-  Library,
-  NowPlaying,
-  PlaybackQueue,
-} 
+import Connection from "screens/home/Connection";
+import LibraryMain from "screens/home/LibraryMain";
+import NowPlaying from "screens/home/NowPlaying";
+import PlaybackQueue from "screens/home/PlaybackQueue";
 
 type Icon = React.FC<SvgProps>;
 

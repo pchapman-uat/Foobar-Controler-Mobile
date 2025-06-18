@@ -1,9 +1,10 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useContext } from "react";
 import { Animated, Dimensions, StyleSheet } from "react-native";
 import { RootStackParamList } from "App";
 import { items } from "classes/NavBar";
 import NavBarScreen from "elements/NavBarScreen";
+import AppContext from "AppContext";
 
 type HomeNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Home'>
 type HomeProps = {
@@ -16,7 +17,7 @@ export default ({navigation}: HomeProps) =>{
   const screenTranslateX = useRef(new Animated.Value(0)).current;
 
   const screenWidth = Dimensions.get('window').width;
-
+  const ctx = useContext(AppContext)
   useEffect(() => {
     if (prevScreen === null) {
       setPrevScreen(currentScreen);
@@ -34,7 +35,9 @@ export default ({navigation}: HomeProps) =>{
 
     setPrevScreen(currentScreen);
   }, [currentScreen]);
-
+  useEffect(()=> {
+    ctx.Settings.get('DEFAULT_SCREEN').then(setCurrentScreen)
+  },[])
   let ScreenComponent = items[currentScreen].screen;
   return (
      <NavBarScreen onNavigate={setCurrentScreen} currentScreen={currentScreen} navigator={navigation}>
