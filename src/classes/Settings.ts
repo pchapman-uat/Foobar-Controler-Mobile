@@ -1,5 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-export default class Settings {
+class Settings {
     readonly PROPS: { [K in keyof SettingPropTypes]: SettingsProperty<SettingPropTypes[K]> } = new SettingProps() as any;
 
     public async get<K extends keyof SettingPropTypes>(key: K): Promise<SettingPropTypes[K]> {
@@ -91,4 +91,5 @@ class SettingsProperty<T> {
 
 }
 
-export {AppTheme, SettingsDefaults, SettingProps, SettingsProperty, themes}
+export default new Settings()
+export {AppTheme, SettingsDefaults, SettingProps, SettingsProperty, themes, Settings as SettingsClass}

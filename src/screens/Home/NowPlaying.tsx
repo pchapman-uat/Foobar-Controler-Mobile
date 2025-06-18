@@ -125,9 +125,12 @@ export default function NowPlaying(){
     }
 
     useEffect(()=> {
-       ctx.BeefWeb.addEventListener('update',onUpdate);
-       ctx.Settings.PROPS.DYNAMIC_BACKGROUND.get().then(setDynamicBackground)
-       forceUpdate();
+        ctx.BeefWeb.addEventListener('update',onUpdate);
+        ctx.Settings.PROPS.DYNAMIC_BACKGROUND.get().then(setDynamicBackground)
+        forceUpdate();
+        return () => {
+            ctx.BeefWeb.removeEventListener('update', onUpdate);
+        };
     }, [])
 
     const content = () => (

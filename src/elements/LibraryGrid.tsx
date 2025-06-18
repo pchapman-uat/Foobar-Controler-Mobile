@@ -2,13 +2,13 @@ import { useState, useEffect, useContext, useCallback } from "react";
 import { TouchableOpacity, Image, View, Text, FlatList, Modal } from "react-native";
 import { Icon } from "managers/ImageManager";
 import { useStyles } from "managers/StyleManager";
-import Beefweb from "classes/BeefWeb";
+import {BeefwebClass} from "classes/BeefWeb";
 import AppContext from "AppContext";
 import { WebPlayerResponse } from "managers/TypeManager";
 
 type LibraryGridPops = {
     onGridPress: (item:GridItem) => void;
-    BeefWeb: Beefweb,
+    BeefWeb: BeefwebClass,
     items:GridItem[],
     actions: ModalAction[]
 }

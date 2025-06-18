@@ -60,7 +60,7 @@ export type BeefWebEvents = {
     songChange: WebPlayerResponse
 }
 
-export default class Beefweb {
+export class Beefweb {
     status = Status.Offline;
     con = new Connection();
     state = State.Disconnected
@@ -96,7 +96,6 @@ export default class Beefweb {
     }
 
     setState = (t: boolean) => {
-        console.warn("LOOK AT ME!!!", this.mainInterval)
         try {
             if(t) this.start();
             else this.stop(this.mainInterval)
@@ -439,3 +438,5 @@ export default class Beefweb {
         return paths.join("/")
     }
 }
+export default new Beefweb()
+export {Beefweb as BeefwebClass}
