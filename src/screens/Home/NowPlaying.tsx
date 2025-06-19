@@ -8,7 +8,8 @@ import { useStyles } from "managers/StyleManager";
 import { getColor } from "managers/ThemeManager";
 import { Button } from "react-native-elements";
 import { formatTime } from "helpers/helpers";
-import { EmptyStar, FullStar, HalfStar } from "managers/SVGManager";
+import { EmptyStar, FullStar, HalfStar, Next, Pause, Play } from "managers/SVGManager";
+import { SvgProps } from "react-native-svg";
 
 export default function NowPlaying(){
     const ctx = useContext(AppContext);
@@ -27,6 +28,7 @@ export default function NowPlaying(){
     const [volumeType, setVolumeType] = useState("");
     const [volumeValue, setVolumeValue] = useState<number>();
     const [rating, setRating] = useState<number>()
+    const [playing, setPlaying] = useState(false)
     
 
     const onUpdate = async (response: WebPlayerResponse, firstTime:boolean = false) => {
@@ -49,7 +51,7 @@ export default function NowPlaying(){
             setVolumeMin(data.volume.min)
             setVolumeType(data.volume.type)
             setRating(activeItem.columns.rating)
-  
+            setPlaying(data.playbackState == 'playing')
         }
     };
 
@@ -149,6 +151,27 @@ export default function NowPlaying(){
         )
     }
 
+    const toggleButton = (state:boolean) => {
+        const size = Styles.NowPlaying.controlsButton.width
+        return (
+            <TouchableOpacity onPress={() => onToggle()}>
+                {state ? (
+                    <Pause width={size} height={size} color={getColor(ctx.theme, 'buttonPrimary')}/>
+                ) : (
+                    <Play width={size} height={size} color={getColor(ctx.theme, 'buttonPrimary')}/>
+                )}
+            </TouchableOpacity>
+        )
+    }
+    const controlButton = (Element: React.FC<SvgProps>, onPress:() => void) => {
+        const size = Styles.NowPlaying.controlsButton.width
+        return (
+            <TouchableOpacity onPress={() => onPress()}>
+                <Element width={size} height={size} color={getColor(ctx.theme, 'buttonPrimary')}/>
+            </TouchableOpacity>
+        )
+    }
+
     useEffect(()=> {
         ctx.BeefWeb.addEventListener('update',onUpdate);
         ctx.Settings.PROPS.DYNAMIC_BACKGROUND.get().then(setDynamicBackground)
@@ -183,8 +206,8 @@ export default function NowPlaying(){
                     </View>
                     
                     <View style={Styles.NowPlaying.buttonContainer}>
-                        <Button buttonStyle={Styles.Main.button} title="Toggle" onPress={() => onToggle()}/>
-                        <Button buttonStyle={Styles.Main.button} title="Skip" onPress={() => onSkip()}/>
+                        {toggleButton(playing)}
+                        {controlButton(Next, onSkip)}
                     </View>
                     {volumeBar(volumeMax, volumeMin, volumeValue)}
                 </View>

@@ -7,5 +7,8 @@ import AlbumSVG from 'assets/library/album.svg'
 import EmptyStar from 'assets/stars/empty_star.svg'
 import HalfStar from 'assets/stars/half_star.svg'
 import FullStar from 'assets/stars/full_star.svg'
+import Pause from 'assets/controls/pause.svg'
+import Play from 'assets/controls/play.svg'
+import Next from 'assets/controls/next.svg'
 
-export { ConnectionSVG, LibrarySVG, NowPlayingSVG, PlaybackQueueSVG, MenuSVG, AlbumSVG, EmptyStar, HalfStar, FullStar}
+export { ConnectionSVG, LibrarySVG, NowPlayingSVG, PlaybackQueueSVG, MenuSVG, AlbumSVG, EmptyStar, HalfStar, FullStar, Pause, Play, Next}

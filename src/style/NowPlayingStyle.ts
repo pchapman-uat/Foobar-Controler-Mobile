@@ -53,5 +53,9 @@ export default (theme: AppTheme, ori: Orientation) =>  {
     ratingStar: {
         width: 30,
         height: 30
+    },
+    controlsButton: {
+        width: 50,
+        height: 50
     }
 })}
