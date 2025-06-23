@@ -15,17 +15,17 @@ type SettingsNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Set
 type SettingsProps = {
   navigation: SettingsNavigationProp
 }
+ type renderItemProps = {
+    item: GroupItem<keyof SettingPropTypes>,
+    index: number,
+}
 export default function SettingsScreen({navigation}: SettingsProps) {
     const [theme, setTheme] = useState<AppTheme>()
     const Styles = useStyles('Main', 'Settings', 'Library')
     const ctx = useContext(AppContext);
-
-    type renderItemProps = {
-        item: GroupItem<keyof SettingPropTypes>,
-        index: number
-    }
     
     const [values, setValues] = useState<Partial<SettingPropTypes>>({});
+    const [loaded, setLoaded] =useState(false)
 
     const onSave = async () => {
         const entries = Object.entries(values) as [keyof SettingPropTypes, SettingPropTypes[keyof SettingPropTypes]][];
@@ -54,65 +54,79 @@ export default function SettingsScreen({navigation}: SettingsProps) {
             );
 
             setValues(Object.fromEntries(entries));
+            setLoaded(true)
         })();
     }, []);
     const SettingsControl = ({ item }: renderItemProps) => {
         const value = values[item.key];
-        console.warn("Current Value for key: ",item.key, "is: ", value)
-        const updateValue = (newValue: SettingPropTypes[typeof item.key]) => {
-            setValues(prev => ({ ...prev, [item.key]: newValue }));
-        };
+        const [val, setVal] = useState<SettingPropTypes[typeof item.key] | undefined>(value);
 
+        useEffect(() => {
+            setVal(value);
+        }, [value]);
+
+        const set = (newVal: SettingPropTypes[typeof item.key]) => {
+            setVal(newVal);
+            setValues(prev => ({ ...prev, [item.key]: newVal }));
+        };
         switch (item.type){
             case "string":
                 return (<View></View>)
             case "number":{
-                const typedValue = (value ?? "").toString();
+                
+                
                 return (
-                    <TextInput style={{...Styles.Main.textInput, width: 200}} keyboardType='number-pad' value={typedValue} onChangeText={text => updateValue(text)} placeholder={item.getDefault(ctx.Settings).toString()}/>
+                    <TextInput style={{...Styles.Main.textInput, width: 200}} keyboardType='number-pad' value={val?.toString() ?? ''} onChangeText={set} placeholder={item.getDefault(ctx.Settings).toString()}/>
                 )
             }
             case "boolean":{
-                const typedValue = (value as boolean) ?? false;
+                console.log((val as boolean) ?? false)
                 return (<Switch
                     thumbColor={getColor(ctx.theme, 'buttonPrimary')}
-                    value={typedValue}
-                    onValueChange={text => updateValue(text)}
+                    value={(val as boolean) ?? false}
+                    onValueChange={set}
                     trackColor={{true: getColor(ctx.theme, 'buttonPrimary')}}
                 />)
             }
             case "AppTheme":
-            case "Screens":{
-                var thing: any[];
-                if(item.type == 'AppTheme') thing = themes;
-                else if(item.type == 'Screens') thing = screens;
-                else thing = []
-                return (
-                <Picker style={Styles.Main.picker} onValueChange={updateValue} dropdownIconColor={getColor(ctx.theme, 'textPrimary')} mode='dropdown' selectedValue={value}>
-                    {thing.map((item, index) => (
-                        <Picker.Item key={'item-'+item} label={item} value={index} />
-                    ))}
-                </Picker>)
-                
-            }
+            case "Screens":
+            let thing: any[] = [];
+            if (item.type === "AppTheme") thing = themes;
+            else if (item.type === "Screens") thing = screens;
+
+            return (
+                <Picker
+                style={Styles.Main.picker}
+                onValueChange={set}
+                dropdownIconColor={getColor(ctx.theme, "textPrimary")}
+                mode="dropdown"
+                selectedValue={val}
+                >
+                {thing.map(item => (
+                    <Picker.Item key={"item-" + item} label={item} value={item} />
+                ))}
+                </Picker>
+            );
+      
             default: throw new Error("Unhandled Setting Type of: " + item.type)
         }
     }
 
-    const renderItem = useCallback(({ item, index }:renderItemProps) => (
+    const renderItem = useCallback((item:GroupItem<keyof SettingPropTypes>, index: number) => (
         <View style={[Styles.Library[index % 2 === 0 ? 'rowEven' : 'rowOdd'], Styles.Settings.itemView]} key={index} >
             <Text style={Styles.Settings.itemLabel}>{item.name}</Text>
             <SettingsControl item={item} index={index}/>
         </View>
-    ), [values, ctx.theme, Styles.Main]);
+    ), [loaded]);
 
     return (
         <SafeAreaView style={Styles.Main.container}>
             <ScrollView style={Styles.Settings.list}>
-                {SettingGroups.groups[0].items.map((item, index) => renderItem({item, index}))}
+                {SettingGroups.groups[0].items.map((item, index) => renderItem(item, index))}
             </ScrollView>
-            <View>
-                <Button buttonStyle={Styles.Main.button} title='Save' onPress={onSave}/>    
+            <View style={Styles.Settings.buttonsView}>
+                <Button buttonStyle={[Styles.Main.button, Styles.Settings.button]} title='Save' onPress={onSave}/>   
+                <Button buttonStyle={[Styles.Main.button, Styles.Settings.button]} title='Cancel' onPress={() => navigation.goBack()}/>    
             </View>
         </SafeAreaView>
     )
