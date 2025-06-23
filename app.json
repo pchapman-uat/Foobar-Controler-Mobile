@@ -23,7 +23,8 @@
       "edgeToEdgeEnabled": true,
       "package": "com.pchapman.foobarcontollermobile",
       "permissions": [
-        "FOREGROUND_SERVICE"
+        "FOREGROUND_SERVICE",
+        "INTERNET"
       ],
       "services": {
         "musicservice": {
@@ -39,6 +40,13 @@
       "eas": {
         "projectId": "79fec63c-c71e-41ab-8eb3-4e959253baae"
       }
-    }
+    },
+    "plugins": [
+      ["expo-build-properties", {
+        "android": {
+          "usesCleartextTraffic": true
+        }
+      }]
+    ]
   }
 }

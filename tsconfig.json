@@ -3,6 +3,17 @@
   "compilerOptions": {
     "strict": true,
     "sourceMap": true,
-    "baseUrl": "./src"
+    "baseUrl": "./src",
+    "paths": {
+      "screens/*": ["screens/*"],
+      "classes/*": ["classes/*"],
+      "managers/*": ["managers/*"],
+      "elements/*": ["elements/*"],
+      "enum/*": ["enum/*"],
+      "helpers/*": ["helpers/*"],
+      "hooks/*": ["hooks/*"],
+      "style/*": ["style/*"],
+      "assets/*": ["assets/*"]
+    },
   }
 }
