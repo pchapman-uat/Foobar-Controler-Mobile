@@ -1,5 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Screens } from "enum/Screens";
+import { Screen } from "enum/Screens";
 class Settings {
     readonly PROPS: { [K in keyof SettingPropTypes]: SettingsProperty<SettingPropTypes[K]> } = new SettingProps() as any;
 
@@ -11,6 +11,13 @@ class Settings {
     public getDefault<K extends keyof SettingPropTypes>(key: K): SettingPropTypes[K]{
         const prop = this.PROPS[key];
         return prop.fallback;
+    }
+
+    public set<K extends keyof SettingPropTypes>(key:K, value?: SettingPropTypes[K]){
+        this.PROPS[key].set(value);
+    }
+    setOnlyNew<K extends keyof SettingPropTypes>(key:K, value: SettingPropTypes[K]) {
+        this.PROPS[key].setOnlyNew(value)
     }
 }
 
@@ -30,7 +37,7 @@ const SettingsDefaults = {
     DYNAMIC_BACKGROUND: false,
     AUTOMATIC_UPDATES: true,
     UPDATE_FREQUENCY: 1000,
-    DEFAULT_SCREEN: Screens.Connection
+    DEFAULT_SCREEN: Screen.Connection
 }
 
 interface SettingPropTypes {
@@ -40,7 +47,7 @@ interface SettingPropTypes {
     DYNAMIC_BACKGROUND: boolean;
     AUTOMATIC_UPDATES: boolean;
     UPDATE_FREQUENCY: number;
-    DEFAULT_SCREEN: Screens
+    DEFAULT_SCREEN: Screen
 }
 
 
@@ -51,7 +58,7 @@ class SettingProps {
     readonly DYNAMIC_BACKGROUND = new SettingsProperty<boolean>("dynamic_background", SettingsDefaults.DYNAMIC_BACKGROUND);
     readonly AUTOMATIC_UPDATES = new SettingsProperty<boolean>("automatic_updates", SettingsDefaults.AUTOMATIC_UPDATES);
     readonly UPDATE_FREQUENCY = new SettingsProperty<number>('update_frequency', SettingsDefaults.UPDATE_FREQUENCY)
-    readonly DEFAULT_SCREEN = new SettingsProperty<Screens>('default_screen', SettingsDefaults.DEFAULT_SCREEN)
+    readonly DEFAULT_SCREEN = new SettingsProperty<Screen>('default_screen', SettingsDefaults.DEFAULT_SCREEN)
 }
 class SettingsProperty<T> {
     readonly key: string;
@@ -96,4 +103,4 @@ class SettingsProperty<T> {
 }
 
 export default new Settings()
-export {AppTheme, SettingsDefaults, SettingProps, SettingsProperty, themes, Settings as SettingsClass}
+export {AppTheme, SettingsDefaults, SettingProps, SettingsProperty, themes, Settings as SettingsClass, SettingPropTypes}

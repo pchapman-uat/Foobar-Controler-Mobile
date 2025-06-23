@@ -8,8 +8,9 @@ import LibraryStyle from "../style/LibraryStyle";
 import { useContext, useMemo } from "react";
 import AppContext from "AppContext";
 import { Orientation } from "hooks/useOrientation";
+import SettingsStyle from "style/SettingsStyle";
 
-type Styles = 'Main' | 'NowPlaying' | 'Modal' | 'Navbar' | 'StatusBar' | 'Library';
+type Styles = 'Main' | 'NowPlaying' | 'Modal' | 'Navbar' | 'StatusBar' | 'Library' | 'Settings';
 
 // Infer the types from each module
 type StyleMapType = {
@@ -19,6 +20,7 @@ type StyleMapType = {
   Navbar: ReturnType<typeof NavBarStyle>;
   StatusBar: ReturnType<typeof StatusBarStyle>;
   Library: ReturnType<typeof LibraryStyle>;
+  Settings: ReturnType<typeof SettingsStyle>
 };
 
 const styleMap: { [K in Styles]: (theme: AppTheme, orientation: Orientation) => StyleMapType[K] } = {
@@ -28,6 +30,7 @@ const styleMap: { [K in Styles]: (theme: AppTheme, orientation: Orientation) => 
   Navbar: NavBarStyle,
   StatusBar: StatusBarStyle,
   Library: LibraryStyle,
+  Settings: SettingsStyle
 };
 
 export function createStyle<T extends Styles>(

@@ -9,8 +9,7 @@ import { RootStackParamList } from "App";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useStyles } from "managers/StyleManager";
 import { getColor } from "managers/ThemeManager";
-import { Screens } from "classes/NavBar";
-
+import { Screen } from "enum/Screens";
 type StatusBarProps = {
     navigator: NativeStackNavigationProp<RootStackParamList, 'Home'>
     onNavigate: (screen: number) => void;
@@ -73,7 +72,7 @@ const StatusBar: React.FC<StatusBarProps> = ({navigator, onNavigate}) => {
                 <View style={{...Style.StatusBar.StatusCircle, backgroundColor: getStatusColor(status), borderColor: getStateColor(state), borderWidth: 1}}>
                 </View>
             </TouchableOpacity>
-            <TouchableOpacity onPress={()=> onNavigate(Screens.NowPlaying)} style={Style.StatusBar.StatusTextContainer}>
+            <TouchableOpacity onPress={()=> onNavigate(Screen.NowPlaying)} style={Style.StatusBar.StatusTextContainer}>
                 <Text style={Style.StatusBar.StatusText}>{title} - {album}</Text>
             </TouchableOpacity>
             <TouchableOpacity>
