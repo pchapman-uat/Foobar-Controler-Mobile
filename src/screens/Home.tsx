@@ -36,7 +36,7 @@ export default ({navigation}: HomeProps) =>{
     setPrevScreen(currentScreen);
   }, [currentScreen]);
   useEffect(()=> {
-    ctx.Settings.get('DEFAULT_SCREEN').then(setCurrentScreen)
+    ctx.Settings.get('DEFAULT_SCREEN').then((item)=> {if(typeof item == 'number') setCurrentScreen(item)})
   },[])
   let ScreenComponent = items[currentScreen].screen;
   return (

@@ -11,6 +11,8 @@ import { Screen, screens } from "enum/Screens";
 import SettingGroups, { GroupItem } from "classes/SettingGroups";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "App";
+import { renderPicker } from "elements/EnumPicker";
+import { getEnumKeys } from "helpers/helpers";
 type SettingsNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Settings'>
 type SettingsProps = {
   navigation: SettingsNavigationProp
@@ -90,24 +92,25 @@ export default function SettingsScreen({navigation}: SettingsProps) {
             }
             case "AppTheme":
             case "Screens":
-            let thing: any[] = [];
-            if (item.type === "AppTheme") thing = themes;
-            else if (item.type === "Screens") thing = screens;
+                const values = item.type === "AppTheme" ? AppTheme :
+                                item.type === "Screens" ? Screen :
+                                (() => { throw new Error("This error should never happen"); })();
 
-            return (
+                const keys = getEnumKeys(values);
+
+                return (
                 <Picker
-                style={Styles.Main.picker}
-                onValueChange={set}
-                dropdownIconColor={getColor(ctx.theme, "textPrimary")}
-                mode="dropdown"
-                selectedValue={val}
+                    style={Styles.Main.picker}
+                    onValueChange={set}
+                    dropdownIconColor={getColor(ctx.theme, "textPrimary")}
+                    mode="dropdown"
+                    selectedValue={val}
                 >
-                {thing.map(item => (
-                    <Picker.Item key={"item-" + item} label={item} value={item} />
-                ))}
+                    {renderPicker(keys, values)}
                 </Picker>
-            );
-      
+                );
+
+
             default: throw new Error("Unhandled Setting Type of: " + item.type)
         }
     }
