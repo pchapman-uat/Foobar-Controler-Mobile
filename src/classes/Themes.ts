@@ -1,3 +1,8 @@
+export enum ThemeType {
+    Light,
+    Dark
+}
+
 export class Color {
     private r: number;
     private g: number;
@@ -58,6 +63,8 @@ export class Color {
 export abstract class Theme {
     abstract name: string;
 
+    abstract type: ThemeType
+
     abstract primary: Color;
     abstract secondary: Color;
     abstract accent: Color;
@@ -88,6 +95,7 @@ export abstract class Theme {
 }
 class Dark extends Theme{
     name = "Dark";
+    type = ThemeType.Dark;
     primary = new Color(0,0,0);
     secondary= new Color(0,0,0);
     accent = new Color(103,58,183);
@@ -106,6 +114,7 @@ class Dark extends Theme{
 }
 class Light extends Theme{
     name = "Light";
+    type = ThemeType.Light
     primary = new Color(255,255,255);
     secondary= new Color(255,255,255);
     accent = new Color(30,144,255);
