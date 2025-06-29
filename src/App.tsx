@@ -7,10 +7,12 @@ import Settings, { AppTheme, SettingsDefaults } from 'classes/Settings';
 import AppContext, {AppContextType} from 'AppContext';
 import { useOrientation } from 'hooks/useOrientation';
 import BeefWeb from 'classes/BeefWeb';
+import AboutScreen from 'screens/AboutScreen';
 
 export type RootStackParamList = {
   Home: undefined,
-  Settings: undefined
+  Settings: undefined,
+  About: undefined
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -51,6 +53,7 @@ export default function App() {
         <Stack.Navigator screenOptions={{ headerShown: false }}>
           <Stack.Screen name="Home" component={Home} />
           <Stack.Screen name="Settings" component={SettingsScreen} />
+          <Stack.Screen name='About' component={AboutScreen}/>
         </Stack.Navigator>
       </NavigationContainer>
     </AppContext.Provider>

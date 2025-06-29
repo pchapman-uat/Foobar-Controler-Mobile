@@ -4,7 +4,7 @@ import { AppTheme, SettingPropTypes, SettingsDefaults, themes } from "classes/Se
 import { useStyles } from "managers/StyleManager";
 import { getColor } from "managers/ThemeManager";
 import { useCallback, useContext, useEffect, useState } from "react";
-import { View, Text, TextInput, FlatList, ScrollView } from "react-native";
+import { View, Text, TextInput, FlatList, ScrollView, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Button, Switch } from "react-native-elements";
 import { Screen, screens } from "enum/Screens";
@@ -124,6 +124,9 @@ export default function SettingsScreen({navigation}: SettingsProps) {
 
     return (
         <SafeAreaView style={Styles.Main.container}>
+            <View style={Styles.Settings.buttonsView}>
+                 <Button buttonStyle={[Styles.Main.button, Styles.Settings.button]} onPress={()=>navigation.navigate('About')} title='About'/>
+            </View>
             <ScrollView style={Styles.Settings.list}>
                 {SettingGroups.groups[0].items.map((item, index) => renderItem(item, index))}
             </ScrollView>
