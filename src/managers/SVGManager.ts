@@ -10,5 +10,7 @@ import FullStar from 'assets/stars/full_star.svg'
 import Pause from 'assets/controls/pause.svg'
 import Play from 'assets/controls/play.svg'
 import Next from 'assets/controls/next.svg'
+import GitHubMark from 'assets/icons/github-mark.svg'
+import GitHubMarkWhite from 'assets/icons/github-mark-white.svg'
 
-export { ConnectionSVG, LibrarySVG, NowPlayingSVG, PlaybackQueueSVG, MenuSVG, AlbumSVG, EmptyStar, HalfStar, FullStar, Pause, Play, Next}
+export { ConnectionSVG, LibrarySVG, NowPlayingSVG, PlaybackQueueSVG, MenuSVG, AlbumSVG, EmptyStar, HalfStar, FullStar, Pause, Play, Next, GitHubMark, GitHubMarkWhite}
