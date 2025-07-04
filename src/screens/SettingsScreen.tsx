@@ -8,7 +8,7 @@ import { View, Text, TextInput, FlatList, ScrollView, TouchableOpacity } from "r
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Button, Switch } from "react-native-elements";
 import { Screen, screens } from "enum/Screens";
-import SettingGroups, { GroupItem } from "classes/SettingGroups";
+import SettingGroups, { Group, GroupItem, GroupTypes } from "classes/SettingGroups";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "App";
 import { renderPicker } from "elements/EnumPicker";
@@ -28,6 +28,7 @@ export default function SettingsScreen({navigation}: SettingsProps) {
     
     const [values, setValues] = useState<Partial<SettingPropTypes>>({});
     const [loaded, setLoaded] =useState(false)
+    const [settingIndex, setSettingIndex] = useState<number>()
 
     const onSave = async () => {
         const entries = Object.entries(values) as [keyof SettingPropTypes, SettingPropTypes[keyof SettingPropTypes]][];
@@ -121,14 +122,36 @@ export default function SettingsScreen({navigation}: SettingsProps) {
             <SettingsControl item={item} index={index}/>
         </View>
     ), [loaded]);
+    const renderGroup = (group: Group<GroupTypes>, index: number) => {
+        const onPress = () => {
+            setSettingIndex(index)
+        }
+        return (
+            <TouchableOpacity style={[Styles.Library[index % 2 === 0 ? 'rowEven' : 'rowOdd'], Styles.Settings.itemView]} key={index} onPress={onPress}>
+                <Text style={Styles.Settings.itemLabel}>{group.name} - {group.items.length}</Text>
+            </TouchableOpacity>
+        )
+    }
+    const groupSelector = () => {
+        return (
+            <ScrollView>
+                {SettingGroups.groups.map(renderGroup)}
+            </ScrollView>
+        )
+    }
 
+    const groupSettings = (groupIndex: number) => (
+        SettingGroups.groups[groupIndex].items.map(renderItem)
+    )
     return (
         <SafeAreaView style={Styles.Main.container}>
             <View style={Styles.Settings.buttonsView}>
-                 <Button buttonStyle={[Styles.Main.button, Styles.Settings.button]} onPress={()=>navigation.navigate('About')} title='About'/>
+                {settingIndex != null && <Button buttonStyle={[Styles.Main.button, Styles.Settings.button]} onPress={()=>setSettingIndex(undefined)} title='Back'/>}
+                <Button buttonStyle={[Styles.Main.button, Styles.Settings.button]} onPress={()=>navigation.navigate('About')} title='About'/>
             </View>
             <ScrollView style={Styles.Settings.list}>
-                {SettingGroups.groups[0].items.map((item, index) => renderItem(item, index))}
+                {/* {SettingGroups.groups[0].items.map((item, index) => renderItem(item, index))} */}
+                {settingIndex == null ? groupSelector() : groupSettings(settingIndex)}
             </ScrollView>
             <View style={Styles.Settings.buttonsView}>
                 <Button buttonStyle={[Styles.Main.button, Styles.Settings.button]} title='Save' onPress={onSave}/>   

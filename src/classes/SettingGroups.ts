@@ -29,7 +29,8 @@ class GroupItem<K extends keyof SettingPropTypes> {
     }
 }
 
-class Group<TItems extends readonly GroupItem<keyof SettingPropTypes>[]> {
+type GroupTypes = readonly GroupItem<keyof SettingPropTypes>[];
+class Group<TItems extends GroupTypes> {
   readonly name: string;
   readonly items: TItems;
 
@@ -45,9 +46,11 @@ class SettingGroups {
             new GroupItem('Theme', 'THEME', 'AppTheme'),
             new GroupItem('Dynamic Background', 'DYNAMIC_BACKGROUND', 'boolean'),
             new GroupItem('Automatic Updates', 'AUTOMATIC_UPDATES', 'boolean'),
-            new GroupItem('Update Frequency', 'UPDATE_FREQUENCY', 'number'),
             new GroupItem('Default Screen', 'DEFAULT_SCREEN', 'Screens'),
-        )
+        ),
+        new Group('Advanced',
+            new GroupItem('Update Frequency', 'UPDATE_FREQUENCY', 'number')
+        ),
     ];
 
     [Symbol.iterator]() {
@@ -63,4 +66,4 @@ class SettingGroups {
     }
 }
 export default new SettingGroups();
-export {GroupItem, Group, SettingGroups}
+export {GroupItem, Group, SettingGroups,GroupTypes }
