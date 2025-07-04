@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { View, TouchableOpacity, Modal, Text } from "react-native";
 import AppContext from "../AppContext";
 import { Columns } from "../classes/responses/Player";
@@ -27,16 +27,19 @@ export default function LibraryItems({playlistId, songs}: LibraryItemsProps) {
         };
         const playSong = () => {
             const plref = playlistId ?? selectedSong?.playlistId
-            if(!plref || !selectedIndex) return;
             const index = selectedSong?.songIndex ?? selectedIndex
+            if(plref == null || index == null) return setModalVisible(false);
             ctx.BeefWeb.playSong(plref, index)
-            setModalVisible(false);
+            setModalVisible(false)
         }
         const queueSong = () => {
-            if(!playlistId || !selectedIndex) return;
-            ctx.BeefWeb.queueSong(playlistId, selectedIndex)
-            setModalVisible(false);
+            const plref = playlistId ?? selectedSong?.playlistId
+            const index = selectedSong?.songIndex ?? selectedIndex
+            if(plref == null || index == null) return setModalVisible(false);
+            ctx.BeefWeb.queueSong(plref, index)
+            setModalVisible(false)
         };
+
         return (
             <View>
                 {songs.map((item, index) => (

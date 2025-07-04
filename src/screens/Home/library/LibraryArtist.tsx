@@ -46,19 +46,9 @@ export default function LibraryArtist() {
         setfilteredSongs(newSongs)
         return newSongs;
     };
-    const listView = (playlists: GridItem[], artist:string | undefined, filteredSongs:Columns[]|undefined) => {
+    const listView = (filteredSongs:Columns[]|undefined) => {
         return(
             <View style={{flex: 1}}>
-                <Picker
-                    selectedValue={artist}
-                    onValueChange={(itemValue) => onArtistChange(itemValue)}
-                    dropdownIconColor={getColor(ctx.theme, 'textPrimary')}
-                    style={Styles.Main.picker}
-                >
-                    {playlists.map((item) => (
-                        <Picker.Item key={item.id} label={item.title} value={item.id} />
-                    ))}
-                </Picker>
                 <TextInput style={Styles.Main.textInput} onChangeText={searchSongs} value={searchInput}/>
                 <ScrollView><LibraryItems songs={filteredSongs} /></ScrollView>
             </View>
@@ -86,7 +76,7 @@ export default function LibraryArtist() {
             case "grid":
                 return <LibraryGrid onGridPress={onGridPress} BeefWeb={ctx.BeefWeb} items={playlists} actions={[{text: 'Play All', onPress: playAll}]}/>
             case "list":
-                return listView(playlists, artist, filteredSongs)
+                return listView(filteredSongs)
         }
     }
      useEffect(() => {

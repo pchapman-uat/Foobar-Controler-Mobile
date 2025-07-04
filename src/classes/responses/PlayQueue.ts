@@ -20,7 +20,7 @@ export class QueueItem {
     playlistIndex: number;
 
     constructor(columnsRaw:RawColumns, itemIndex: number, playlistId: string, playlistIndex: number){
-        this.columns = new Columns(columnsRaw);
+        this.columns = new Columns(columnsRaw, playlistId);
         this.itemIndex = itemIndex;
         this.playlistId = playlistId;
         this.playlistIndex = playlistIndex;

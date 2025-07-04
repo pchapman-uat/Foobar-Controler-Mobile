@@ -49,16 +49,6 @@ export default function LibraryAlbum() {
     const listView = (playlists: GridItem[], album:string | undefined, filteredSongs:Columns[]|undefined) => {
         return(
             <View style={{flex: 1}}>
-                <Picker
-                    selectedValue={album}
-                    onValueChange={(itemValue) => onAlbumChange(itemValue)}
-                    dropdownIconColor={getColor(ctx.theme, 'textPrimary')}
-                    style={Styles.Main.picker}
-                >
-                    {playlists.map((item) => (
-                        <Picker.Item key={item.id} label={item.title} value={item.id} />
-                    ))}
-                </Picker>
                 <TextInput style={Styles.Main.textInput} onChangeText={searchSongs} value={searchInput}/>
                 <ScrollView><LibraryItems songs={filteredSongs} /></ScrollView>
             </View>

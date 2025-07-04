@@ -1,6 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import {Image, ScrollView, Text, TextInput, TouchableOpacity, View} from "react-native";
-import { Picker } from '@react-native-picker/picker';
+import { ScrollView, TextInput, View} from "react-native";
 import AppContext from "AppContext";
 import { Columns } from "classes/responses/Player";
 import LibraryItems, {filterSongs} from "elements/LibraryList";
@@ -51,19 +50,9 @@ export default function LibraryPlaylist(){
         setfilteredSongs(filterSongs(text, songs))
     }
     
-    const listView = (playlists: { id: string; title: string }[], playlistId:string | undefined, filteredSongs:Columns[]|undefined) => {
+    const listView = (playlistId:string | undefined, filteredSongs:Columns[]|undefined) => {
         return(
             <View style={{flex: 1}}>
-                <Picker
-                    selectedValue={playlistId}
-                    onValueChange={(itemValue) => onPlaylistChange(itemValue)}
-                    dropdownIconColor={getColor(ctx.theme, 'textPrimary')}
-                    style={Styles.Main.picker}
-                >
-                    {playlists.map((item) => (
-                        <Picker.Item key={item.id} label={item.title} value={item.id} />
-                    ))}
-                </Picker>
                 <TextInput style={Styles.Main.textInput} onChangeText={searchSongs} value={searchInput}/>
                 <ScrollView><LibraryItems playlistId={playlistId} songs={filteredSongs} /></ScrollView>
             </View>
@@ -91,7 +80,7 @@ export default function LibraryPlaylist(){
             case "grid":
                 return <LibraryGrid onGridPress={onGridPress} BeefWeb={ctx.BeefWeb} items={playlists} actions={[{text: 'Load Playlist', onPress: loadPlaylist}]}/>
             case "list":
-                return listView(playlists, playlistId, filteredSongs)
+                return listView(playlistId, filteredSongs)
         }
     }
     useEffect(() => {
