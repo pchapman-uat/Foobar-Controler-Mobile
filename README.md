@@ -17,6 +17,32 @@ Information in the README and LICENSE may not properly reflect the above at the 
 - [Foobar2000](https://www.foobar2000.org) – Tested on v2.23.5 32-bit
 - [Beefweb](https://github.com/hyperblast/beefweb) – Tested on v0.10
 
+## Resources
+
+### Usage
+
+- [Foobar2000](https://www.foobar2000.org/)
+- [Latest APK](https://github.com/pchapman-uat/Foobar-Controler-Mobile/releases) (Downloaded from project GitHub)
+- [BeefWeb fb2k-component](https://github.com/hyperblast/beefweb/releases) (Downloaded from [hyperblast's](https://github.com/hyperblast) GitHub)
+- Android Phone
+- Install from unknown sources must be enable
+
+### Development
+- [Visual Studio Code](https://code.visualstudio.com/) (Recommended)
+- [GitHub Desktop](https://github.com/apps/desktop) (Optional)
+- [Git](https://git-scm.com/) (Recommended)
+- Android Phone or Emulator (Physical Phone Recommended, S22 was used)
+    - USB or Wireless debugging enabled
+- Router (Optional)
+- Windows 10/11 or Linux (Windows 11 was used)
+    - Windows Only: [WSL](https://learn.microsoft.com/en-us/windows/wsl/install) (Ubuntu was used)
+- [SDK tools](https://developer.android.com/tools)
+- [Android Studio](https://developer.android.com/studio) (Recommended, NOT USED)
+- [Node.JS](https://nodejs.org/en)
+- [Node Package Manager \[NPM\]](https://www.npmjs.com/)
+
+
+
 ## References
 
 Below is information regarding the assets and libraries used for this project.
