@@ -2,9 +2,9 @@ import { Picker } from "@react-native-picker/picker";
 import AppContext from "AppContext";
 import { AppTheme, SettingPropTypes, SettingsDefaults, themes } from "classes/Settings";
 import { useStyles } from "managers/StyleManager";
-import { getColor } from "managers/ThemeManager";
+import { getColor, getCustomTheme, initCustomTheme } from "managers/ThemeManager";
 import { useCallback, useContext, useEffect, useState } from "react";
-import { View, Text, TextInput, FlatList, ScrollView, TouchableOpacity } from "react-native";
+import { View, Text, TextInput, FlatList, ScrollView, TouchableOpacity, Modal, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Button, Switch } from "react-native-elements";
 import { Screen, screens } from "enum/Screens";
@@ -13,6 +13,9 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "App";
 import { renderPicker } from "elements/EnumPicker";
 import { getEnumKeys } from "helpers/helpers";
+import Themes, { Color, CustomTheme, Theme, ThemeJSON } from "classes/Themes";
+import ColorPickers, { ColorPickerOptions } from "elements/ColorPickers";
+import { ColorFormatsObject } from "reanimated-color-picker";
 type SettingsNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Settings'>
 type SettingsProps = {
   navigation: SettingsNavigationProp
@@ -22,14 +25,17 @@ type SettingsProps = {
     index: number,
 }
 export default function SettingsScreen({navigation}: SettingsProps) {
-    const [theme, setTheme] = useState<AppTheme>()
-    const Styles = useStyles('Main', 'Settings', 'Library')
+    const Styles = useStyles('Main', 'Settings', 'Library', 'Modal')
     const ctx = useContext(AppContext);
     
     const [values, setValues] = useState<Partial<SettingPropTypes>>({});
     const [loaded, setLoaded] =useState(false)
     const [settingIndex, setSettingIndex] = useState<number>()
 
+    const [colorModalVisable, setColorModalVisable] = useState(false)
+    const [selectedColorKey, setSelectedColorKey] = useState<keyof Theme>()
+    const [selectedColor, setSelectedColor] = useState<ColorFormatsObject>()
+    const [customTheme, setCustomTheme] = useState<CustomTheme>()
     const onSave = async () => {
         const entries = Object.entries(values) as [keyof SettingPropTypes, SettingPropTypes[keyof SettingPropTypes]][];
      
@@ -42,7 +48,9 @@ export default function SettingsScreen({navigation}: SettingsProps) {
    
         if(values.THEME != null){
             ctx.setTheme(values.THEME);
-            setTheme(values.THEME)
+        }
+        if(values.CUSTOM_THEME != null && customTheme != null){
+           initCustomTheme(customTheme)
         }
         navigation.goBack()
     };
@@ -111,7 +119,54 @@ export default function SettingsScreen({navigation}: SettingsProps) {
                 </Picker>
                 );
 
+            case "CustomTheme":
+                const custom = getCustomTheme();
+                if(!(custom instanceof CustomTheme)) return
 
+                useEffect(() => {
+                    setCustomTheme(custom);
+                }, [item.key]);
+
+                const onPress = (key:keyof Theme) => {
+                    setColorModalVisable(true)
+                    setSelectedColorKey(key)
+                }
+                const onReset = (key:keyof Theme) => {
+                    customTheme?.reset(key)
+                    setValues(prev => ({ ...prev, CUSTOM_THEME: customTheme}))
+                }
+                const onLongPress = (key:keyof Theme) => {
+                    Alert.alert('Reset', `Are you sure you want to reset: ${key}?`, [
+                        { text: 'No', style: 'cancel' },
+                        { text: 'Yes', onPress: () => onReset(key)},
+                    ])
+                }
+                  return (
+                    <View>
+                        {Object.keys(custom).map((key) => {
+                            const themeKey = key as keyof Theme;
+                            const value = custom[themeKey];
+
+                            if (value instanceof Color) {
+                                return (
+                                    <Button
+                                        key={themeKey}
+                                        title={themeKey}
+                                        onPress={() => onPress(themeKey)}
+                                        onLongPress={() => onLongPress(themeKey)}
+                                        titleStyle={{color: value.isDark() ? "white" : "black"}}
+                                        buttonStyle={[
+                                            Styles.Main.button,
+                                            { backgroundColor: value.toHex() }
+                                        ]}
+                                    />
+                                );
+                            }
+                            return null;
+                        })}
+                    </View>
+                );
+                
             default: throw new Error("Unhandled Setting Type of: " + item.type)
         }
     }
@@ -143,6 +198,16 @@ export default function SettingsScreen({navigation}: SettingsProps) {
     const groupSettings = (groupIndex: number) => (
         SettingGroups.groups[groupIndex].items.map(renderItem)
     )
+    
+    const onColorSave = (customTheme: CustomTheme, key: keyof Theme, value: ColorFormatsObject) => {
+        customTheme.set(key, Color.fromHex(value.hex))
+        setValues(prev => ({ ...prev, CUSTOM_THEME: customTheme}))
+        onColorClose()
+    }
+    const onColorClose = () => {
+        setColorModalVisable(false)
+        setSelectedColor(undefined);
+    }
     return (
         <SafeAreaView style={Styles.Main.container}>
             <View style={Styles.Settings.buttonsView}>
@@ -150,13 +215,29 @@ export default function SettingsScreen({navigation}: SettingsProps) {
                 <Button buttonStyle={[Styles.Main.button, Styles.Settings.button]} onPress={()=>navigation.navigate('About')} title='About'/>
             </View>
             <ScrollView style={Styles.Settings.list}>
-                {/* {SettingGroups.groups[0].items.map((item, index) => renderItem(item, index))} */}
                 {settingIndex == null ? groupSelector() : groupSettings(settingIndex)}
             </ScrollView>
             <View style={Styles.Settings.buttonsView}>
                 <Button buttonStyle={[Styles.Main.button, Styles.Settings.button]} title='Save' onPress={onSave}/>   
                 <Button buttonStyle={[Styles.Main.button, Styles.Settings.button]} title='Cancel' onPress={() => navigation.goBack()}/>    
             </View>
+            <Modal
+                      transparent
+                      visible={colorModalVisable}
+                      animationType="fade"
+                      onRequestClose={() => setColorModalVisable(false)}
+                  >
+                    <View style={Styles.Modal.modalOverlay}>
+                        <View style={Styles.Modal.menu}>
+                            <ColorPickers kind={ColorPickerOptions.Picker1} currentColor={(selectedColor?.hex ?? (selectedColorKey && customTheme?.get(selectedColorKey)))?? ''} onColorPick={setSelectedColor}/>
+                                <View style={Styles.Settings.buttonsView}>
+                                    <Button title={"Save"} onPress={() => selectedColorKey && customTheme && selectedColor && onColorSave(customTheme, selectedColorKey, selectedColor)}/>
+                                    <Button title={"Cancel"} onPress={() => onColorClose()}/>
+                                </View>
+                        </View>
+                
+                    </View>
+            </Modal>
         </SafeAreaView>
     )
 }

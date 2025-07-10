@@ -9,6 +9,8 @@ import { getColor } from 'managers/ThemeManager';
 import { Modal } from 'react-native';
 import updateColors, { LottieLoading } from 'managers/LottiManager';
 import LottieView from 'lottie-react-native';
+import ColorPickers, { ColorPickerOptions } from 'elements/ColorPickers';
+import { ColorFormatsObject, colorKit } from 'reanimated-color-picker';
 export default function App() {
   const ctx = useContext(AppContext);
   const Styles = useStyles('Main', 'Modal')

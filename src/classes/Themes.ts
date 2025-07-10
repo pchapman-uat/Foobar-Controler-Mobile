@@ -38,24 +38,45 @@ export class Color {
 
         return [r, g, b, a];
     }
+    toHex(): string {
+        const rHex = this.r.toString(16).padStart(2, '0');
+        const gHex = this.g.toString(16).padStart(2, '0');
+        const bHex = this.b.toString(16).padStart(2, '0');
+        const aHex = Math.round(this.a * 255).toString(16).padStart(2, '0');
 
-    static fromHex(hex:string) {
-        hex = hex.replace(/^#/, '');
+        return `#${rHex}${gHex}${bHex}${aHex}`;
+    }
 
-        if (hex.length === 3) {
+    toJSON() {
+        return this.toHex()
+    }
+
+    isDark(): boolean {
+        const luminance = 0.299 * this.r + 0.587 * this.g + 0.114 * this.b;
+        return luminance < 128;
+    }
+
+   static fromHex(hex: string): Color {
+        console.log("Look at me!", hex);
+
+        hex = hex.replace(/^#/, '').toLowerCase();
+
+        if (hex.length === 3 || hex.length === 4) {
             hex = hex.split('').map(char => char + char).join('');
         }
 
-        if (hex.length !== 6) {
-            throw new Error('Invalid hex color');
+        if (hex.length !== 6 && hex.length !== 8) {
+            throw new Error(`Invalid hex color: ${hex}`);
         }
 
         const r = parseInt(hex.slice(0, 2), 16);
         const g = parseInt(hex.slice(2, 4), 16);
         const b = parseInt(hex.slice(4, 6), 16);
+        const a = hex.length === 8 ? parseInt(hex.slice(6, 8), 16) / 255 : 1;
 
-        return new Color(r,g,b)
+        return new Color(r, g, b, a);
     }
+
     public getAlpha(a:number){
         return new Color(this.r,this.g,this.b,a)
     }
@@ -83,8 +104,8 @@ export abstract class Theme {
     abstract shadow: Color;
 
     abstract rowEven: Color;
-    abstract rowOdd: Color
-
+    abstract rowOdd: Color;
+    
     get(val: keyof Theme, alpha?:number): string{
         if(alpha && val != 'name'){
             const color = this[val];
@@ -143,5 +164,92 @@ class LightRed extends Light{
     accent = new Color(194,6,47);
     buttonPrimary = new Color(194,6,47);
 }
+export type ThemeJSON = {
+  name: string;
+  type: ThemeType;
 
-export default [new Light(), new Dark(), new LightRed(), new DarkRed()]
+  primary: string;
+  secondary: string;
+  accent: string;
+
+  background: string;
+  backgroundAccent: string;
+
+  textPrimary: string;
+  textSecondary: string;
+  textDisabled: string;
+
+  buttonPrimary: string;
+  buttonSecondary: string;
+
+  border: string;
+  shadow: string;
+
+  rowEven: string;
+  rowOdd: string;
+};
+
+
+
+export class CustomTheme extends Light {
+    constructor() {
+        super();
+    }
+
+    init(json: ThemeJSON) {
+        console.warn(json)
+        this.name = json.name;
+        this.type = json.type;
+
+        const parse = (item: string, key: string) => {
+            if (item && typeof item === "string") {
+                try {
+                    return Color.fromHex(item);
+                } catch (e) {
+                    console.error(`Invalid hex value for "${key}":`, item);
+                    throw e;
+                }
+            }
+            console.error(`Missing or invalid color for "${key}":`, item);
+            throw new Error(`Color for "${key}" is invalid or missing.`);
+        };
+
+
+        this.primary = parse(json.primary, "primary");
+        this.secondary = parse(json.secondary, "secondary");
+        this.accent = parse(json.accent, "accent");
+
+        this.background = parse(json.background, "background");
+        this.backgroundAccent = parse(json.backgroundAccent, "backgroundAccent");
+
+        this.textPrimary = parse(json.textPrimary, "textPrimary");
+        this.textSecondary = parse(json.textSecondary, "textSecondary");
+        this.textDisabled = parse(json.textDisabled, "textDisabled");
+
+        this.buttonPrimary = parse(json.buttonPrimary, "buttonPrimary");
+        this.buttonSecondary = parse(json.buttonSecondary, "buttonSecondary");
+
+        this.border = parse(json.border, "border");
+        this.shadow = parse(json.shadow, "shadow");
+
+        this.rowEven = parse(json.rowEven, "rowEven");
+        this.rowOdd = parse(json.rowOdd, "rowOdd");
+    }
+    
+    set(key: keyof Theme, val: Color): void {
+        const current = this[key];
+        if (current instanceof Color) {
+            (this as any)[key] = val;
+        }
+    }
+    reset(key: keyof Theme){
+        console.log("resetting");
+        (this as any)[key] = custom_defaullt[key]
+    }
+}
+
+const custom_defaullt = new CustomTheme();
+
+
+
+export default [new Light(), new Dark(), new LightRed(), new DarkRed(), new CustomTheme()]

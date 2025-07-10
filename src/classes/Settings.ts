@@ -1,5 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Screen } from "enum/Screens";
+import Themes, { CustomTheme, Theme, ThemeJSON } from "./Themes";
 class Settings {
     readonly PROPS: { [K in keyof SettingPropTypes]: SettingsProperty<SettingPropTypes[K]> } = new SettingProps() as any;
 
@@ -27,6 +28,7 @@ enum AppTheme {
     Dark,
     LightRed,
     DarkRed,
+    Custom
 }
 const themes = Object.keys(AppTheme).filter(k => isNaN(Number(k))) as (keyof typeof AppTheme)[];
 
@@ -37,7 +39,8 @@ const SettingsDefaults = {
     DYNAMIC_BACKGROUND: false,
     AUTOMATIC_UPDATES: true,
     UPDATE_FREQUENCY: 1000,
-    DEFAULT_SCREEN: Screen.Connection
+    DEFAULT_SCREEN: Screen.Connection,
+    CUSTOM_THEME: new CustomTheme()
 }
 
 interface SettingPropTypes {
@@ -48,6 +51,7 @@ interface SettingPropTypes {
     AUTOMATIC_UPDATES: boolean;
     UPDATE_FREQUENCY: number;
     DEFAULT_SCREEN: Screen
+    CUSTOM_THEME: Theme
 }
 
 
@@ -59,6 +63,7 @@ class SettingProps {
     readonly AUTOMATIC_UPDATES = new SettingsProperty<boolean>("automatic_updates", SettingsDefaults.AUTOMATIC_UPDATES);
     readonly UPDATE_FREQUENCY = new SettingsProperty<number>('update_frequency', SettingsDefaults.UPDATE_FREQUENCY)
     readonly DEFAULT_SCREEN = new SettingsProperty<Screen>('default_screen', SettingsDefaults.DEFAULT_SCREEN)
+    readonly CUSTOM_THEME = new SettingsProperty<Theme>('custom_theme', SettingsDefaults.CUSTOM_THEME)
 }
 class SettingsProperty<T> {
     readonly key: string;

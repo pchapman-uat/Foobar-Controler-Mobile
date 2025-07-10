@@ -8,6 +8,7 @@ import AppContext, {AppContextType} from 'AppContext';
 import { useOrientation } from 'hooks/useOrientation';
 import BeefWeb from 'classes/BeefWeb';
 import AboutScreen from 'screens/AboutScreen';
+import { initCustomTheme } from 'managers/ThemeManager';
 
 export type RootStackParamList = {
   Home: undefined,
@@ -24,6 +25,7 @@ export default function App() {
   // Set the theme from settings once on mount
   useEffect(() => {
     Settings.PROPS.THEME.get().then(setTheme);
+    Settings.get('CUSTOM_THEME').then(initCustomTheme)
   }, []);
 
   // Optional: Start Beefweb updates if automatic updates enabled

@@ -99,11 +99,15 @@ Below is information regarding the assets and libraries used for this project.
     - Audio Controler in notification bar/lock screen
 - `react-native-elements`: `^3.4.3`,
     - UI Elements
+- `react-native-gesture-handler`: `^2.27.1`,
+    - Required for color picker
 - `react-native-network-info`: `^5.2.1`,
     - Finding aviaiable servers
 - `react-native-safe-area-context`: `^5.4.0`,
     - UI Elements
 - `react-native-svg`: `^15.12.0`,
     - SVG Support
-- `react-native-svg-transformer`: `^1.5.1`
+- `react-native-svg-transformer`: `^1.5.1`,
     - SVG Support
+- `reanimated-color-picker`: `^4.1.0`
+    - Color Picker

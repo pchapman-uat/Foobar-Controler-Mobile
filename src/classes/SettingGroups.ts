@@ -1,6 +1,6 @@
 import { SettingPropTypes, SettingsClass } from "./Settings";
 
-type SettingType = 'string' | 'boolean' | 'number' | 'AppTheme' | 'Screens' 
+type SettingType = 'string' | 'boolean' | 'number' | 'AppTheme' | 'Screens' | 'CustomTheme'
 class GroupItem<K extends keyof SettingPropTypes> {
     readonly name: string;
     readonly key: K;
@@ -47,6 +47,10 @@ class SettingGroups {
             new GroupItem('Dynamic Background', 'DYNAMIC_BACKGROUND', 'boolean'),
             new GroupItem('Automatic Updates', 'AUTOMATIC_UPDATES', 'boolean'),
             new GroupItem('Default Screen', 'DEFAULT_SCREEN', 'Screens'),
+        ),
+        new Group('Themes',
+            new GroupItem('Theme', 'THEME', 'AppTheme'),
+            new GroupItem('Custom Theme', 'CUSTOM_THEME', 'CustomTheme')
         ),
         new Group('Advanced',
             new GroupItem('Update Frequency', 'UPDATE_FREQUENCY', 'number')

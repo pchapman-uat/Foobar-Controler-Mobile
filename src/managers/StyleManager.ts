@@ -9,11 +9,11 @@ import { useContext, useMemo } from "react";
 import AppContext from "AppContext";
 import { Orientation } from "hooks/useOrientation";
 import SettingsStyle from "style/SettingsStyle";
+import ColorPickerStyle from "style/ColorPickerStyle";
 
-type Styles = 'Main' | 'NowPlaying' | 'Modal' | 'Navbar' | 'StatusBar' | 'Library' | 'Settings';
+type Styles = 'Main' | 'NowPlaying' | 'Modal' | 'Navbar' | 'StatusBar' | 'Library' | 'Settings' | 'ColorPicker';
 
-// Infer the types from each module
-type StyleMapType = {
+export type StyleMapType = {
   Main: ReturnType<typeof MainStyle>;
   NowPlaying: ReturnType<typeof NowPlayingStyle>;
   Modal: ReturnType<typeof ModalStyle>;
@@ -21,6 +21,7 @@ type StyleMapType = {
   StatusBar: ReturnType<typeof StatusBarStyle>;
   Library: ReturnType<typeof LibraryStyle>;
   Settings: ReturnType<typeof SettingsStyle>
+  ColorPicker: ReturnType<typeof ColorPickerStyle>
 };
 
 const styleMap: { [K in Styles]: (theme: AppTheme, orientation: Orientation) => StyleMapType[K] } = {
@@ -30,7 +31,8 @@ const styleMap: { [K in Styles]: (theme: AppTheme, orientation: Orientation) => 
   Navbar: NavBarStyle,
   StatusBar: StatusBarStyle,
   Library: LibraryStyle,
-  Settings: SettingsStyle
+  Settings: SettingsStyle,
+  ColorPicker: ColorPickerStyle
 };
 
 export function createStyle<T extends Styles>(
