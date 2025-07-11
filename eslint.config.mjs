@@ -37,6 +37,7 @@ export default defineConfig([
 			"no-unused-vars": "off",
 			"@typescript-eslint/no-unused-vars": "warn",
 			"react/no-unescaped-entities": "warn",
+			"react/prop-types": "off",
 		},
 	},
 	globalIgnores(["node_modules/*", ".expo/*", "builds/*", "android"]),

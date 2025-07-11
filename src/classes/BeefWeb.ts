@@ -6,7 +6,7 @@ import {
 import { AddPlaylistResponse } from "./responses/AddPlaylist";
 import { Columns, PlayerResponse } from "./responses/Player";
 import { PlaylistItemsResponse } from "./responses/PlaylistItems";
-import { PlaylistsResponse } from "./responses/Playlists";
+import { Playlist, PlaylistsResponse } from "./responses/Playlists";
 import PlayQueueResponse from "./responses/PlayQueue";
 import { RequestStatus, WebRequest } from "./WebRequest";
 import axios, { AxiosResponse } from "axios";
@@ -17,6 +17,7 @@ import {
 	AudioProEventType,
 } from "react-native-audio-pro";
 import { SettingsDefaults } from "./Settings";
+import FromJSON from "interfaces/iFromJSON";
 type AudioProTrack = {
 	id: string;
 	url: string | number;
@@ -58,7 +59,7 @@ export class Connection {
 		return this.port;
 	}
 }
-type EventHandler<T = any> = (data: T) => void;
+type EventHandler<T = unknown> = (data: T) => void;
 
 export type BeefWebEvents = {
 	update: WebPlayerResponse;
@@ -203,7 +204,7 @@ export class Beefweb {
 		const columns = activeItem.columns;
 		const track = this.createTrackNotification({
 			id: "track-" + activeItem.index,
-			url: require("../assets/audio/silence.mp3"),
+			url: require("../assets/audio/silence.mp3"), //TODO: Change this to use module imports
 			title: columns.title,
 			artwork: albumArtiURI,
 			artist: columns.artist,
@@ -240,15 +241,15 @@ export class Beefweb {
 		else this.status = Status.Offline;
 	}
 	private async createWebRequest<T>(
-		response: AxiosResponse<any, any>,
-		type: any,
+		response: AxiosResponse<T>,
+		type: FromJSON<T>,
 	): Promise<WebRequest<T>> {
 		const _response = await WebRequest.create<T>(response, type);
 		this.fromRequestStatus(_response.status);
 		return _response;
 	}
 	async getPlayer(): AsyncWebPlayerResponse {
-		const response = await this._fetch(
+		const response = await this._fetch<PlayerResponse>(
 			this.combineUrl("player") + Columns.columnsQuery,
 		);
 		console.log("done");
@@ -270,7 +271,9 @@ export class Beefweb {
 	}
 
 	async getPlaylists() {
-		const response = await this._fetch(this.combineUrl("playlists"));
+		const response = await this._fetch<PlaylistsResponse>(
+			this.combineUrl("playlists"),
+		);
 		if (response) {
 			const playlistsResponse = await this.createWebRequest<PlaylistsResponse>(
 				response,
@@ -281,11 +284,11 @@ export class Beefweb {
 	}
 
 	async getPlaylistItems(playlistId: string) {
-		const playlistInfo = await this._fetch(
+		const playlistInfo = await this._fetch<Playlist>(
 			this.combineUrl("playlists", playlistId),
 		);
 		if (playlistInfo && playlistInfo.data.itemCount) {
-			const response = await this._fetch(
+			const response = await this._fetch<PlaylistItemsResponse>(
 				this.combineUrl(
 					"playlists",
 					playlistId,
@@ -303,7 +306,7 @@ export class Beefweb {
 	}
 
 	async getPlaybackQueue() {
-		const response = await this._fetch(
+		const response = await this._fetch<PlayQueueResponse>(
 			this.combineUrl("playqueue") + Columns.columnsQuery,
 		);
 		if (response) {
@@ -406,11 +409,14 @@ export class Beefweb {
 		index: number,
 		columns?: Columns[],
 	) {
-		const response = await this._post(this.combineUrl("playlists", "add"), {
-			title,
-			index,
-			setCurrent,
-		});
+		const response = await this._post<AddPlaylistResponse>(
+			this.combineUrl("playlists", "add"),
+			{
+				title,
+				index,
+				setCurrent,
+			},
+		);
 		if (response && columns) {
 			const result = await this.createWebRequest<AddPlaylistResponse>(
 				response,
@@ -445,7 +451,7 @@ export class Beefweb {
 		const playlists = await this.getPlaylists();
 		if (playlists) {
 			let id: string | null = null;
-			for (let item of playlists.data) {
+			for (const item of playlists.data) {
 				if (item.title == this.mobilePlaylistTitle) {
 					console.log("Found it!", item);
 					id = item.id;
@@ -480,7 +486,7 @@ export class Beefweb {
 		this.con.set(ip, port);
 	}
 
-	private async _fetch(path: string): Promise<AxiosResponse<any, any> | null> {
+	private async _fetch<T>(path: string): Promise<AxiosResponse<T> | null> {
 		const url = this.con.getUrl();
 		if (url) {
 			const fullUrl = this.combineUrl(url, path);
@@ -498,10 +504,10 @@ export class Beefweb {
 		return null;
 	}
 
-	private async _post(
+	private async _post<T>(
 		path: string,
 		body?: object,
-	): Promise<AxiosResponse<any, any> | null> {
+	): Promise<AxiosResponse<T> | null> {
 		const url = this.con.getUrl();
 		if (url) {
 			try {
