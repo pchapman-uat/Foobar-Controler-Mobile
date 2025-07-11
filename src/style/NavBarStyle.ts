@@ -1,7 +1,7 @@
 import { StyleSheet } from "react-native";
-import { AppTheme } from "classes/Settings";
+import { StyleProps } from "classes/Settings";
 
-export default (theme: AppTheme) =>
+export default ({}: StyleProps) =>
 	StyleSheet.create({
 		navBarContainer: {
 			display: "flex",

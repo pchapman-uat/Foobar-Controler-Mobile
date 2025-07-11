@@ -1,9 +1,9 @@
 import { Dimensions, StyleSheet } from "react-native";
-import { AppTheme } from "classes/Settings";
 import { getColor } from "managers/ThemeManager";
-import { getOri, Orientation } from "hooks/useOrientation";
+import { getOri } from "hooks/useOrientation";
+import { StyleProps } from "classes/Settings";
 
-export default (theme: AppTheme, ori: Orientation) => {
+export default ({ theme, ori }: StyleProps) => {
 	const { width, height } = Dimensions.get("window");
 	const imageSize = getOri(ori, "landscape", height * 0.5, width * 0.75);
 	return StyleSheet.create({

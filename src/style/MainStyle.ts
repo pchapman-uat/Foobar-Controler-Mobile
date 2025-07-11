@@ -1,8 +1,8 @@
 import { StyleSheet } from "react-native";
-import { AppTheme } from "classes/Settings";
-import { getColor, getTheme } from "managers/ThemeManager";
+import { StyleProps } from "classes/Settings";
+import { getColor } from "managers/ThemeManager";
 
-export default (theme: AppTheme) => {
+export default ({ theme }: StyleProps) => {
 	const primaryText = {
 		color: getColor(theme, "textPrimary"),
 	};

@@ -1,4 +1,4 @@
-import { AppTheme } from "classes/Settings";
+import { AppTheme, StyleProps } from "classes/Settings";
 import MainStyle from "../style/MainStyle";
 import NowPlayingStyle from "../style/NowPlayingStyle";
 import ModalStyle from "../style/ModalStyle";
@@ -33,7 +33,7 @@ export type StyleMapType = {
 };
 
 const styleMap: {
-	[K in Styles]: (theme: AppTheme, orientation: Orientation) => StyleMapType[K];
+	[K in Styles]: (props: StyleProps) => StyleMapType[K];
 } = {
 	Main: MainStyle,
 	NowPlaying: NowPlayingStyle,
@@ -47,13 +47,13 @@ const styleMap: {
 
 export function createStyle<T extends Styles>(
 	theme: AppTheme,
-	orientation: Orientation,
+	ori: Orientation,
 	...styles: T[]
 ): Pick<StyleMapType, T> {
 	console.log("updating style");
 	const result = {} as Pick<StyleMapType, T>;
 	for (const style of styles) {
-		result[style] = styleMap[style](theme, orientation);
+		result[style] = styleMap[style]({ theme, ori });
 	}
 	return result;
 }

@@ -1,6 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Screen } from "enum/Screens";
 import { CustomTheme, Theme } from "./Themes";
+import { Orientation } from "hooks/useOrientation";
 class Settings {
 	readonly PROPS: {
 		[K in keyof SettingPropTypes]: SettingsProperty<SettingPropTypes[K]>;
@@ -43,6 +44,7 @@ enum AppTheme {
 }
 type StyleProps = {
 	theme: AppTheme;
+	ori: Orientation;
 };
 const themes = Object.keys(AppTheme).filter((k) =>
 	isNaN(Number(k)),

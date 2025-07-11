@@ -1,8 +1,8 @@
-import { AppTheme } from "classes/Settings";
+import { StyleProps } from "classes/Settings";
 import { getColor } from "managers/ThemeManager";
 import { StyleSheet } from "react-native";
 
-export default (theme: AppTheme) =>
+export default ({ theme }: StyleProps) =>
 	StyleSheet.create({
 		StatusBarContainer: {
 			display: "flex",

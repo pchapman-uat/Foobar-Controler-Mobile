@@ -1,8 +1,8 @@
 import { StyleSheet } from "react-native";
-import { AppTheme } from "classes/Settings";
+import { StyleProps } from "classes/Settings";
 import { getColor } from "managers/ThemeManager";
 
-export default (theme: AppTheme) =>
+export default ({ theme }: StyleProps) =>
 	StyleSheet.create({
 		itemLabel: {
 			color: getColor(theme, "textPrimary"),
