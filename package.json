@@ -39,6 +39,7 @@
     "babel-plugin-module-resolver": "^5.0.2",
     "eas-cli": "^16.8.0",
     "expo-build-properties": "^0.14.6",
+    "prettier": "^3.6.2",
     "react-native-svg-transformer": "^1.5.1",
     "typescript": "~5.8.3"
   },

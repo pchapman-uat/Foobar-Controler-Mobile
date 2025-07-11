@@ -11,44 +11,57 @@ import { Orientation } from "hooks/useOrientation";
 import SettingsStyle from "style/SettingsStyle";
 import ColorPickerStyle from "style/ColorPickerStyle";
 
-type Styles = 'Main' | 'NowPlaying' | 'Modal' | 'Navbar' | 'StatusBar' | 'Library' | 'Settings' | 'ColorPicker';
+type Styles =
+	| "Main"
+	| "NowPlaying"
+	| "Modal"
+	| "Navbar"
+	| "StatusBar"
+	| "Library"
+	| "Settings"
+	| "ColorPicker";
 
 export type StyleMapType = {
-  Main: ReturnType<typeof MainStyle>;
-  NowPlaying: ReturnType<typeof NowPlayingStyle>;
-  Modal: ReturnType<typeof ModalStyle>;
-  Navbar: ReturnType<typeof NavBarStyle>;
-  StatusBar: ReturnType<typeof StatusBarStyle>;
-  Library: ReturnType<typeof LibraryStyle>;
-  Settings: ReturnType<typeof SettingsStyle>
-  ColorPicker: ReturnType<typeof ColorPickerStyle>
+	Main: ReturnType<typeof MainStyle>;
+	NowPlaying: ReturnType<typeof NowPlayingStyle>;
+	Modal: ReturnType<typeof ModalStyle>;
+	Navbar: ReturnType<typeof NavBarStyle>;
+	StatusBar: ReturnType<typeof StatusBarStyle>;
+	Library: ReturnType<typeof LibraryStyle>;
+	Settings: ReturnType<typeof SettingsStyle>;
+	ColorPicker: ReturnType<typeof ColorPickerStyle>;
 };
 
-const styleMap: { [K in Styles]: (theme: AppTheme, orientation: Orientation) => StyleMapType[K] } = {
-  Main: MainStyle,
-  NowPlaying: NowPlayingStyle,
-  Modal: ModalStyle,
-  Navbar: NavBarStyle,
-  StatusBar: StatusBarStyle,
-  Library: LibraryStyle,
-  Settings: SettingsStyle,
-  ColorPicker: ColorPickerStyle
+const styleMap: {
+	[K in Styles]: (theme: AppTheme, orientation: Orientation) => StyleMapType[K];
+} = {
+	Main: MainStyle,
+	NowPlaying: NowPlayingStyle,
+	Modal: ModalStyle,
+	Navbar: NavBarStyle,
+	StatusBar: StatusBarStyle,
+	Library: LibraryStyle,
+	Settings: SettingsStyle,
+	ColorPicker: ColorPickerStyle,
 };
 
 export function createStyle<T extends Styles>(
-  theme: AppTheme,
-  orientation: Orientation,
-  ...styles: T[]
+	theme: AppTheme,
+	orientation: Orientation,
+	...styles: T[]
 ): Pick<StyleMapType, T> {
-  console.log("updating style")
-  const result = {} as Pick<StyleMapType, T>;
-  for (const style of styles) {
-    result[style] = styleMap[style](theme, orientation);
-  }
-  return result;
+	console.log("updating style");
+	const result = {} as Pick<StyleMapType, T>;
+	for (const style of styles) {
+		result[style] = styleMap[style](theme, orientation);
+	}
+	return result;
 }
 
 export function useStyles<T extends Styles>(...styles: T[]) {
-  const { theme ,orientation } = useContext(AppContext);
-  return useMemo(() => createStyle(theme, orientation, ...styles), [theme, orientation]);
+	const { theme, orientation } = useContext(AppContext);
+	return useMemo(
+		() => createStyle(theme, orientation, ...styles),
+		[theme, orientation],
+	);
 }
