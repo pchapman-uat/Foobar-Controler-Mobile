@@ -5,14 +5,13 @@ import {
 	TouchableOpacity,
 	ImageBackground,
 } from "react-native";
-import { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import AppContext from "AppContext";
 import Slider from "@react-native-community/slider";
 import { WebPlayerResponse } from "managers/TypeManager";
 import { Icon } from "managers/ImageManager";
 import { useStyles } from "managers/StyleManager";
 import { getColor } from "managers/ThemeManager";
-import { Button } from "react-native-elements";
 import { formatTime } from "helpers/helpers";
 import {
 	EmptyStar,
@@ -153,10 +152,10 @@ export default function NowPlaying() {
 	};
 
 	const ratingEle = (rating: number = 0) => {
-		var stars = [];
+		const stars = [];
 		const size = Styles.NowPlaying.ratingStar.width;
 		for (let i = 0; i < 5; i++) {
-			var _rating = rating - i;
+			const _rating = rating - i;
 			if (_rating >= 1)
 				stars.push(
 					<FullStar

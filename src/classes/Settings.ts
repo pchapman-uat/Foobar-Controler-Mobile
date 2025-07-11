@@ -1,6 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Screen } from "enum/Screens";
-import Themes, { CustomTheme, Theme, ThemeJSON } from "./Themes";
+import { CustomTheme, Theme } from "./Themes";
 class Settings {
 	readonly PROPS: {
 		[K in keyof SettingPropTypes]: SettingsProperty<SettingPropTypes[K]>;
@@ -41,6 +41,9 @@ enum AppTheme {
 	DarkRed,
 	Custom,
 }
+type StyleProps = {
+	theme: AppTheme;
+};
 const themes = Object.keys(AppTheme).filter((k) =>
 	isNaN(Number(k)),
 ) as (keyof typeof AppTheme)[];
@@ -151,4 +154,5 @@ export {
 	themes,
 	Settings as SettingsClass,
 	SettingPropTypes,
+	StyleProps,
 };

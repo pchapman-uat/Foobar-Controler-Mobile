@@ -21,7 +21,7 @@ export function initCustomTheme(customTheme: Theme) {
 	if (theme instanceof CustomTheme) {
 		console.warn("Custom Theme");
 		if (!customTheme) return;
-		let data = JSON.parse(JSON.stringify(customTheme)) as ThemeJSON;
+		const data = JSON.parse(JSON.stringify(customTheme)) as ThemeJSON;
 		theme.init(data);
 	}
 }

@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect } from "react";
+import React, { useState, useContext } from "react";
 import { View, TouchableOpacity, Modal, Text } from "react-native";
 import AppContext from "../AppContext";
 import { Columns } from "../classes/responses/Player";

@@ -5,7 +5,7 @@ import { GitHubMark, GitHubMarkWhite } from "managers/SVGManager";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "App";
 import { Button } from "react-native-elements";
-import { useContext } from "react";
+import React, { useContext } from "react";
 import AppContext from "AppContext";
 import { getTheme } from "managers/ThemeManager";
 import { ThemeType } from "classes/Themes";

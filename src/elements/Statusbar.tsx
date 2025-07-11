@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import AppContext from "../AppContext";
 import { TouchableOpacity, View, Text } from "react-native";
 import { State, Status } from "../classes/BeefWeb";

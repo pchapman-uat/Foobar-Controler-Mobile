@@ -1,3 +1,4 @@
+import React from "react";
 import { Picker } from "@react-native-picker/picker";
 
 export function renderPicker<T extends Record<string, string | number>>(

@@ -1,17 +1,12 @@
-import { useContext, useEffect, useState } from "react";
-import { TouchableOpacity, View, Text, ScrollView } from "react-native";
+import React, { useContext, useEffect, useState } from "react";
+import { TouchableOpacity, Text, ScrollView } from "react-native";
 import Playlist from "./library/LibraryPlaylist";
 import LibraryArtist from "./library/LibraryArtist";
 import { useStyles } from "managers/StyleManager";
 import { Button } from "react-native-elements";
 import { SafeAreaView } from "react-native-safe-area-context";
 import LibraryAlbum from "./library/LibraryAlbum";
-import {
-	AlbumSVG,
-	ConnectionSVG,
-	LibrarySVG,
-	PlaybackQueueSVG,
-} from "managers/SVGManager";
+import { AlbumSVG, LibrarySVG, PlaybackQueueSVG } from "managers/SVGManager";
 import { SvgProps } from "react-native-svg";
 import AppContext from "AppContext";
 import { getColor } from "managers/ThemeManager";
@@ -78,7 +73,7 @@ export default function LibraryMain() {
 		setPrevScreen(currentScreen);
 	}, [currentScreen]);
 
-	let ScreenComponent = currentScreen < 0 ? Main : items[currentScreen].screen;
+	const ScreenComponent = currentScreen < 0 ? Main : items[currentScreen].screen;
 
 	return (
 		<SafeAreaView style={Styles.Main.container}>

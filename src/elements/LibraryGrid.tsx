@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext, useCallback } from "react";
+import React, { useState, useEffect, useContext, useCallback } from "react";
 import {
 	TouchableOpacity,
 	Image,

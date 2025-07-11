@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { ScrollView, TextInput, View } from "react-native";
 import AppContext from "AppContext";
 import { Columns } from "classes/responses/Player";

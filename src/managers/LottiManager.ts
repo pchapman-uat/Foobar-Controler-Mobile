@@ -1,6 +1,5 @@
 import LottieLoading from "assets/lottie/loading.lottie.json";
 import { Color } from "classes/Themes";
-import { color } from "react-native-elements/dist/helpers";
 
 export { LottieLoading };
 

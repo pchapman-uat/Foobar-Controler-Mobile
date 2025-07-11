@@ -1,23 +1,17 @@
 import { Picker } from "@react-native-picker/picker";
 import AppContext from "AppContext";
-import {
-	AppTheme,
-	SettingPropTypes,
-	SettingsDefaults,
-	themes,
-} from "classes/Settings";
+import { AppTheme, SettingPropTypes, SettingsDefaults } from "classes/Settings";
 import { useStyles } from "managers/StyleManager";
 import {
 	getColor,
 	getCustomTheme,
 	initCustomTheme,
 } from "managers/ThemeManager";
-import { useCallback, useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import {
 	View,
 	Text,
 	TextInput,
-	FlatList,
 	ScrollView,
 	TouchableOpacity,
 	Modal,
@@ -25,7 +19,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Button, Switch } from "react-native-elements";
-import { Screen, screens } from "enum/Screens";
+import { Screen } from "enum/Screens";
 import SettingGroups, {
 	Group,
 	GroupItem,
@@ -35,7 +29,7 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "App";
 import { renderPicker } from "elements/EnumPicker";
 import { getEnumKeys } from "helpers/helpers";
-import Themes, { Color, CustomTheme, Theme, ThemeJSON } from "classes/Themes";
+import { Color, CustomTheme, Theme } from "classes/Themes";
 import ColorPickers, { ColorPickerOptions } from "elements/ColorPickers";
 import { ColorFormatsObject } from "reanimated-color-picker";
 type SettingsNavigationProp = NativeStackNavigationProp<

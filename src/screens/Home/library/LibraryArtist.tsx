@@ -1,15 +1,16 @@
-import { useState, useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import AppContext from "AppContext";
 import { Columns } from "classes/responses/Player";
-import { View, Button, ScrollView, TextInput, Animated } from "react-native";
+import { View, ScrollView, TextInput } from "react-native";
 import LibraryItems, { filterSongs } from "elements/LibraryList";
 import { useStyles } from "managers/StyleManager";
 import LibraryGrid, { GridItem } from "elements/LibraryGrid";
-import { Picker } from "@react-native-picker/picker";
 import { getColor } from "managers/ThemeManager";
 import LottieView from "lottie-react-native";
 import updateColors, { LottieLoading } from "managers/LottiManager";
+
 type Views = "grid" | "list";
+
 export default function LibraryArtist() {
 	const Styles = useStyles("Main");
 	const [searchInput, setSearchInput] = useState<string>();

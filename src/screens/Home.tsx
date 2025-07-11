@@ -1,5 +1,5 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { useState, useRef, useEffect, useContext } from "react";
+import React, { useState, useRef, useEffect, useContext } from "react";
 import { Animated, Dimensions, StyleSheet } from "react-native";
 import { RootStackParamList } from "App";
 import { items } from "classes/NavBar";
@@ -10,7 +10,7 @@ type HomeNavigationProp = NativeStackNavigationProp<RootStackParamList, "Home">;
 type HomeProps = {
 	navigation: HomeNavigationProp;
 };
-export default ({ navigation }: HomeProps) => {
+export default function Home({ navigation }: HomeProps) {
 	const [currentScreen, setCurrentScreen] = useState<number>(0);
 	const [prevScreen, setPrevScreen] = useState<number | null>(null);
 
@@ -40,7 +40,7 @@ export default ({ navigation }: HomeProps) => {
 			if (typeof item == "number") setCurrentScreen(item);
 		});
 	}, []);
-	let ScreenComponent = items[currentScreen].screen;
+	const ScreenComponent = items[currentScreen].screen;
 	return (
 		<NavBarScreen
 			onNavigate={setCurrentScreen}
@@ -57,7 +57,7 @@ export default ({ navigation }: HomeProps) => {
 			</Animated.View>
 		</NavBarScreen>
 	);
-};
+}
 const styles = StyleSheet.create({
 	screenContainer: {
 		flex: 1,
