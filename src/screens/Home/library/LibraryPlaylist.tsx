@@ -8,7 +8,9 @@ import { getColor } from "managers/ThemeManager";
 import LibraryGrid, { GridItem } from "elements/LibraryGrid";
 import LottieView from "lottie-react-native";
 import updateColors, { LottieLoading } from "managers/LottiManager";
+
 type Views = "grid" | "list";
+
 export default function LibraryPlaylist() {
 	const Styles = useStyles("Main", "Library");
 	const [playlistId, setPlaylistId] = useState<string>();

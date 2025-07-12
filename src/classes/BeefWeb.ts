@@ -18,6 +18,12 @@ import {
 } from "react-native-audio-pro";
 import { SettingsDefaults } from "./Settings";
 import FromJSON from "interfaces/iFromJSON";
+import {
+	BrowserDirectory,
+	BrowserEntriesResponse,
+	BrowserFile,
+	BrowserRootsResponse,
+} from "./responses/Browser";
 
 type AudioProTrack = {
 	id: string;
@@ -317,6 +323,27 @@ export class Beefweb {
 			return await this.createWebRequest<PlayQueueResponse>(
 				response,
 				PlayQueueResponse,
+			);
+		}
+	}
+	async getBrowserRoots() {
+		const response = await this._fetch<BrowserRootsResponse>(
+			this.combineUrl("browser", "roots"),
+		);
+		if (response) {
+			return await this.createWebRequest<BrowserRootsResponse>(
+				response,
+				BrowserRootsResponse,
+			);
+		}
+	}
+	async getBrowserEntries(path: string) {
+		const url = this.combineUrl("browser", "entries") + "?path=" + path;
+		const response = await this._fetch<BrowserEntriesResponse>(url);
+		if (response) {
+			return await this.createWebRequest<BrowserEntriesResponse>(
+				response,
+				BrowserEntriesResponse,
 			);
 		}
 	}
