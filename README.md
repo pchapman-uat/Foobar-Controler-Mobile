@@ -119,7 +119,7 @@ Below is information regarding the assets and libraries used for this project.
 This is a list of all VSCode extensions that where used for this project.
 
 - [ADB QR (Aakash P)](https://marketplace.visualstudio.com/items?itemName=AakashP.adb-qr) [AakashP.adb-qr]
-- [Error Lense (Alexander)](https://marketplace.visualstudio.com/items?itemName=usernamehw.errorlens) [icrawl.discord-vscode]
+- [Error Lense (Alexander)](https://marketplace.visualstudio.com/items?itemName=usernamehw.errorlens) [usernamehw.errorlens]
 - [ESLint (Microsoft)](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) [dbaeumer.vscode-eslint]
 - [Expo Tools (Expo)](https://marketplace.visualstudio.com/items?itemName=expo.vscode-expo-tools) [expo.vscode-expo-tools]
 - [GitLens (GitKraken)](https://marketplace.visualstudio.com/items?itemName=eamodio.gitlens) [eamodio.gitlens]
