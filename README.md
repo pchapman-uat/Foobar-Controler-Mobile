@@ -1,4 +1,7 @@
 # Foobar Controller Mobile (Name Pending)
+![GitHub latest release](https://img.shields.io/github/v/release/pchapman-uat/Foobar-Controler-Mobile?include_prereleases&display_name=release)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/w/pchapman-uat/Foobar-Controler-Mobile)
+![GitHub last commit](https://img.shields.io/github/last-commit/pchapman-uat/Foobar-Controler-Mobile)
 
 > [!WARNING]
 > This project is still in early testing and is not ready for release
