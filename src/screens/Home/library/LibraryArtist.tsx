@@ -13,7 +13,6 @@ type Views = "grid" | "list";
 
 export default function LibraryArtist() {
 	const Styles = useStyles("Main");
-	const [searchInput, setSearchInput] = useState<string>();
 	const ctx = useContext(AppContext);
 	const [view, setView] = useState<Views>("grid");
 	const [gridItems, setGridItems] = useState<GridItem[]>([]);
@@ -54,11 +53,7 @@ export default function LibraryArtist() {
 	const listView = (filteredSongs: Columns[] | undefined) => {
 		return (
 			<View style={{ flex: 1 }}>
-				<TextInput
-					style={Styles.Main.textInput}
-					onChangeText={searchSongs}
-					value={searchInput}
-				/>
+				<TextInput style={Styles.Main.textInput} onChangeText={searchSongs} />
 				<ScrollView>
 					<LibraryItems songs={filteredSongs} />
 				</ScrollView>
@@ -72,7 +67,7 @@ export default function LibraryArtist() {
 		filteredSongs?: Columns[];
 	};
 
-	const GetView = ({ view, playlists, artist, filteredSongs }: GetViewProps) => {
+	const GetView = ({ view, playlists, filteredSongs }: GetViewProps) => {
 		const onGridPress = (item: GridItem) => {
 			onArtistChange(item.title);
 			setView("list");

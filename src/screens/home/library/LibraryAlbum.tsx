@@ -13,7 +13,6 @@ type Views = "grid" | "list";
 
 export default function LibraryAlbum() {
 	const Styles = useStyles("Main");
-	const [searchInput, setSearchInput] = useState<string>();
 	const ctx = useContext(AppContext);
 	const [view, setView] = useState<Views>("grid");
 	const [gridItems, setGridItems] = useState<GridItem[]>([]);
@@ -58,11 +57,7 @@ export default function LibraryAlbum() {
 	) => {
 		return (
 			<View style={{ flex: 1 }}>
-				<TextInput
-					style={Styles.Main.textInput}
-					onChangeText={searchSongs}
-					value={searchInput}
-				/>
+				<TextInput style={Styles.Main.textInput} onChangeText={searchSongs} />
 				<ScrollView>
 					<LibraryItems songs={filteredSongs} />
 				</ScrollView>

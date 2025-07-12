@@ -39,11 +39,9 @@ export default function AboutScreen({ navigation }: AboutProps) {
 					to control Foobar2000 remotely.
 				</Text>
 				<Text style={Styles.Main.centeredText}>
-					This project was created for Preston Chapman's Student Innovation Project
-					(SIP) at the University of Advancing Technology (UAT). The SIP is UAT's
-					equivalent of a master’s thesis; all students graduating with a bachelor's
-					degree are required to innovate and create a product. For more information,
-					view{" "}
+					{
+						"This project was created for Preston Chapman's Student Innovation Project (SIP) at the University of Advancing Technology (UAT). The SIP is UAT's equivalent of a master's thesis; all students graduating with a bachelor'sdegree are required to innovate and create a product. For more information, view "
+					}
 					<Text
 						style={Styles.Main.hyperlink}
 						onPress={() =>

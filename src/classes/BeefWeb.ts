@@ -66,7 +66,6 @@ export type BeefWebEvents = {
 	update: WebPlayerResponse;
 	songChange: WebPlayerResponse;
 };
-
 export class Beefweb {
 	status = Status.Offline;
 	con = new Connection();
@@ -126,9 +125,9 @@ export class Beefweb {
 		AudioPro.addEventListener((event) => {
 			switch (event.type) {
 				case AudioProEventType.REMOTE_NEXT:
-					this.onNotificationSkip(event.payload);
+					this.onNotificationSkip(event);
 				case AudioProEventType.REMOTE_PREV:
-					this.onNotificationBack(event.payload);
+					this.onNotificationBack(event);
 			}
 		});
 	}
@@ -160,7 +159,9 @@ export class Beefweb {
 			if (response?.data?.player?.info?.name) {
 				return ip;
 			}
-		} catch (e) {}
+		} catch (e) {
+			console.error(e);
+		}
 		return null;
 	}
 	addEventListener<K extends keyof BeefWebEvents>(
@@ -232,10 +233,10 @@ export class Beefweb {
 		return null;
 	}
 
-	private onNotificationSkip(event: AudioProEvent["payload"]) {
+	private onNotificationSkip({}: AudioProEvent) {
 		this.skip();
 	}
-	private onNotificationBack(event: AudioProEvent["payload"]) {
+	private onNotificationBack({}: AudioProEvent) {
 		this.back();
 	}
 
@@ -450,6 +451,7 @@ export class Beefweb {
 		});
 	}
 
+	// TODO: Add support for replacing and playing
 	async addToMobilePlaylist(items: string[], replace = true, play = true) {
 		const playlists = await this.getPlaylists();
 		if (playlists) {

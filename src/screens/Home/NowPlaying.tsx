@@ -34,9 +34,11 @@ export default function NowPlaying() {
 	const [elapsed, setElapsed] = useState<number>();
 	const [length, setLength] = useState<number>();
 
+	// TODO: Add Muted Icon
 	const [isMuted, setIsMuted] = useState(false);
 	const [volumeMax, setVolumeMax] = useState<number>();
 	const [volumeMin, setVolumeMin] = useState<number>();
+	// TODO: Add Volume Type Option
 	const [volumeType, setVolumeType] = useState("");
 	const [volumeValue, setVolumeValue] = useState<number>();
 	const [rating, setRating] = useState<number>();

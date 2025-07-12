@@ -20,7 +20,6 @@ type ColorPickersProps = {
 };
 
 export default function ColorPickers({
-	kind,
 	currentColor,
 	onColorPick,
 }: ColorPickersProps) {
