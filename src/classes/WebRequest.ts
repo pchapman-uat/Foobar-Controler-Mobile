@@ -1,4 +1,5 @@
 import { AxiosResponse } from "axios";
+import FromJSON from "interfaces/iFromJSON";
 
 export enum RequestStatus {
 	// Sucess
@@ -22,7 +23,7 @@ export class WebRequest<T> {
 
 	static async create<T>(
 		response: AxiosResponse,
-		type: any,
+		type: FromJSON<T>,
 	): Promise<WebRequest<T>> {
 		const status = response.status;
 		const json = await response.data;

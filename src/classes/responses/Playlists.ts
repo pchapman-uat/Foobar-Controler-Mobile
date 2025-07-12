@@ -2,7 +2,7 @@ export class PlaylistsResponse extends Array<Playlist> {
 	constructor(items: Playlist[]) {
 		super(...items);
 	}
-	static fromJSON(json: any): PlaylistsResponse {
+	static fromJSON(json: PlaylistResponseJSON): PlaylistsResponse {
 		return new PlaylistsResponse(json.playlists);
 	}
 }
@@ -14,4 +14,8 @@ export interface Playlist {
 	isCurrent: boolean;
 	itemCount: number;
 	totaltime: 0;
+}
+
+interface PlaylistResponseJSON {
+	playlists: Playlist[];
 }

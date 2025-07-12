@@ -18,6 +18,7 @@ import {
 } from "react-native-audio-pro";
 import { SettingsDefaults } from "./Settings";
 import FromJSON from "interfaces/iFromJSON";
+
 type AudioProTrack = {
 	id: string;
 	url: string | number;
@@ -204,7 +205,9 @@ export class Beefweb {
 		const columns = activeItem.columns;
 		const track = this.createTrackNotification({
 			id: "track-" + activeItem.index,
-			url: require("../assets/audio/silence.mp3"), //TODO: Change this to use module imports
+			/* eslint-disable */
+			url: require("../assets/audio/silence.mp3"), // NOTE: Currently I do not know how to use a module for an mp3 file
+			/* eslint-enable */
 			title: columns.title,
 			artwork: albumArtiURI,
 			artist: columns.artist,

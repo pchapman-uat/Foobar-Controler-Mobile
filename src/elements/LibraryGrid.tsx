@@ -43,8 +43,8 @@ export default function LibraryGrid({
 	const [activePlaylistId, setActivePlaylistId] = useState<string>();
 	const ctx = useContext(AppContext);
 	useEffect(() => {
-		const onBeefWebUpdate = async (e: any) => {
-			onUpdate(await e);
+		const onBeefWebUpdate = async (e: WebPlayerResponse) => {
+			onUpdate(e);
 		};
 		ctx.BeefWeb.addEventListener("update", onBeefWebUpdate);
 		return () => {

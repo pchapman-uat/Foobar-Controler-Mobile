@@ -1,3 +1,4 @@
+import type { AnimationObject } from "lottie-react-native";
 declare module "*.svg" {
 	import React from "react";
 	import { SvgProps } from "react-native-svg";
@@ -20,6 +21,10 @@ declare module "*.jpeg" {
 }
 
 declare module "*.lottie.json" {
-	const content: Record<string, any>;
+	const content: AnimationObject;
+	export default content;
+}
+declare module "*.mp3" {
+	const content: number;
 	export default content;
 }

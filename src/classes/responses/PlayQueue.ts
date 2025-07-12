@@ -5,8 +5,8 @@ export default class PlayQueueResponse extends Array<QueueItem> {
 		super(...playQueue);
 	}
 
-	static fromJSON(json: any): PlayQueueResponse {
-		const queue: any[] = json.playQueue;
+	static fromJSON(json: PlayQueueResponseJSON): PlayQueueResponse {
+		const queue: PlayqueueResponseItemJSON[] = json.playQueue;
 		const playQueue = queue.map(
 			(item) =>
 				new QueueItem(
@@ -20,6 +20,15 @@ export default class PlayQueueResponse extends Array<QueueItem> {
 	}
 }
 
+interface PlayQueueResponseJSON {
+	playQueue: PlayqueueResponseItemJSON[];
+}
+interface PlayqueueResponseItemJSON {
+	columns: RawColumns;
+	itemIndex: number;
+	playlistId: string;
+	playlistIndex: number;
+}
 export class QueueItem {
 	columns: Columns;
 	itemIndex: number;

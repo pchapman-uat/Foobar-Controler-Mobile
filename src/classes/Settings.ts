@@ -3,9 +3,9 @@ import { Screen } from "enum/Screens";
 import { CustomTheme, Theme } from "./Themes";
 import { Orientation } from "hooks/useOrientation";
 class Settings {
-	readonly PROPS: {
+	readonly PROPS = new SettingProps() as {
 		[K in keyof SettingPropTypes]: SettingsProperty<SettingPropTypes[K]>;
-	} = new SettingProps() as any;
+	};
 
 	public async get<K extends keyof SettingPropTypes>(
 		key: K,
@@ -61,16 +61,9 @@ const SettingsDefaults = {
 	CUSTOM_THEME: new CustomTheme(),
 };
 
-interface SettingPropTypes {
-	IP_ADDRESS: string;
-	REMEMBER_IP: boolean;
-	THEME: AppTheme;
-	DYNAMIC_BACKGROUND: boolean;
-	AUTOMATIC_UPDATES: boolean;
-	UPDATE_FREQUENCY: number;
-	DEFAULT_SCREEN: Screen;
-	CUSTOM_THEME: Theme;
-}
+type SettingPropTypes = {
+	[K in keyof typeof SettingsDefaults]: (typeof SettingsDefaults)[K];
+};
 
 class SettingProps {
 	readonly IP_ADDRESS = new SettingsProperty<string>(

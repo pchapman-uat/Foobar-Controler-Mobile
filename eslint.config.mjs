@@ -40,5 +40,11 @@ export default defineConfig([
 			"react/prop-types": "off",
 		},
 	},
+	{
+		files: ["*.config.js"],
+		rules: {
+			"@typescript-eslint/no-require-imports": "off",
+		},
+	},
 	globalIgnores(["node_modules/*", ".expo/*", "builds/*", "android"]),
 ]);

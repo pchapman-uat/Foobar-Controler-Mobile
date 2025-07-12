@@ -21,23 +21,28 @@ export class PlayerResponse {
 	constructor(
 		info: PlayerInfo,
 		activeItem: ActiveItem,
-		columns: RawColumns,
 		volume: Volume,
 		playbackState: PlaybackState,
 	) {
 		this.info = info;
 		this.activeItem = activeItem;
-		this.activeItem.columns = new Columns(columns, activeItem.playlistId);
 		this.volume = volume;
 		this.playbackState = playbackState;
 	}
 
-	static fromJSON(json: any): PlayerResponse {
+	static fromJSON(json: FullPlayerResponseJSON): PlayerResponse {
 		console.log("Creating from JSON");
+		const rawActiveItem = json.player.activeItem;
+		const rawColumns = rawActiveItem.columns;
+
+		const activeItem: ActiveItem = {
+			...rawActiveItem,
+			columns: new Columns(rawColumns, rawActiveItem.playlistId),
+		};
+
 		return new PlayerResponse(
 			json.player.info,
-			json.player.activeItem,
-			json.player.activeItem.columns,
+			activeItem,
 			json.player.volume,
 			json.player.playbackState,
 		);
@@ -48,13 +53,30 @@ export class PlayerResponse {
 		return newColumns.path == oldColumns.path;
 	}
 }
+interface FullPlayerResponseJSON {
+	player: PlayerResponseJSON;
+}
+
+interface PlayerResponseJSON {
+	info: PlayerInfo;
+	activeItem: RawActiveItem;
+	volume: Volume;
+	playbackState: PlaybackState;
+}
 export interface PlayerInfo {
 	name: string;
 	title: string;
 	version: string;
 	pluginVersion: string;
 }
-
+interface RawActiveItem {
+	playlistId: string;
+	playlistIndex: number;
+	index: number;
+	position: number;
+	duration: number;
+	columns: RawColumns;
+}
 export interface ActiveItem {
 	playlistId: string;
 	playlistIndex: number;

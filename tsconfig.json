@@ -5,15 +5,37 @@
     "sourceMap": true,
     "baseUrl": "./src",
     "paths": {
-      "screens/*": ["screens/*"],
-      "classes/*": ["classes/*"],
-      "managers/*": ["managers/*"],
-      "elements/*": ["elements/*"],
-      "enum/*": ["enum/*"],
-      "helpers/*": ["helpers/*"],
-      "hooks/*": ["hooks/*"],
-      "style/*": ["style/*"],
-      "assets/*": ["assets/*"]
-    },
-  }
+      "screens/*": [
+        "screens/*"
+      ],
+      "classes/*": [
+        "classes/*"
+      ],
+      "managers/*": [
+        "managers/*"
+      ],
+      "elements/*": [
+        "elements/*"
+      ],
+      "enum/*": [
+        "enum/*"
+      ],
+      "helpers/*": [
+        "helpers/*"
+      ],
+      "hooks/*": [
+        "hooks/*"
+      ],
+      "style/*": [
+        "style/*"
+      ],
+      "assets/*": [
+        "assets/*"
+      ]
+    }
+  },
+  "include": [
+    "src",
+    "src/declarations.d.ts"
+  ]
 }

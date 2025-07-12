@@ -20,7 +20,7 @@ export class AddPlaylistResponse {
 		this.itemCount = itemCount;
 		this.totalTime = totalTime;
 	}
-	static fromJSON(json: any): AddPlaylistResponse {
+	static fromJSON(json: AddPlaylistResponseJSON): AddPlaylistResponse {
 		return new AddPlaylistResponse(
 			json.id,
 			json.index,
@@ -30,4 +30,12 @@ export class AddPlaylistResponse {
 			json.totalTime,
 		);
 	}
+}
+interface AddPlaylistResponseJSON {
+	id: string;
+	index: number;
+	title: string;
+	isCurrent: boolean;
+	itemCount: number;
+	totalTime: number;
 }

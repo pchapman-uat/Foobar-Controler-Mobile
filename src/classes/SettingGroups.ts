@@ -73,10 +73,6 @@ class SettingGroups {
 	get length() {
 		return this.groups.length;
 	}
-
-	forEach(callback: (g: Group<any>, i: number) => void) {
-		this.groups.forEach(callback);
-	}
 }
 export default new SettingGroups();
 export { GroupItem, Group, SettingGroups, GroupTypes };

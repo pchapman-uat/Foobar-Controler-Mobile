@@ -243,19 +243,16 @@ export class CustomTheme extends Light {
 		this.rowOdd = parse(json.rowOdd, "rowOdd");
 	}
 
-	set(key: keyof Theme, val: Color): void {
-		const current = this[key];
-		if (current instanceof Color) {
-			(this as any)[key] = val;
-		}
+	set<K extends keyof this>(key: K, val: this[K]): void {
+		this[key] = val;
 	}
-	reset(key: keyof Theme) {
-		console.log("resetting");
-		(this as any)[key] = custom_defaullt[key];
+
+	reset<K extends keyof this>(key: K): void {
+		this[key] = (custom_default as this)[key];
 	}
 }
 
-const custom_defaullt = new CustomTheme();
+const custom_default = new CustomTheme();
 
 export default [
 	new Light(),

@@ -9,7 +9,7 @@ export class PlaylistItemsResponse {
 		this.offset = offset;
 		this.totalCount = totalCount;
 	}
-	static fromJSON(json: any): PlaylistItemsResponse {
+	static fromJSON(json: FullPlaylistItemsResponseJSON): PlaylistItemsResponse {
 		console.log("Creating from JSON");
 		const rawColumns: { columns: RawColumns }[] = json.playlistItems.items;
 		const columns = rawColumns.map((item) => new Columns(item.columns));
@@ -19,4 +19,16 @@ export class PlaylistItemsResponse {
 			json.playlistItems.totalCount,
 		);
 	}
+}
+
+interface FullPlaylistItemsResponseJSON {
+	playlistItems: PlaylistItemsResponseJSON;
+}
+interface PlaylistItemsResponseJSON {
+	items: ColumnsContainerJSON[];
+	offset: number;
+	totalCount: number;
+}
+interface ColumnsContainerJSON {
+	columns: RawColumns;
 }
