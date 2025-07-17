@@ -11,7 +11,7 @@
         "reveal": "always"
       }
     },
-     {
+    {
       "label": "EAS Local Build",
       "type": "shell",
       "command": "eas build --platform android --profile preview --local --output ./builds/android/app-release",
@@ -20,6 +20,11 @@
       "presentation": {
         "reveal": "always"
       }
+    },
+    {
+      "label": "Validate",
+      "type": "shell",
+      "command": "npx eslint",
     }
   ]
 }
