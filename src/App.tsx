@@ -31,7 +31,9 @@ export default function App() {
 	// Optional: Start Beefweb updates if automatic updates enabled
 	useEffect(() => {
 		Settings.PROPS.AUTOMATIC_UPDATES.get().then(BeefWeb.setState);
-
+		Settings.get("AUTHENTICATION").then(BeefWeb.setAuthenticationEnabled);
+		Settings.get("USERNAME").then(BeefWeb.setUsername);
+		Settings.get("PASSWORD").then(BeefWeb.setPassword);
 		// Cleanup on unmount (including hot reload)
 		return () => {
 			BeefWeb.setState(false);

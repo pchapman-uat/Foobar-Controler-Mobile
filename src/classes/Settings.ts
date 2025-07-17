@@ -1,11 +1,10 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Screen } from "enum/Screens";
-import { CustomTheme, Theme } from "./Themes";
+import { CustomTheme } from "./Themes";
 import { Orientation } from "hooks/useOrientation";
+import { setItemAsync, getItemAsync } from "expo-secure-store";
 class Settings {
-	readonly PROPS = new SettingProps() as {
-		[K in keyof SettingPropTypes]: SettingsProperty<SettingPropTypes[K]>;
-	};
+	readonly PROPS = SettingProps.create();
 
 	public async get<K extends keyof SettingPropTypes>(
 		key: K,
@@ -59,6 +58,9 @@ const SettingsDefaults = {
 	UPDATE_FREQUENCY: 1000,
 	DEFAULT_SCREEN: Screen.Connection,
 	CUSTOM_THEME: new CustomTheme(),
+	USERNAME: "",
+	PASSWORD: "",
+	AUTHENTICATION: false,
 };
 
 type SettingPropTypes = {
@@ -66,72 +68,95 @@ type SettingPropTypes = {
 };
 
 class SettingProps {
-	readonly IP_ADDRESS = new SettingsProperty<string>(
-		"ip_address",
-		SettingsDefaults.IP_ADDRESS,
-	);
-	readonly REMEMBER_IP = new SettingsProperty<boolean>(
-		"remember_ip",
-		SettingsDefaults.REMEMBER_IP,
-	);
-	readonly THEME = new SettingsProperty<AppTheme>(
-		"app_theme",
-		SettingsDefaults.THEME,
-	);
-	readonly DYNAMIC_BACKGROUND = new SettingsProperty<boolean>(
-		"dynamic_background",
-		SettingsDefaults.DYNAMIC_BACKGROUND,
-	);
-	readonly AUTOMATIC_UPDATES = new SettingsProperty<boolean>(
-		"automatic_updates",
-		SettingsDefaults.AUTOMATIC_UPDATES,
-	);
-	readonly UPDATE_FREQUENCY = new SettingsProperty<number>(
-		"update_frequency",
-		SettingsDefaults.UPDATE_FREQUENCY,
-	);
-	readonly DEFAULT_SCREEN = new SettingsProperty<Screen>(
-		"default_screen",
-		SettingsDefaults.DEFAULT_SCREEN,
-	);
-	readonly CUSTOM_THEME = new SettingsProperty<Theme>(
-		"custom_theme",
-		SettingsDefaults.CUSTOM_THEME,
-	);
+	static create(): {
+		[K in keyof SettingPropTypes]: SettingsProperty<SettingPropTypes[K]>;
+	} {
+		return {
+			IP_ADDRESS: new SettingsProperty<string>(
+				"ip_address",
+				SettingsDefaults.IP_ADDRESS,
+			),
+			REMEMBER_IP: new SettingsProperty<boolean>(
+				"remember_ip",
+				SettingsDefaults.REMEMBER_IP,
+			),
+			THEME: new SettingsProperty<AppTheme>("app_theme", SettingsDefaults.THEME),
+			DYNAMIC_BACKGROUND: new SettingsProperty<boolean>(
+				"dynamic_background",
+				SettingsDefaults.DYNAMIC_BACKGROUND,
+			),
+			AUTOMATIC_UPDATES: new SettingsProperty<boolean>(
+				"automatic_updates",
+				SettingsDefaults.AUTOMATIC_UPDATES,
+			),
+			UPDATE_FREQUENCY: new SettingsProperty<number>(
+				"update_frequency",
+				SettingsDefaults.UPDATE_FREQUENCY,
+			),
+			DEFAULT_SCREEN: new SettingsProperty<Screen>(
+				"default_screen",
+				SettingsDefaults.DEFAULT_SCREEN,
+			),
+			CUSTOM_THEME: new SettingsProperty<CustomTheme>(
+				"custom_theme",
+				SettingsDefaults.CUSTOM_THEME,
+			),
+			USERNAME: new SettingsProperty<string>(
+				"username",
+				SettingsDefaults.USERNAME,
+			),
+			PASSWORD: new EncryptedSettingsProperty(
+				"password",
+				SettingsDefaults.PASSWORD,
+			),
+			AUTHENTICATION: new SettingsProperty<boolean>(
+				"authentication",
+				SettingsDefaults.AUTHENTICATION,
+			),
+		};
+	}
 }
 class SettingsProperty<T> {
 	readonly key: string;
 	readonly fallback: T;
+	protected readonly prefix = "@";
 
 	constructor(key: string, fallback: T) {
-		this.key = "@" + key;
+		this.key = key;
 		this.fallback = fallback;
+	}
+
+	protected getKey(): string {
+		return this.prefix + this.key;
 	}
 
 	async set(value?: T) {
 		if (value == null || value == undefined) return;
 		try {
 			const json = JSON.stringify(value);
-			await AsyncStorage.setItem(this.key, json);
+			await AsyncStorage.setItem(this.getKey(), json);
 		} catch (e) {
 			console.error(e);
 		}
 	}
+
 	async setOnlyNew(value: T) {
 		const current = await this.get();
 		if (current == null) await this.set(value);
 	}
+
 	async getHelper<T>(fallback: T): Promise<T>;
 	async getHelper<T>(fallback: null): Promise<T | null>;
 	async getHelper(fallback: T | null): Promise<T | null> {
 		try {
-			const jsonValue = await AsyncStorage.getItem(this.key);
+			const jsonValue = await AsyncStorage.getItem(this.getKey());
 			return jsonValue != null ? (JSON.parse(jsonValue) as T) : fallback;
 		} catch (e) {
-			console.error(`Error retrieving item with key "${this.key}":`, e);
+			console.error(`Error retrieving item with key "${this.getKey()}":`, e);
 			return fallback;
 		}
 	}
+
 	async get(): Promise<T> {
 		return await this.getHelper(this.fallback);
 	}
@@ -140,6 +165,30 @@ class SettingsProperty<T> {
 	}
 }
 
+class EncryptedSettingsProperty extends SettingsProperty<string> {
+	override async set(value?: string) {
+		if (value == null || value == undefined) return;
+		try {
+			await setItemAsync(this.key, value);
+		} catch (e) {
+			console.error(e);
+		}
+	}
+	override async getHelper(fallback: string): Promise<string>;
+	override async getHelper(fallback: null): Promise<string | null>;
+	override async getHelper(fallback: string | null): Promise<string | null> {
+		console.warn("Look at me!", this.key);
+		try {
+			return getItemAsync(this.key);
+		} catch (e) {
+			console.error(`Error retrieving item with key "${this.key}":`, e);
+			return fallback;
+		}
+	}
+	protected getKey(): string {
+		return this.prefix + this.key;
+	}
+}
 export default new Settings();
 export {
 	AppTheme,

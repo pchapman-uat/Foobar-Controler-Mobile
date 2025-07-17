@@ -106,9 +106,39 @@ export default function SettingsScreen({ navigation }: SettingsProps) {
 			setVal(newVal);
 			setValues((prev) => ({ ...prev, [item.key]: newVal }));
 		};
+		const [hiddenPassword, setHiddenPassword] = useState(true);
 		switch (item.type) {
 			case "string":
-				return <View></View>;
+				return (
+					<TextInput
+						style={{ ...Styles.Main.textInput, width: 200 }}
+						keyboardType="default"
+						value={val?.toString() ?? ""}
+						onChangeText={set}
+						placeholder={item.getDefault(ctx.Settings).toString()}
+					/>
+				);
+			case "encrypted_string":
+				console.log("Look at this!", val);
+				return (
+					<View
+						style={{ display: "flex", flexDirection: "row", alignItems: "center" }}
+					>
+						<TextInput
+							style={{ ...Styles.Main.textInput, width: 200 }}
+							keyboardType="default"
+							value={val?.toString() ?? ""}
+							onChangeText={set}
+							placeholder={item.getDefault(ctx.Settings).toString()}
+							secureTextEntry={hiddenPassword}
+						/>
+						<Button
+							buttonStyle={Styles.Main.button}
+							title={hiddenPassword ? "Show" : "Hide"}
+							onPress={() => setHiddenPassword(!hiddenPassword)}
+						/>
+					</View>
+				);
 			case "number": {
 				return (
 					<TextInput

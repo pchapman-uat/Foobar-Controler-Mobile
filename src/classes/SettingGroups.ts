@@ -6,7 +6,8 @@ type SettingType =
 	| "number"
 	| "AppTheme"
 	| "Screens"
-	| "CustomTheme";
+	| "CustomTheme"
+	| "encrypted_string";
 class GroupItem<K extends keyof SettingPropTypes> {
 	readonly name: string;
 	readonly key: K;
@@ -63,6 +64,9 @@ class SettingGroups {
 		new Group(
 			"Advanced",
 			new GroupItem("Update Frequency", "UPDATE_FREQUENCY", "number"),
+			new GroupItem("Require Auithentication", "AUTHENTICATION", "boolean"),
+			new GroupItem("Username", "USERNAME", "string"),
+			new GroupItem("Password", "PASSWORD", "encrypted_string"),
 		),
 	];
 

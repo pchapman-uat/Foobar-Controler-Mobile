@@ -79,6 +79,11 @@ export class Beefweb {
 	lastPlayer?: PlayerResponse;
 	readonly mobilePlaylistTitle = "Mobile Playlist";
 
+	authentication = {
+		enabled: false,
+		username: "",
+		password: "",
+	};
 	private listeners: {
 		[K in keyof BeefWebEvents]?: Array<EventHandler<BeefWebEvents[K]>>;
 	} = {};
@@ -90,7 +95,6 @@ export class Beefweb {
 	}
 
 	private start() {
-		console.warn(this.updateFrequency);
 		if (!this.mainInterval) {
 			this.mainInterval = setInterval(() => this.onUpdate(), this.updateFrequency);
 			this.state = State.Running;
@@ -112,6 +116,16 @@ export class Beefweb {
 		} catch (e) {
 			console.error(e);
 		}
+	};
+
+	setUsername = (username: string) => {
+		this.authentication.username = username;
+	};
+	setPassword = (password: string) => {
+		this.authentication.password = password;
+	};
+	setAuthenticationEnabled = (enabled: boolean) => {
+		this.authentication.enabled = enabled;
 	};
 
 	restart = () => {
@@ -513,13 +527,20 @@ export class Beefweb {
 	setConnection(ip: string, port: number) {
 		this.con.set(ip, port);
 	}
-
+	private getAuth() {
+		if (!this.authentication.enabled) return undefined;
+		return {
+			username: this.authentication.username,
+			password: this.authentication.password,
+		};
+	}
 	private async _fetch<T>(path: string): Promise<AxiosResponse<T> | null> {
 		const url = this.con.getUrl();
 		if (url) {
 			const fullUrl = this.combineUrl(url, path);
+			const auth = this.getAuth();
 			try {
-				const response = await axios.get(fullUrl, this.timeout);
+				const response = await axios.get(fullUrl, { ...this.timeout, auth });
 				return response;
 			} catch (error) {
 				console.warn("Fetch Failed!");
@@ -540,7 +561,11 @@ export class Beefweb {
 		if (url) {
 			try {
 				console.log(this.combineUrl(url, path), this.timeout);
-				return await axios.post(this.combineUrl(url, path), body, this.timeout);
+				const auth = this.getAuth();
+				return await axios.post(this.combineUrl(url, path), body, {
+					...this.timeout,
+					auth,
+				});
 			} catch (error) {
 				console.warn("Post Failed!");
 				console.error(error);
