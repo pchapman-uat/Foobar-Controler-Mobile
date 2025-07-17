@@ -10,6 +10,7 @@ import { AlbumSVG, LibrarySVG, PlaybackQueueSVG } from "managers/SVGManager";
 import { SvgProps } from "react-native-svg";
 import AppContext from "AppContext";
 import { getColor } from "managers/ThemeManager";
+import LibraryBrowser from "./library/LibraryBrowser";
 
 export type LibraryProps = {
 	setCurrentScreen: (screen: number) => void;
@@ -64,6 +65,7 @@ export default function LibraryMain() {
 		new LibraryItem("Playlist", Playlist, PlaybackQueueSVG),
 		new LibraryItem("Artist", LibraryArtist, LibrarySVG),
 		new LibraryItem("Album", LibraryAlbum, AlbumSVG),
+		new LibraryItem("Browser", LibraryBrowser, LibrarySVG),
 	];
 	useEffect(() => {
 		if (prevScreen === null) {

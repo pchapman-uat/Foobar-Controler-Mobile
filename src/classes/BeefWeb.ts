@@ -19,9 +19,7 @@ import {
 import { SettingsDefaults } from "./Settings";
 import FromJSON from "interfaces/iFromJSON";
 import {
-	BrowserDirectory,
 	BrowserEntriesResponse,
-	BrowserFile,
 	BrowserRootsResponse,
 } from "./responses/Browser";
 
@@ -389,7 +387,6 @@ export class Beefweb {
 			? this.combineUrl(url, "artwork", playlistId, index.toString())
 			: null;
 	}
-
 	async playSong(playlistId: string, songId: number) {
 		await this._post(
 			this.combineUrl("player", "play", playlistId, songId.toString()),
@@ -478,7 +475,6 @@ export class Beefweb {
 		});
 	}
 
-	// TODO: Add support for replacing and playing
 	async addToMobilePlaylist(items: string[], replace = true, play = true) {
 		const playlists = await this.getPlaylists();
 		if (playlists) {
@@ -497,7 +493,7 @@ export class Beefweb {
 				}
 			}
 			if (id) {
-				this.addItemsToPlaylist(items, id);
+				this.addItemsToPlaylist(items, id, replace, play);
 			}
 		}
 	}

@@ -9,8 +9,6 @@ import { getColor } from "managers/ThemeManager";
 import { Modal } from "react-native";
 import updateColors, { LottieLoading } from "managers/LottiManager";
 import LottieView from "lottie-react-native";
-import { BrowserDirectory, BrowserItem } from "classes/responses/Browser";
-import { printTree } from "helpers/helpers";
 
 export default function App() {
 	const ctx = useContext(AppContext);
@@ -118,16 +116,6 @@ export default function App() {
 		);
 	};
 
-	const testing = async () => {
-		const response = await ctx.BeefWeb.getBrowserRoots();
-		const root = response?.data.roots[0];
-
-		if (root) {
-			await root.init(ctx.BeefWeb);
-			console.warn("Printing Tree");
-			printTree(root);
-		}
-	};
 	return (
 		<View style={Styles.Main.container}>
 			<View>
@@ -165,7 +153,6 @@ export default function App() {
 				title="Find Beefweb Servers"
 				onPress={findBeefwebServers}
 			/>
-			<Button buttonStyle={Styles.Main.button} title="test" onPress={testing} />
 			{modal(scannedIps)}
 		</View>
 	);
