@@ -26,7 +26,8 @@ import Next from "assets/controls/next.svg";
 import GitHubMark from "assets/icons/github-mark.svg";
 // @ts-expect-error TS will not handle custom modules (svg); However, Metro will handle at runtime
 import GitHubMarkWhite from "assets/icons/github-mark-white.svg";
-
+// @ts-expect-error TS will not handle custom modules (svg); However, Metro will handle at runtime
+import StopSVG from "assets/controls/stop.svg";
 export {
 	ConnectionSVG,
 	LibrarySVG,
@@ -40,6 +41,7 @@ export {
 	Pause,
 	Play,
 	Next,
+	StopSVG,
 	GitHubMark,
 	GitHubMarkWhite,
 };

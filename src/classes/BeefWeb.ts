@@ -94,25 +94,28 @@ export class Beefweb {
 		this.init();
 	}
 
-	private start() {
+	private startInterval() {
 		if (!this.mainInterval) {
 			this.mainInterval = setInterval(() => this.onUpdate(), this.updateFrequency);
 			this.state = State.Running;
 		}
 	}
 
-	private stop(interval?: ReturnType<typeof setInterval>, restart = false) {
+	private stopInterval(
+		interval?: ReturnType<typeof setInterval>,
+		restart = false,
+	) {
 		console.log("HELLO??", interval);
 		if (interval) clearInterval(interval);
 		this.state = State.Stopped;
 		// this.onUpdate()
-		if (restart) this.start();
+		if (restart) this.startInterval();
 	}
 
 	setState = (t: boolean) => {
 		try {
-			if (t) this.start();
-			else this.stop(this.mainInterval);
+			if (t) this.startInterval();
+			else this.stopInterval(this.mainInterval);
 		} catch (e) {
 			console.error(e);
 		}
@@ -129,7 +132,7 @@ export class Beefweb {
 	};
 
 	restart = () => {
-		this.stop(this.mainInterval, true);
+		this.stopInterval(this.mainInterval, true);
 	};
 
 	private init() {
@@ -415,11 +418,21 @@ export class Beefweb {
 	}
 
 	async toggle() {
-		await this._post(this.combineUrl("player", "pause", "toggle"));
+		if (this.lastPlayer?.playbackState == "stopped") {
+			this.play();
+		} else {
+			await this._post(this.combineUrl("player", "pause", "toggle"));
+		}
 	}
 
 	async skip() {
 		await this._post(this.combineUrl("player", "next"));
+	}
+	async play() {
+		await this._post(this.combineUrl("player", "play"));
+	}
+	async stop() {
+		await this._post(this.combineUrl("player", "stop"));
 	}
 
 	async back() {

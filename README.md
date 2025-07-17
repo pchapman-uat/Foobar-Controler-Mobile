@@ -1,4 +1,5 @@
 # Foobar Controller Mobile (Name Pending)
+
 ![GitHub latest release](https://img.shields.io/github/v/release/pchapman-uat/Foobar-Controler-Mobile?include_prereleases&display_name=release)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/w/pchapman-uat/Foobar-Controler-Mobile)
 ![GitHub last commit](https://img.shields.io/github/last-commit/pchapman-uat/Foobar-Controler-Mobile)
@@ -66,6 +67,7 @@ Below is information regarding the assets and libraries used for this project.
 - [Next](./src/assets/controls/next.svg) - [SVG Repo](https://www.svgrepo.com/svg/512548/next-998) _(Public Domain)_
 - [Pause](./src/assets/controls/pause.svg) - [SVG Repo](https://www.svgrepo.com/svg/512622/pause-1006) _(Public Domain)_
 - [Play](./src/assets/controls/play.svg) - [SVG Repo](https://www.svgrepo.com/svg/512667/play-1000) _(Public Domain)_
+- [Stop](./src/assets/controls/stop.svg) - [SVG Repo](https://www.svgrepo.com/svg/522297/stop) _(CC Attribution License)_
 - [GitHub](./src/assets/icons/) - [GitHub](https://github.com/logos)
 - [Loading](./src/assets/lottie/loading.lottie.json) – [LottieFiles](https://lottiefiles.com/free-animation/music-play-Izr4xf80lB) _(Lottie Simple License)_
 

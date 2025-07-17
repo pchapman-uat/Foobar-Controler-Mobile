@@ -20,6 +20,7 @@ import {
 	Next,
 	Pause,
 	Play,
+	StopSVG,
 } from "managers/SVGManager";
 import { SvgProps } from "react-native-svg";
 
@@ -90,7 +91,9 @@ export default function NowPlaying() {
 	const onSkip = () => {
 		ctx.BeefWeb.skip();
 	};
-
+	const onStop = () => {
+		ctx.BeefWeb.stop();
+	};
 	const progressBar = (
 		_elapsed?: string | number,
 		_length?: string | number,
@@ -255,6 +258,7 @@ export default function NowPlaying() {
 					</View>
 
 					<View style={Styles.NowPlaying.buttonContainer}>
+						{controlButton(StopSVG, onStop)}
 						{toggleButton(playing)}
 						{controlButton(Next, onSkip)}
 					</View>
