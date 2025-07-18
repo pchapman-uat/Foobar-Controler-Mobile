@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import AppContext from "../AppContext";
-import { TouchableOpacity, View, Text } from "react-native";
+import { TouchableOpacity, View } from "react-native";
 import { State, Status } from "../classes/BeefWeb";
 import { WebRequest } from "../classes/WebRequest";
 import { PlayerResponse } from "../classes/responses/Player";
@@ -10,6 +10,7 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useStyles } from "managers/StyleManager";
 import { getColor } from "managers/ThemeManager";
 import { Screen } from "enum/Screens";
+import ScrollingText from "./ScrollingText";
 type StatusBarProps = {
 	navigator: NativeStackNavigationProp<RootStackParamList, "Home">;
 	onNavigate: (screen: number) => void;
@@ -82,9 +83,9 @@ const StatusBar: React.FC<StatusBarProps> = ({ navigator, onNavigate }) => {
 				onPress={() => onNavigate(Screen.NowPlaying)}
 				style={Style.StatusBar.StatusTextContainer}
 			>
-				<Text style={Style.StatusBar.StatusText}>
+				<ScrollingText textStyle={Style.StatusBar.StatusText}>
 					{title} - {album}
-				</Text>
+				</ScrollingText>
 			</TouchableOpacity>
 			<TouchableOpacity>
 				<MenuSVG

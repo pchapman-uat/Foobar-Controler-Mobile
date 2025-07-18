@@ -23,6 +23,7 @@ import {
 	StopSVG,
 } from "managers/SVGManager";
 import { SvgProps } from "react-native-svg";
+import ScrollingText from "elements/ScrollingText";
 
 export default function NowPlaying() {
 	const ctx = useContext(AppContext);
@@ -243,9 +244,11 @@ export default function NowPlaying() {
 			</View>
 			<View style={Styles.NowPlaying.interfaceControler}>
 				<View>
-					<Text style={Styles.NowPlaying.npText}>{title}</Text>
-					<Text style={Styles.NowPlaying.npText}>{artist}</Text>
-					<Text style={Styles.NowPlaying.npText}>{album}</Text>
+					<ScrollingText textStyle={Styles.NowPlaying.npText}>{title}</ScrollingText>
+					<ScrollingText textStyle={Styles.NowPlaying.npText}>
+						{artist}
+					</ScrollingText>
+					<ScrollingText textStyle={Styles.NowPlaying.npText}>{album}</ScrollingText>
 				</View>
 				{ratingEle(rating)}
 				<View style={Styles.NowPlaying.controlsContainer}>
