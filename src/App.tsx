@@ -23,18 +23,21 @@ export default function App() {
 	const orientation = useOrientation();
 
 	// Set the theme from settings once on mount
+	useEffect(() => {}, []);
+
 	useEffect(() => {
 		Settings.PROPS.THEME.get().then(setTheme);
 		Settings.get("CUSTOM_THEME").then(initCustomTheme);
-	}, []);
 
-	// Optional: Start Beefweb updates if automatic updates enabled
-	useEffect(() => {
+		// Beefweb Init
+
 		Settings.PROPS.AUTOMATIC_UPDATES.get().then(BeefWeb.setState);
 		Settings.get("AUTHENTICATION").then(BeefWeb.setAuthenticationEnabled);
 		Settings.get("USERNAME").then(BeefWeb.setUsername);
 		Settings.get("PASSWORD").then(BeefWeb.setPassword);
-		// Cleanup on unmount (including hot reload)
+		Settings.get("IP_ADDRESS").then(BeefWeb.setIp);
+		Settings.get("PORT").then(BeefWeb.setPort);
+
 		return () => {
 			BeefWeb.setState(false);
 		};

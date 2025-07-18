@@ -61,6 +61,7 @@ const SettingsDefaults = {
 	USERNAME: "",
 	PASSWORD: "",
 	AUTHENTICATION: false,
+	PORT: 8880,
 };
 
 type SettingPropTypes = {
@@ -113,6 +114,7 @@ class SettingProps {
 				"authentication",
 				SettingsDefaults.AUTHENTICATION,
 			),
+			PORT: new SettingsProperty<number>("port", SettingsDefaults.PORT),
 		};
 	}
 }

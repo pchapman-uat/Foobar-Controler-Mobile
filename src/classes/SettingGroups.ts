@@ -57,6 +57,14 @@ class SettingGroups {
 			new GroupItem("Default Screen", "DEFAULT_SCREEN", "Screens"),
 		),
 		new Group(
+			"Network",
+			new GroupItem("IP Address", "IP_ADDRESS", "string"),
+			new GroupItem("Port", "PORT", "number"),
+			new GroupItem("Require Authentication", "AUTHENTICATION", "boolean"),
+			new GroupItem("Username", "USERNAME", "string"),
+			new GroupItem("Password", "PASSWORD", "encrypted_string"),
+		),
+		new Group(
 			"Themes",
 			new GroupItem("Theme", "THEME", "AppTheme"),
 			new GroupItem("Custom Theme", "CUSTOM_THEME", "CustomTheme"),
@@ -64,9 +72,6 @@ class SettingGroups {
 		new Group(
 			"Advanced",
 			new GroupItem("Update Frequency", "UPDATE_FREQUENCY", "number"),
-			new GroupItem("Require Auithentication", "AUTHENTICATION", "boolean"),
-			new GroupItem("Username", "USERNAME", "string"),
-			new GroupItem("Password", "PASSWORD", "encrypted_string"),
 		),
 	];
 

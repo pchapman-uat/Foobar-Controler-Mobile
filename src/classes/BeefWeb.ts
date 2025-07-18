@@ -49,7 +49,13 @@ export class Connection {
 		return !!this.ip && !!this.port;
 	}
 	set(ip: string, port: number) {
+		this.setIp(ip);
+		this.setPort(port);
+	}
+	setIp(ip: string) {
 		this.ip = ip;
+	}
+	setPort(port: number) {
 		this.port = port;
 	}
 	getUrl(): string | null {
@@ -130,7 +136,12 @@ export class Beefweb {
 	setAuthenticationEnabled = (enabled: boolean) => {
 		this.authentication.enabled = enabled;
 	};
-
+	setIp = (ip: string) => {
+		this.con.setIp(ip);
+	};
+	setPort = (port: number) => {
+		this.con.setPort(port);
+	};
 	restart = () => {
 		this.stopInterval(this.mainInterval, true);
 	};

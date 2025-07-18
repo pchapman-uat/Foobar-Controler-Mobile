@@ -1,9 +1,9 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
-import { Text, TextInput, View, Alert, TouchableOpacity } from "react-native";
+import { Text, View, Alert, TouchableOpacity } from "react-native";
 import AppContext from "AppContext";
 import { RequestStatus } from "classes/WebRequest";
 import { PlayerResponse } from "classes/responses/Player";
-import { CheckBox, Button } from "react-native-elements";
+import { Button } from "react-native-elements";
 import { useStyles } from "managers/StyleManager";
 import { getColor } from "managers/ThemeManager";
 import { Modal } from "react-native";
@@ -21,7 +21,6 @@ export default function App() {
 	const [status, setStatus] = useState<string>("");
 
 	const [ipAddress, setIpAddress] = useState<string>();
-	const [rememberIP, setRememberIp] = useState<boolean>();
 	const [scannedIps, setScannedIps] = useState<string[]>([]);
 
 	const connectToBeefweb = useCallback(async () => {
@@ -50,21 +49,13 @@ export default function App() {
 		setIpAddress(ip);
 		setModalVisible(false);
 	};
-	const onRemeberChange = (value: boolean) => {
-		setRememberIp(value);
-		if (value) ctx.Settings.PROPS.IP_ADDRESS.set("");
-		ctx.Settings.PROPS.REMEMBER_IP.set(value);
-	};
+
 	useEffect(() => {
 		console.log("Running");
-		const Settings = ctx.Settings;
-
-		(async () => {
-			setRememberIp(await Settings.get("REMEMBER_IP"));
-			setIP((await Settings.get("IP_ADDRESS")) ?? "");
-			ctx.BeefWeb.updateFrequency = await Settings.get("UPDATE_FREQUENCY");
-			ctx.BeefWeb.setState(await Settings.get("AUTOMATIC_UPDATES"));
-		})();
+		ctx.BeefWeb.addEventListener(
+			"update",
+			(response) => response?.data && onConnectSucess(response.data),
+		);
 	}, []);
 
 	const startScan = async () => {
@@ -126,22 +117,7 @@ export default function App() {
 				<Text style={Styles.Main.statusItem}>
 					Plugin Version: {infoPluginVersion}
 				</Text>
-			</View>
-			<View>
-				<TextInput
-					style={{ ...Styles.Main.textInput, width: 200 }}
-					textContentType="URL"
-					value={ipAddress}
-					onChangeText={setIP}
-				/>
-				<CheckBox
-					containerStyle={Styles.Main.checkBox}
-					textStyle={Styles.Main.checkBox}
-					checkedColor={getColor(ctx.theme, "accent")}
-					title="Remember IP"
-					checked={rememberIP}
-					onPress={() => onRemeberChange(!(rememberIP ?? false))}
-				/>
+				<Text style={Styles.Main.statusItem}>IP: {ipAddress}</Text>
 			</View>
 			<Button
 				buttonStyle={Styles.Main.button}
