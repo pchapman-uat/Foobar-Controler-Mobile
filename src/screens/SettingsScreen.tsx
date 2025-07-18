@@ -24,6 +24,7 @@ import SettingGroups, {
 	Group,
 	GroupItem,
 	GroupTypes,
+	SettingType,
 } from "classes/SettingGroups";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "App";
@@ -40,7 +41,7 @@ type SettingsProps = {
 	navigation: SettingsNavigationProp;
 };
 type renderItemProps = {
-	item: GroupItem<keyof SettingPropTypes>;
+	item: GroupItem<keyof SettingPropTypes, SettingType>;
 	index: number;
 };
 export default function SettingsScreen({ navigation }: SettingsProps) {
@@ -106,20 +107,13 @@ export default function SettingsScreen({ navigation }: SettingsProps) {
 			setVal(newVal);
 			setValues((prev) => ({ ...prev, [item.key]: newVal }));
 		};
-		const [hiddenPassword, setHiddenPassword] = useState(true);
+
 		switch (item.type) {
 			case "string":
-				return (
-					<TextInput
-						style={{ ...Styles.Main.textInput, width: 200 }}
-						keyboardType="default"
-						value={val?.toString() ?? ""}
-						onChangeText={set}
-						placeholder={item.getDefault(ctx.Settings).toString()}
-					/>
+				const props = item.props;
+				const [hiddenPassword, setHiddenPassword] = useState<boolean>(
+					props.password,
 				);
-			case "encrypted_string":
-				console.log("Look at this!", val);
 				return (
 					<View
 						style={{ display: "flex", flexDirection: "row", alignItems: "center" }}
@@ -132,11 +126,13 @@ export default function SettingsScreen({ navigation }: SettingsProps) {
 							placeholder={item.getDefault(ctx.Settings).toString()}
 							secureTextEntry={hiddenPassword}
 						/>
-						<Button
-							buttonStyle={Styles.Main.button}
-							title={hiddenPassword ? "Show" : "Hide"}
-							onPress={() => setHiddenPassword(!hiddenPassword)}
-						/>
+						{props.password && (
+							<Button
+								buttonStyle={Styles.Main.button}
+								title={hiddenPassword ? "Show" : "Hide"}
+								onPress={() => setHiddenPassword(!hiddenPassword)}
+							/>
+						)}
 					</View>
 				);
 			case "number": {
@@ -237,7 +233,7 @@ export default function SettingsScreen({ navigation }: SettingsProps) {
 	};
 
 	const renderItem = useCallback(
-		(item: GroupItem<keyof SettingPropTypes>, index: number) => (
+		(item: GroupItem<keyof SettingPropTypes, SettingType>, index: number) => (
 			<View
 				style={[
 					Styles.Library[index % 2 === 0 ? "rowEven" : "rowOdd"],

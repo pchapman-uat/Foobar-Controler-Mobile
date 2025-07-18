@@ -1,22 +1,26 @@
 import { SettingPropTypes, SettingsClass } from "./Settings";
 
-type SettingType =
-	| "string"
-	| "boolean"
-	| "number"
-	| "AppTheme"
-	| "Screens"
-	| "CustomTheme"
-	| "encrypted_string";
-class GroupItem<K extends keyof SettingPropTypes> {
+class GroupItem<K extends keyof SettingPropTypes, T extends SettingType> {
 	readonly name: string;
 	readonly key: K;
 	readonly type: SettingType;
+	readonly props: ItemOptions[T];
 
-	constructor(name: string, key: K, type: SettingType) {
+	constructor(
+		name: string,
+		key: K,
+		type: T,
+		props: Partial<ItemOptions[T]> = {},
+	) {
 		this.name = name;
 		this.key = key;
 		this.type = type;
+
+		const defaultProps = ItemPropsDefaults[type] as ItemOptions[T];
+		this.props = {
+			...defaultProps,
+			...props,
+		} as ItemOptions[T];
 	}
 
 	public get(settings: SettingsClass): Promise<SettingPropTypes[K]> {
@@ -36,7 +40,38 @@ class GroupItem<K extends keyof SettingPropTypes> {
 	}
 }
 
-type GroupTypes = readonly GroupItem<keyof SettingPropTypes>[];
+type ItemProps = {
+	string: {
+		password: boolean;
+	};
+	boolean: Record<string, never>;
+	number: Record<string, never>;
+	AppTheme: Record<string, never>;
+	Screens: Record<string, never>;
+	CustomTheme: Record<string, never>;
+	encrypted_string: Record<string, never>;
+};
+export const ItemPropsDefaults: {
+	[K in keyof ItemProps]: Partial<ItemProps[K]>;
+} = {
+	string: {
+		password: false,
+	},
+	boolean: {},
+	number: {},
+	AppTheme: {},
+	Screens: {},
+	CustomTheme: {},
+	encrypted_string: {},
+};
+export type SettingType = keyof ItemProps;
+
+type ItemOptions = {
+	[K in SettingType]: ItemProps[K];
+};
+
+type GroupTypes = readonly GroupItem<keyof SettingPropTypes, SettingType>[];
+
 class Group<TItems extends GroupTypes> {
 	readonly name: string;
 	readonly items: TItems;
@@ -62,7 +97,7 @@ class SettingGroups {
 			new GroupItem("Port", "PORT", "number"),
 			new GroupItem("Require Authentication", "AUTHENTICATION", "boolean"),
 			new GroupItem("Username", "USERNAME", "string"),
-			new GroupItem("Password", "PASSWORD", "encrypted_string"),
+			new GroupItem("Password", "PASSWORD", "string", { password: true }),
 		),
 		new Group(
 			"Themes",
