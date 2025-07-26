@@ -9,11 +9,13 @@ import { useOrientation } from "hooks/useOrientation";
 import BeefWeb from "classes/BeefWeb";
 import AboutScreen from "screens/AboutScreen";
 import { initCustomTheme } from "managers/ThemeManager";
+import Setup from "screens/Setup";
 
 export type RootStackParamList = {
 	Home: undefined;
 	Settings: undefined;
 	About: undefined;
+	Setup: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -61,6 +63,7 @@ export default function App() {
 					<Stack.Screen name="Home" component={Home} />
 					<Stack.Screen name="Settings" component={SettingsScreen} />
 					<Stack.Screen name="About" component={AboutScreen} />
+					<Stack.Screen name="Setup" component={Setup} />
 				</Stack.Navigator>
 			</NavigationContainer>
 		</AppContext.Provider>

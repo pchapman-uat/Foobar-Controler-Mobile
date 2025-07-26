@@ -10,6 +10,7 @@ import AppContext from "AppContext";
 import { Orientation } from "hooks/useOrientation";
 import SettingsStyle from "style/SettingsStyle";
 import ColorPickerStyle from "style/ColorPickerStyle";
+import SetupStyle from "style/SetupStyle";
 
 type Styles =
 	| "Main"
@@ -19,7 +20,8 @@ type Styles =
 	| "StatusBar"
 	| "Library"
 	| "Settings"
-	| "ColorPicker";
+	| "ColorPicker"
+	| "Setup";
 
 export type StyleMapType = {
 	Main: ReturnType<typeof MainStyle>;
@@ -30,6 +32,7 @@ export type StyleMapType = {
 	Library: ReturnType<typeof LibraryStyle>;
 	Settings: ReturnType<typeof SettingsStyle>;
 	ColorPicker: ReturnType<typeof ColorPickerStyle>;
+	Setup: ReturnType<typeof SetupStyle>;
 };
 
 const styleMap: {
@@ -43,6 +46,7 @@ const styleMap: {
 	Library: LibraryStyle,
 	Settings: SettingsStyle,
 	ColorPicker: ColorPickerStyle,
+	Setup: SetupStyle,
 };
 
 export function createStyle<T extends Styles>(

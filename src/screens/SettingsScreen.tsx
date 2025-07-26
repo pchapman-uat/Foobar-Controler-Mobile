@@ -316,6 +316,11 @@ export default function SettingsScreen({ navigation }: SettingsProps) {
 					title="Cancel"
 					onPress={() => navigation.goBack()}
 				/>
+				<Button
+					buttonStyle={[Styles.Main.button, Styles.Settings.button]}
+					title={"Setup"}
+					onPress={() => navigation.navigate("Setup")}
+				/>
 			</View>
 			<Modal
 				transparent
