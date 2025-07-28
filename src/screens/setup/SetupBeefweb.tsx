@@ -1,7 +1,7 @@
 import CodeText from "elements/CodeText";
 import List from "elements/List";
 import { useStyles } from "managers/StyleManager";
-import React, { FlatList, Linking, Text, View } from "react-native";
+import React, { Linking, Text, View } from "react-native";
 export default function SetupBeefweb() {
 	const Styles = useStyles("Main", "Setup");
 	const centeredText = Styles.Main.centeredText;

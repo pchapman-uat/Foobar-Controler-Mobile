@@ -1,5 +1,4 @@
-import AppContext from "AppContext";
-import React, { useState, useRef, useContext, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Animated, Dimensions, View, Text, ScrollView } from "react-native";
 import SetupIntro from "./setup/SetupIntro";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -39,7 +38,6 @@ export default function Setup({ navigation }: SetupProps) {
 	const screenTranslateX = useRef(new Animated.Value(0)).current;
 
 	const screenWidth = Dimensions.get("window").width;
-	const ctx = useContext(AppContext);
 	const Styles = useStyles("Main", "Setup");
 	useEffect(() => {
 		if (prevScreen === null) {
