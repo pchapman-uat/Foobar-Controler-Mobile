@@ -24,7 +24,8 @@
       "package": "com.pchapman.foobarcontollermobile",
       "permissions": [
         "FOREGROUND_SERVICE",
-        "INTERNET"
+        "INTERNET",
+        "NOTIFICATION"
       ],
       "services": {
         "musicservice": {
