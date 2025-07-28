@@ -1,0 +1,37 @@
+name: Prettier
+
+on:
+ push:
+  branches: ["main"]
+ pull_request:
+  branches: ["main"]
+ schedule:
+  - cron: "24 23 * * 2"
+
+jobs:
+ prettier:
+  name: Run Prettier Check
+  runs-on: ubuntu-latest
+  permissions:
+   contents: read
+   security-events: write
+   actions: read
+  steps:
+   - name: Checkout code
+     uses: actions/checkout@v4
+
+   - name: Install dependencies
+     run: npm ci
+
+   - name: Run  Prettier Check
+     run: npx prettier --check "src/**/*.{js,jsx,ts,tsx,mjs,cjs,mts,cts,json,css,md}" > prettier-report.txt || true
+     continue-on-error: true
+
+   - name: Show Prettier report in logs
+     run: cat prettier-report.txt
+
+   - name: Upload Prettier report
+     uses: actions/upload-artifact@v4
+     with:
+      name: prettier-report
+      path: prettier-report.txt
