@@ -7,9 +7,6 @@
       "command": "eas build --platform android --profile preview",
       "group": "build",
       "problemMatcher": [],
-      "presentation": {
-        "reveal": "always"
-      }
     },
     {
       "label": "EAS Local Build",
@@ -23,8 +20,13 @@
     },
     {
       "label": "Validate",
-      "type": "shell",
-      "command": "npx eslint",
+      "type": "eslint",
+      "runOptions": {
+        "runOn": "folderOpen"
+      },
+      "presentation": {
+        "reveal": "always"
+      }
     }
   ]
 }
