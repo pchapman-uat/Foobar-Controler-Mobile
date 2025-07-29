@@ -1,0 +1,309 @@
+import React, { useEffect, useState } from "react";
+import {
+	BooleanKeys,
+	CustomThemeKeys,
+	EnumKeys,
+	GroupItem,
+	ItemProps,
+	NumberKeys,
+	SettingType,
+	StringKeys,
+} from "classes/SettingGroups";
+import { Picker } from "@react-native-picker/picker";
+import { SettingPropTypes, AppTheme } from "classes/Settings";
+import { CustomTheme, Color, Theme } from "classes/Themes";
+import { getEnumKeys } from "helpers/helpers";
+import { getColor, getCustomTheme } from "managers/ThemeManager";
+import { View, TextInput, Switch, Alert } from "react-native";
+import { Button } from "react-native-elements";
+import { renderPicker } from "./EnumPicker";
+import { StyleMapType } from "managers/StyleManager";
+import { AppContextType } from "AppContext";
+import { Screen } from "enum/Screens";
+import { ColorFormatsObject } from "reanimated-color-picker";
+
+type StylesType = Pick<StyleMapType, "Main" | "Settings" | "Modal" | "Library">;
+type SettingsControlProps<
+	K extends keyof SettingPropTypes = keyof SettingPropTypes,
+> = {
+	item: GroupItem<K, SettingType>;
+	index: number;
+	values: Partial<SettingPropTypes>;
+	Styles: StylesType;
+	ctx: AppContextType;
+	customThemeProps: CustomThemeControlProps;
+	onSet: (newVal: SettingPropTypes[K]) => void;
+};
+
+type CustomThemeControlProps = {
+	setSelectedColorKey: React.Dispatch<
+		React.SetStateAction<keyof Theme | undefined>
+	>;
+	selectedColorKey: keyof Theme | undefined;
+	setSelectedColor: React.Dispatch<
+		React.SetStateAction<ColorFormatsObject | undefined>
+	>;
+	selectedColor: ColorFormatsObject | undefined;
+	setCustomTheme: React.Dispatch<React.SetStateAction<CustomTheme | undefined>>;
+	customTheme: CustomTheme | undefined;
+	setColorModalVisable: React.Dispatch<React.SetStateAction<boolean>>;
+	colorModalVisable: boolean;
+};
+
+type ControlProps<
+	K extends keyof SettingPropTypes,
+	J extends keyof ItemProps,
+> = {
+	Styles: StylesType;
+	ctx: AppContextType;
+	item: GroupItem<K, J>;
+	set: (newVal: SettingPropTypes[K]) => void;
+	val: Partial<SettingPropTypes>[K];
+};
+function BaseSettingsControl<
+	K extends keyof SettingPropTypes = keyof SettingPropTypes,
+>({
+	item,
+	values,
+	Styles,
+	onSet,
+	ctx,
+	customThemeProps,
+}: SettingsControlProps<K>) {
+	const value = values[item.key];
+	const [val, setVal] = useState<SettingPropTypes[K] | undefined>(value);
+
+	useEffect(() => {
+		setVal(value);
+	}, [value]);
+
+	const set = (newVal: SettingPropTypes[K]) => {
+		setVal(newVal);
+		onSet(newVal);
+	};
+
+	if (item.isString()) {
+		return StringControl({
+			item,
+			Styles,
+			ctx,
+			val: val as string | undefined,
+			set,
+		});
+	} else if (item.isNumber()) {
+		return NumberControl({
+			item,
+			Styles,
+			ctx,
+			val: val as number | undefined,
+			set,
+		});
+	} else if (item.isBoolean()) {
+		return BooleanControl({
+			item,
+			Styles,
+			ctx,
+			val: val as boolean | undefined,
+			set,
+		});
+	} else if (item.isEnum()) {
+		// return EnumControl({
+		// 	item,
+		// 	Styles,
+		// 	ctx,
+		// 	val: val as AppTheme | Screen | undefined,
+		// 	set: set as (v: SettingPropTypes[EnumKeys]) => void,
+		// });
+	} else if (item.isCustomTheme()) {
+		return CustomThemeControl({
+			item,
+			Styles,
+			ctx,
+			val: val as CustomTheme,
+			set,
+			customThemeProps,
+		});
+	} else {
+		throw new Error("Unhandled Setting Type of: " + item.type);
+	}
+}
+
+function StringControl<K extends StringKeys>({
+	item,
+	Styles,
+	ctx,
+	val,
+	set,
+}: ControlProps<K, "string">) {
+	const props = item.props;
+	const [hiddenPassword, setHiddenPassword] = useState<boolean>(props.password);
+	const setString = (newVal: string) => set(newVal as SettingPropTypes[K]);
+	return (
+		<View style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
+			<TextInput
+				style={{ ...Styles.Main.textInput, width: 200 }}
+				keyboardType="default"
+				value={val?.toString() ?? ""}
+				onChangeText={setString}
+				placeholder={item.getDefault(ctx.Settings).toString()}
+				secureTextEntry={hiddenPassword}
+			/>
+			{props.password && (
+				<Button
+					buttonStyle={Styles.Main.button}
+					title={hiddenPassword ? "Show" : "Hide"}
+					onPress={() => setHiddenPassword(!hiddenPassword)}
+				/>
+			)}
+		</View>
+	);
+}
+
+function NumberControl<K extends NumberKeys>({
+	item,
+	Styles,
+	ctx,
+	val,
+	set,
+}: ControlProps<K, "number">) {
+	const setNumber = (newVal: string) => {
+		const parsed = Number(newVal);
+		if (!isNaN(parsed)) {
+			set(parsed as SettingPropTypes[K]);
+		}
+	};
+	return (
+		<TextInput
+			style={{ ...Styles.Main.textInput, width: 200 }}
+			keyboardType="number-pad"
+			value={val?.toString() ?? ""}
+			onChangeText={setNumber}
+			placeholder={item.getDefault(ctx.Settings).toString()}
+		/>
+	);
+}
+
+function BooleanControl<K extends BooleanKeys>({
+	ctx,
+	val,
+	set,
+}: ControlProps<K, "boolean">) {
+	const setBoolean = (newVal: boolean) => set(newVal as SettingPropTypes[K]);
+	return (
+		<Switch
+			thumbColor={getColor(ctx.theme, "buttonPrimary")}
+			value={(val as boolean) ?? false}
+			onValueChange={setBoolean}
+			trackColor={{ true: getColor(ctx.theme, "buttonPrimary") }}
+		/>
+	);
+}
+
+function EnumControl<K extends EnumKeys>({
+	item,
+	Styles,
+	ctx,
+	val,
+	set,
+}: ControlProps<K, "AppTheme" | "CustomTheme">) {
+	const values =
+		item.type === "AppTheme"
+			? AppTheme
+			: item.type === "Screens"
+				? Screen
+				: (() => {
+						throw new Error("This error should never happen");
+					})();
+
+	const keys = getEnumKeys(values);
+
+	return (
+		<Picker
+			style={Styles.Main.picker}
+			onValueChange={set}
+			dropdownIconColor={getColor(ctx.theme, "textPrimary")}
+			mode="dropdown"
+			selectedValue={val}
+		>
+			{renderPicker(keys, values)}
+		</Picker>
+	);
+}
+
+type CustomThemeFunctionProps<K extends keyof SettingPropTypes> = ControlProps<
+	K,
+	"CustomTheme"
+> & {
+	customThemeProps: CustomThemeControlProps;
+};
+function CustomThemeControl<K extends CustomThemeKeys>({
+	item,
+	Styles,
+	set,
+	customThemeProps,
+}: CustomThemeFunctionProps<K>) {
+	if (!customThemeProps) {
+		throw new Error("Missing Custom Theme Props");
+	}
+	const {
+		setSelectedColorKey,
+		setCustomTheme,
+		customTheme,
+		setColorModalVisable,
+	} = customThemeProps;
+
+	const custom = getCustomTheme();
+	if (!(custom instanceof CustomTheme)) return;
+
+	useEffect(() => {
+		setCustomTheme(custom);
+	}, [item.key]);
+
+	const onPress = (key: keyof Theme) => {
+		setColorModalVisable(true);
+		setSelectedColorKey(key);
+	};
+	const onReset = (key: keyof Theme) => {
+		customTheme?.reset(key);
+		set(customTheme as SettingPropTypes[K]);
+	};
+
+	const onLongPress = (key: keyof Theme) => {
+		Alert.alert("Reset", `Are you sure you want to reset: ${key}?`, [
+			{ text: "No", style: "cancel" },
+			{ text: "Yes", onPress: () => onReset(key) },
+		]);
+	};
+	return (
+		<View>
+			{Object.keys(custom).map((key) => {
+				const themeKey = key as keyof Theme;
+				const value = custom[themeKey];
+
+				if (value instanceof Color) {
+					return (
+						<Button
+							key={themeKey}
+							title={themeKey}
+							onPress={() => onPress(themeKey)}
+							onLongPress={() => onLongPress(themeKey)}
+							titleStyle={{ color: value.isDark() ? "white" : "black" }}
+							buttonStyle={[Styles.Main.button, { backgroundColor: value.toHex() }]}
+						/>
+					);
+				}
+				return null;
+			})}
+		</View>
+	);
+}
+
+const SettingsControl = Object.assign(BaseSettingsControl, {
+	String: StringControl,
+	Number: NumberControl,
+	Boolean: BooleanControl,
+	Enum: EnumControl,
+	CustomTheme: CustomThemeControl,
+});
+
+export default SettingsControl;

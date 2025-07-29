@@ -1,25 +1,11 @@
-import { Picker } from "@react-native-picker/picker";
 import AppContext from "AppContext";
-import { AppTheme, SettingPropTypes, SettingsDefaults } from "classes/Settings";
+import { SettingPropTypes, SettingsDefaults } from "classes/Settings";
 import { useStyles } from "managers/StyleManager";
-import {
-	getColor,
-	getCustomTheme,
-	initCustomTheme,
-} from "managers/ThemeManager";
+import { initCustomTheme } from "managers/ThemeManager";
 import React, { useCallback, useContext, useEffect, useState } from "react";
-import {
-	View,
-	Text,
-	TextInput,
-	ScrollView,
-	TouchableOpacity,
-	Modal,
-	Alert,
-} from "react-native";
+import { View, Text, ScrollView, TouchableOpacity, Modal } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Button, Switch } from "react-native-elements";
-import { Screen } from "enum/Screens";
+import { Button } from "react-native-elements";
 import SettingGroups, {
 	Group,
 	GroupItem,
@@ -28,11 +14,10 @@ import SettingGroups, {
 } from "classes/SettingGroups";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "App";
-import { renderPicker } from "elements/EnumPicker";
-import { getEnumKeys } from "helpers/helpers";
 import { Color, CustomTheme, Theme } from "classes/Themes";
 import ColorPickers, { ColorPickerOptions } from "elements/ColorPickers";
 import { ColorFormatsObject } from "reanimated-color-picker";
+import SettingsControl from "elements/SettingsControl";
 type SettingsNavigationProp = NativeStackNavigationProp<
 	RootStackParamList,
 	"Settings"
@@ -40,10 +25,7 @@ type SettingsNavigationProp = NativeStackNavigationProp<
 type SettingsProps = {
 	navigation: SettingsNavigationProp;
 };
-type renderItemProps = {
-	item: GroupItem<keyof SettingPropTypes, SettingType>;
-	index: number;
-};
+
 export default function SettingsScreen({ navigation }: SettingsProps) {
 	const Styles = useStyles("Main", "Settings", "Library", "Modal");
 	const ctx = useContext(AppContext);
@@ -56,6 +38,7 @@ export default function SettingsScreen({ navigation }: SettingsProps) {
 	const [selectedColorKey, setSelectedColorKey] = useState<keyof Theme>();
 	const [selectedColor, setSelectedColor] = useState<ColorFormatsObject>();
 	const [customTheme, setCustomTheme] = useState<CustomTheme>();
+
 	const onSave = async () => {
 		const entries = Object.entries(values) as [
 			keyof SettingPropTypes,
@@ -93,144 +76,6 @@ export default function SettingsScreen({ navigation }: SettingsProps) {
 			setLoaded(true);
 		})();
 	}, []);
-	const SettingsControl = ({ item }: renderItemProps) => {
-		const value = values[item.key];
-		const [val, setVal] = useState<SettingPropTypes[typeof item.key] | undefined>(
-			value,
-		);
-
-		useEffect(() => {
-			setVal(value);
-		}, [value]);
-
-		const set = (newVal: SettingPropTypes[typeof item.key]) => {
-			setVal(newVal);
-			setValues((prev) => ({ ...prev, [item.key]: newVal }));
-		};
-
-		switch (item.type) {
-			case "string":
-				const props = item.props;
-				const [hiddenPassword, setHiddenPassword] = useState<boolean>(
-					props.password,
-				);
-				return (
-					<View
-						style={{ display: "flex", flexDirection: "row", alignItems: "center" }}
-					>
-						<TextInput
-							style={{ ...Styles.Main.textInput, width: 200 }}
-							keyboardType="default"
-							value={val?.toString() ?? ""}
-							onChangeText={set}
-							placeholder={item.getDefault(ctx.Settings).toString()}
-							secureTextEntry={hiddenPassword}
-						/>
-						{props.password && (
-							<Button
-								buttonStyle={Styles.Main.button}
-								title={hiddenPassword ? "Show" : "Hide"}
-								onPress={() => setHiddenPassword(!hiddenPassword)}
-							/>
-						)}
-					</View>
-				);
-			case "number": {
-				return (
-					<TextInput
-						style={{ ...Styles.Main.textInput, width: 200 }}
-						keyboardType="number-pad"
-						value={val?.toString() ?? ""}
-						onChangeText={set}
-						placeholder={item.getDefault(ctx.Settings).toString()}
-					/>
-				);
-			}
-			case "boolean": {
-				console.log((val as boolean) ?? false);
-				return (
-					<Switch
-						thumbColor={getColor(ctx.theme, "buttonPrimary")}
-						value={(val as boolean) ?? false}
-						onValueChange={set}
-						trackColor={{ true: getColor(ctx.theme, "buttonPrimary") }}
-					/>
-				);
-			}
-			case "AppTheme":
-			case "Screens":
-				const values =
-					item.type === "AppTheme"
-						? AppTheme
-						: item.type === "Screens"
-							? Screen
-							: (() => {
-									throw new Error("This error should never happen");
-								})();
-
-				const keys = getEnumKeys(values);
-
-				return (
-					<Picker
-						style={Styles.Main.picker}
-						onValueChange={set}
-						dropdownIconColor={getColor(ctx.theme, "textPrimary")}
-						mode="dropdown"
-						selectedValue={val}
-					>
-						{renderPicker(keys, values)}
-					</Picker>
-				);
-
-			case "CustomTheme":
-				const custom = getCustomTheme();
-				if (!(custom instanceof CustomTheme)) return;
-
-				useEffect(() => {
-					setCustomTheme(custom);
-				}, [item.key]);
-
-				const onPress = (key: keyof Theme) => {
-					setColorModalVisable(true);
-					setSelectedColorKey(key);
-				};
-				const onReset = (key: keyof Theme) => {
-					customTheme?.reset(key);
-					setValues((prev) => ({ ...prev, CUSTOM_THEME: customTheme }));
-				};
-				const onLongPress = (key: keyof Theme) => {
-					Alert.alert("Reset", `Are you sure you want to reset: ${key}?`, [
-						{ text: "No", style: "cancel" },
-						{ text: "Yes", onPress: () => onReset(key) },
-					]);
-				};
-				return (
-					<View>
-						{Object.keys(custom).map((key) => {
-							const themeKey = key as keyof Theme;
-							const value = custom[themeKey];
-
-							if (value instanceof Color) {
-								return (
-									<Button
-										key={themeKey}
-										title={themeKey}
-										onPress={() => onPress(themeKey)}
-										onLongPress={() => onLongPress(themeKey)}
-										titleStyle={{ color: value.isDark() ? "white" : "black" }}
-										buttonStyle={[Styles.Main.button, { backgroundColor: value.toHex() }]}
-									/>
-								);
-							}
-							return null;
-						})}
-					</View>
-				);
-
-			default:
-				throw new Error("Unhandled Setting Type of: " + item.type);
-		}
-	};
 
 	const renderItem = useCallback(
 		(item: GroupItem<keyof SettingPropTypes, SettingType>, index: number) => (
@@ -242,7 +87,24 @@ export default function SettingsScreen({ navigation }: SettingsProps) {
 				key={index}
 			>
 				<Text style={Styles.Settings.itemLabel}>{item.name}</Text>
-				<SettingsControl item={item} index={index} />
+				<SettingsControl
+					item={item}
+					index={index}
+					values={values}
+					Styles={Styles}
+					ctx={ctx}
+					onSet={(newVal) => setValues((prev) => ({ ...prev, [item.key]: newVal }))}
+					customThemeProps={{
+						setSelectedColorKey,
+						selectedColorKey,
+						setSelectedColor,
+						selectedColor,
+						setCustomTheme,
+						customTheme,
+						setColorModalVisable,
+						colorModalVisable,
+					}}
+				/>
 			</View>
 		),
 		[loaded],

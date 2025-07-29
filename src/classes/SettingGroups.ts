@@ -38,9 +38,39 @@ class GroupItem<K extends keyof SettingPropTypes, T extends SettingType> {
 	public set(settings: SettingsClass, value: SettingPropTypes[K]) {
 		settings.set(this.key, value);
 	}
+	isString(): this is GroupItem<StringKeys, "string"> {
+		return this.type == "string";
+	}
+	isBoolean(): this is GroupItem<BooleanKeys, "boolean"> {
+		return this.type == "boolean";
+	}
+	isNumber(): this is GroupItem<NumberKeys, "number"> {
+		return this.type == "number";
+	}
+	isEnum(): this is GroupItem<EnumKeys, EnumTypes> {
+		return this.type == "AppTheme" || this.type == "Screens";
+	}
+	isCustomTheme(): this is GroupItem<CustomThemeKeys, "CustomTheme"> {
+		return this.type == "CustomTheme";
+	}
 }
 
-type ItemProps = {
+type GroupTypes = readonly GroupItem<keyof SettingPropTypes, SettingType>[];
+
+export type StringKeys = {
+	[K in keyof SettingPropTypes]: SettingPropTypes[K] extends string ? K : never;
+}[keyof SettingPropTypes];
+export type NumberKeys = {
+	[K in keyof SettingPropTypes]: SettingPropTypes[K] extends number ? K : never;
+}[keyof SettingPropTypes];
+export type BooleanKeys = {
+	[K in keyof SettingPropTypes]: SettingPropTypes[K] extends boolean ? K : never;
+}[keyof SettingPropTypes];
+export type CustomThemeKeys = "CUSTOM_THEME";
+export type EnumKeys = "THEME" | "DEFAULT_SCREEN";
+export type EnumTypes = "AppTheme" | "Screens";
+
+export type ItemProps = {
 	string: {
 		password: boolean;
 	};
@@ -69,8 +99,6 @@ export type SettingType = keyof ItemProps;
 type ItemOptions = {
 	[K in SettingType]: ItemProps[K];
 };
-
-type GroupTypes = readonly GroupItem<keyof SettingPropTypes, SettingType>[];
 
 class Group<TItems extends GroupTypes> {
 	readonly name: string;
