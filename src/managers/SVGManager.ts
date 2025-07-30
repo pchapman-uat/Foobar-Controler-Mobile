@@ -28,6 +28,8 @@ import GitHubMark from "assets/icons/github-mark.svg";
 import GitHubMarkWhite from "assets/icons/github-mark-white.svg";
 // @ts-expect-error TS will not handle custom modules (svg); However, Metro will handle at runtime
 import StopSVG from "assets/controls/stop.svg";
+// @ts-expect-error TS will not handle custom modules (svg); However, Metro will handle at runtime
+import PreviousSVG from "assets/controls/previous.svg";
 export {
 	ConnectionSVG,
 	LibrarySVG,
@@ -44,4 +46,5 @@ export {
 	StopSVG,
 	GitHubMark,
 	GitHubMarkWhite,
+	PreviousSVG,
 };

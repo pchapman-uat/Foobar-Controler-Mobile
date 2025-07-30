@@ -269,7 +269,7 @@ export class Beefweb {
 		this.skip();
 	}
 	private onNotificationBack({}: AudioProEvent) {
-		this.back();
+		this.previous();
 	}
 
 	private fromRequestStatus(status: RequestStatus) {
@@ -446,7 +446,7 @@ export class Beefweb {
 		await this._post(this.combineUrl("player", "stop"));
 	}
 
-	async back() {
+	async previous() {
 		await this._post(this.combineUrl("player", "previous"));
 	}
 	async removeFromQueue(
