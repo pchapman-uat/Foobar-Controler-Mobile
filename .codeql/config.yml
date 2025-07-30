@@ -1,0 +1,7 @@
+name: foobar-controller-mobile
+languages: [javascript]
+extractor:
+  javascript:
+    index:
+      include: ["src"]
+      exclude: ["node_modules", "android", "ios", "build", "dist", "test"]
