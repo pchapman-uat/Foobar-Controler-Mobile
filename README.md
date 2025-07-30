@@ -17,11 +17,7 @@ Information in the README and LICENSE may not properly reflect the above at the 
 
 ## Setup
 
-> [!CAUTION]
-> Due to this project being in early testing, the setup may be incomplete or inaccurate.
-
-- [Foobar2000](https://www.foobar2000.org) – Tested on v2.23.5 32-bit
-- [Beefweb](https://github.com/hyperblast/beefweb) – Tested on v0.10
+Please view the [Wiki - Setup](https://github.com/pchapman-uat/Foobar-Controler-Mobile/wiki/Setup) for a full guide on setting up the application.
 
 ## Resources
 
