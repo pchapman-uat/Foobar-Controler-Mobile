@@ -41,7 +41,7 @@ export default function LibraryArtist() {
 		getAllSongs();
 	}, []);
 	const searchSongs = (text: string) => {
-		setfilteredSongs(filterSongs(text, songs));
+		setfilteredSongs(filterSongs(text, songs, "artist"));
 	};
 	const onArtistChange = (artist: string) => {
 		setArtist(artist);
@@ -53,7 +53,6 @@ export default function LibraryArtist() {
 	const listView = (filteredSongs: Columns[] | undefined) => {
 		return (
 			<View style={{ flex: 1 }}>
-				<TextInput style={Styles.Main.textInput} onChangeText={searchSongs} />
 				<ScrollView>
 					<LibraryItems songs={filteredSongs} />
 				</ScrollView>
@@ -103,6 +102,9 @@ export default function LibraryArtist() {
 					loop
 					style={{ width: 100, height: 100 }}
 				/>
+			)}
+			{view == "list" && (
+				<TextInput style={Styles.Main.textInput} onChangeText={searchSongs} />
 			)}
 			<GetView
 				view={view}

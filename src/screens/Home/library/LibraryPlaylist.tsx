@@ -60,11 +60,6 @@ export default function LibraryPlaylist() {
 	) => {
 		return (
 			<View style={{ flex: 1 }}>
-				<TextInput
-					style={Styles.Main.textInput}
-					onChangeText={searchSongs}
-					value={searchInput}
-				/>
 				<ScrollView>
 					<LibraryItems playlistId={playlistId} songs={filteredSongs} />
 				</ScrollView>
@@ -118,6 +113,9 @@ export default function LibraryPlaylist() {
 					loop
 					style={{ width: 100, height: 100 }}
 				/>
+			)}
+			{view == "list" && (
+				<TextInput style={Styles.Main.textInput} onChangeText={searchSongs} />
 			)}
 			<GetView
 				view={view}
