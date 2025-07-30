@@ -1,7 +1,10 @@
 import { useStyles } from "managers/StyleManager";
+import { useEffect } from "react";
 import React, { Text, View } from "react-native";
+import { SetupScreenProps } from "screens/Setup";
 
-export default function SetupIntro() {
+export default function SetupIntro({ setReady }: SetupScreenProps) {
+	useEffect(() => setReady(true));
 	const Styles = useStyles("Main", "Setup");
 	return (
 		<View style={Styles.Setup.container}>

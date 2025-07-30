@@ -191,8 +191,8 @@ export class Beefweb {
 			if (response?.data?.player?.info?.name) {
 				return ip;
 			}
-		} catch (e) {
-			console.error(e);
+		} catch {
+			console.warn("failed to find server at: ", ip);
 		}
 		return null;
 	}

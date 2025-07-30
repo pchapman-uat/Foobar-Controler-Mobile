@@ -89,8 +89,7 @@ export default function SettingsScreen({ navigation }: SettingsProps) {
 				<Text style={Styles.Settings.itemLabel}>{item.name}</Text>
 				<SettingsControl
 					item={item}
-					index={index}
-					values={values}
+					value={values[item.key]}
 					Styles={Styles}
 					ctx={ctx}
 					onSet={(newVal) => setValues((prev) => ({ ...prev, [item.key]: newVal }))}

@@ -22,16 +22,15 @@ import { AppContextType } from "AppContext";
 import { Screen } from "enum/Screens";
 import { ColorFormatsObject } from "reanimated-color-picker";
 
-type StylesType = Pick<StyleMapType, "Main" | "Settings" | "Modal" | "Library">;
+type StylesType = Pick<StyleMapType, "Main">;
 type SettingsControlProps<
 	K extends keyof SettingPropTypes = keyof SettingPropTypes,
 > = {
 	item: GroupItem<K, SettingType>;
-	index: number;
-	values: Partial<SettingPropTypes>;
+	value: Partial<SettingPropTypes>[K];
 	Styles: StylesType;
 	ctx: AppContextType;
-	customThemeProps: CustomThemeControlProps;
+	customThemeProps?: CustomThemeControlProps;
 	onSet: (newVal: SettingPropTypes[K]) => void;
 };
 
@@ -58,19 +57,18 @@ type ControlProps<
 	ctx: AppContextType;
 	item: GroupItem<K, J>;
 	set: (newVal: SettingPropTypes[K]) => void;
-	val: Partial<SettingPropTypes>[K];
+	value: Partial<SettingPropTypes>[K];
 };
 function BaseSettingsControl<
 	K extends keyof SettingPropTypes = keyof SettingPropTypes,
 >({
 	item,
-	values,
+	value,
 	Styles,
 	onSet,
 	ctx,
 	customThemeProps,
 }: SettingsControlProps<K>) {
-	const value = values[item.key];
 	const [val, setVal] = useState<SettingPropTypes[K] | undefined>(value);
 
 	useEffect(() => {
@@ -87,7 +85,7 @@ function BaseSettingsControl<
 			item,
 			Styles,
 			ctx,
-			val: val as string | undefined,
+			value: val as string | undefined,
 			set,
 		});
 	} else if (item.isNumber()) {
@@ -95,7 +93,7 @@ function BaseSettingsControl<
 			item,
 			Styles,
 			ctx,
-			val: val as number | undefined,
+			value: val as number | undefined,
 			set,
 		});
 	} else if (item.isBoolean()) {
@@ -103,23 +101,24 @@ function BaseSettingsControl<
 			item,
 			Styles,
 			ctx,
-			val: val as boolean | undefined,
+			value: val as boolean | undefined,
 			set,
 		});
 	} else if (item.isEnum()) {
-		// return EnumControl({
-		// 	item,
-		// 	Styles,
-		// 	ctx,
-		// 	val: val as AppTheme | Screen | undefined,
-		// 	set: set as (v: SettingPropTypes[EnumKeys]) => void,
-		// });
+		return EnumControl({
+			item: item as GroupItem<EnumKeys, "AppTheme" | "CustomTheme">,
+			Styles,
+			ctx,
+			value: val as AppTheme | Screen | undefined,
+			set: set as (v: SettingPropTypes[EnumKeys]) => void,
+		});
 	} else if (item.isCustomTheme()) {
+		if (!customThemeProps) throw new Error("Custom Theme Props are Required");
 		return CustomThemeControl({
 			item,
 			Styles,
 			ctx,
-			val: val as CustomTheme,
+			value: val as CustomTheme,
 			set,
 			customThemeProps,
 		});
@@ -132,7 +131,7 @@ function StringControl<K extends StringKeys>({
 	item,
 	Styles,
 	ctx,
-	val,
+	value: val,
 	set,
 }: ControlProps<K, "string">) {
 	const props = item.props;
@@ -142,7 +141,7 @@ function StringControl<K extends StringKeys>({
 		<View style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
 			<TextInput
 				style={{ ...Styles.Main.textInput, width: 200 }}
-				keyboardType="default"
+				keyboardType={props.keyboardType}
 				value={val?.toString() ?? ""}
 				onChangeText={setString}
 				placeholder={item.getDefault(ctx.Settings).toString()}
@@ -163,7 +162,7 @@ function NumberControl<K extends NumberKeys>({
 	item,
 	Styles,
 	ctx,
-	val,
+	value: val,
 	set,
 }: ControlProps<K, "number">) {
 	const setNumber = (newVal: string) => {
@@ -185,7 +184,7 @@ function NumberControl<K extends NumberKeys>({
 
 function BooleanControl<K extends BooleanKeys>({
 	ctx,
-	val,
+	value: val,
 	set,
 }: ControlProps<K, "boolean">) {
 	const setBoolean = (newVal: boolean) => set(newVal as SettingPropTypes[K]);
@@ -203,7 +202,7 @@ function EnumControl<K extends EnumKeys>({
 	item,
 	Styles,
 	ctx,
-	val,
+	value: val,
 	set,
 }: ControlProps<K, "AppTheme" | "CustomTheme">) {
 	const values =

@@ -1,7 +1,10 @@
 import { useStyles } from "managers/StyleManager";
+import { useEffect } from "react";
 import React, { Linking, Text, View } from "react-native";
+import { SetupScreenProps } from "screens/Setup";
 
-export default function SetupFoobar() {
+export default function SetupFoobar({ setReady }: SetupScreenProps) {
+	useEffect(() => setReady(true));
 	const Styles = useStyles("Main", "Setup");
 	const centeredText = Styles.Main.centeredText;
 	const hyperlink = Styles.Main.hyperlink;

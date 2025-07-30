@@ -1,3 +1,4 @@
+import { KeyboardTypeOptions } from "react-native";
 import { SettingPropTypes, SettingsClass } from "./Settings";
 
 class GroupItem<K extends keyof SettingPropTypes, T extends SettingType> {
@@ -5,17 +6,18 @@ class GroupItem<K extends keyof SettingPropTypes, T extends SettingType> {
 	readonly key: K;
 	readonly type: SettingType;
 	readonly props: ItemOptions[T];
-
+	readonly unused: boolean = false;
 	constructor(
 		name: string,
 		key: K,
 		type: T,
 		props: Partial<ItemOptions[T]> = {},
+		unused?: boolean,
 	) {
 		this.name = name;
 		this.key = key;
 		this.type = type;
-
+		if (unused) this.unused = unused;
 		const defaultProps = ItemPropsDefaults[type] as ItemOptions[T];
 		this.props = {
 			...defaultProps,
@@ -73,6 +75,7 @@ export type EnumTypes = "AppTheme" | "Screens";
 export type ItemProps = {
 	string: {
 		password: boolean;
+		keyboardType: KeyboardTypeOptions;
 	};
 	boolean: Record<string, never>;
 	number: Record<string, never>;
@@ -82,10 +85,11 @@ export type ItemProps = {
 	encrypted_string: Record<string, never>;
 };
 export const ItemPropsDefaults: {
-	[K in keyof ItemProps]: Partial<ItemProps[K]>;
+	[K in keyof ItemProps]: ItemProps[K];
 } = {
 	string: {
 		password: false,
+		keyboardType: "default",
 	},
 	boolean: {},
 	number: {},
@@ -110,32 +114,59 @@ class Group<TItems extends GroupTypes> {
 	}
 }
 
+const ALL_SETTINGS: {
+	[K in keyof SettingPropTypes]: GroupItem<K, SettingType>;
+} = {
+	THEME: new GroupItem("Theme", "THEME", "AppTheme"),
+	DYNAMIC_BACKGROUND: new GroupItem(
+		"Dynamic Background",
+		"DYNAMIC_BACKGROUND",
+		"boolean",
+	),
+	AUTOMATIC_UPDATES: new GroupItem(
+		"Automatic Updates",
+		"AUTOMATIC_UPDATES",
+		"boolean",
+	),
+	DEFAULT_SCREEN: new GroupItem("Default Screen", "DEFAULT_SCREEN", "Screens"),
+	IP_ADDRESS: new GroupItem("IP Address", "IP_ADDRESS", "string", {
+		keyboardType: "url",
+	}),
+	PORT: new GroupItem("Port", "PORT", "number"),
+	AUTHENTICATION: new GroupItem(
+		"Require Authentication",
+		"AUTHENTICATION",
+		"boolean",
+	),
+	USERNAME: new GroupItem("Username", "USERNAME", "string"),
+	PASSWORD: new GroupItem("Password", "PASSWORD", "string", { password: true }),
+	CUSTOM_THEME: new GroupItem("Custom Theme", "CUSTOM_THEME", "CustomTheme"),
+	UPDATE_FREQUENCY: new GroupItem(
+		"Update Frequency",
+		"UPDATE_FREQUENCY",
+		"number",
+	),
+	REMEMBER_IP: new GroupItem("Rememeber IP", "REMEMBER_IP", "boolean", {}, true),
+};
 class SettingGroups {
 	readonly groups = [
 		new Group(
 			"General",
-			new GroupItem("Theme", "THEME", "AppTheme"),
-			new GroupItem("Dynamic Background", "DYNAMIC_BACKGROUND", "boolean"),
-			new GroupItem("Automatic Updates", "AUTOMATIC_UPDATES", "boolean"),
-			new GroupItem("Default Screen", "DEFAULT_SCREEN", "Screens"),
+			ALL_SETTINGS.THEME,
+			ALL_SETTINGS.DYNAMIC_BACKGROUND,
+			ALL_SETTINGS.AUTOMATIC_UPDATES,
+			ALL_SETTINGS.DEFAULT_SCREEN,
 		),
 		new Group(
 			"Network",
-			new GroupItem("IP Address", "IP_ADDRESS", "string"),
-			new GroupItem("Port", "PORT", "number"),
-			new GroupItem("Require Authentication", "AUTHENTICATION", "boolean"),
-			new GroupItem("Username", "USERNAME", "string"),
-			new GroupItem("Password", "PASSWORD", "string", { password: true }),
+			ALL_SETTINGS.IP_ADDRESS,
+			ALL_SETTINGS.PORT,
+			ALL_SETTINGS.AUTHENTICATION,
+			ALL_SETTINGS.USERNAME,
+			ALL_SETTINGS.PASSWORD,
 		),
-		new Group(
-			"Themes",
-			new GroupItem("Theme", "THEME", "AppTheme"),
-			new GroupItem("Custom Theme", "CUSTOM_THEME", "CustomTheme"),
-		),
-		new Group(
-			"Advanced",
-			new GroupItem("Update Frequency", "UPDATE_FREQUENCY", "number"),
-		),
+		new Group("Themes", ALL_SETTINGS.THEME, ALL_SETTINGS.CUSTOM_THEME),
+		new Group("Advanced", ALL_SETTINGS.UPDATE_FREQUENCY),
 	];
 
 	[Symbol.iterator]() {
@@ -147,4 +178,4 @@ class SettingGroups {
 	}
 }
 export default new SettingGroups();
-export { GroupItem, Group, SettingGroups, GroupTypes };
+export { GroupItem, Group, SettingGroups, GroupTypes, ALL_SETTINGS };

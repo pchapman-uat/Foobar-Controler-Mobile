@@ -17,4 +17,19 @@ export default ({ theme }: StyleProps) =>
 		container: {
 			padding: 10,
 		},
+		inputView: {
+			display: "flex",
+			flexDirection: "row",
+			justifyContent: "space-between",
+		},
+		inputLabel: {
+			verticalAlign: "middle",
+		},
+		buttonContainer: {
+			display: "flex",
+			flexDirection: "row",
+			padding: 5,
+			justifyContent: "space-around",
+			width: "100%",
+		},
 	});

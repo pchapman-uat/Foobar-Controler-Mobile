@@ -1,8 +1,11 @@
 import CodeText from "elements/CodeText";
 import List from "elements/List";
 import { useStyles } from "managers/StyleManager";
+import { useEffect } from "react";
 import React, { Linking, Text, View } from "react-native";
-export default function SetupBeefweb() {
+import { SetupScreenProps } from "screens/Setup";
+export default function SetupBeefweb({ setReady }: SetupScreenProps) {
+	useEffect(() => setReady(true));
 	const Styles = useStyles("Main", "Setup");
 	const centeredText = Styles.Main.centeredText;
 	const hyperlink = Styles.Main.hyperlink;
