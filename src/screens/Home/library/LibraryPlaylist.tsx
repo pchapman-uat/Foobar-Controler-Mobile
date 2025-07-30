@@ -14,7 +14,6 @@ type Views = "grid" | "list";
 export default function LibraryPlaylist() {
 	const Styles = useStyles("Main", "Library");
 	const [playlistId, setPlaylistId] = useState<string>();
-	const [searchInput, setSearchInput] = useState<string>();
 	const [songs, setSongs] = useState<Columns[]>();
 	const [filteredSongs, setfilteredSongs] = useState<Columns[]>([]);
 	const ctx = useContext(AppContext);
@@ -26,7 +25,6 @@ export default function LibraryPlaylist() {
 
 	const onPlaylistChange = async (playlistID: string) => {
 		setPlaylistId(playlistID);
-		setSearchInput("");
 		if (playlistID && playlistID !== "") {
 			console.log(playlistID);
 			const response = await ctx.BeefWeb.getPlaylistItems(playlistID);
