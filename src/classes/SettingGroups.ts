@@ -1,5 +1,6 @@
 import { KeyboardTypeOptions } from "react-native";
 import { SettingPropTypes, SettingsClass } from "./Settings";
+import { ArrayItems, ArrayItemType, ArrayItemTypeKeys } from "./ArrayItems";
 
 class GroupItem<K extends keyof SettingPropTypes, T extends SettingType> {
 	readonly name: string;
@@ -55,8 +56,36 @@ class GroupItem<K extends keyof SettingPropTypes, T extends SettingType> {
 	isCustomTheme(): this is GroupItem<CustomThemeKeys, "CustomTheme"> {
 		return this.type == "CustomTheme";
 	}
+	isArrayItems(): this is ArrayGroupItem<
+		ArrayItemsKeys,
+		"ArrayItems",
+		ArrayItemTypeKeys
+	> {
+		return this.type == "ArrayItems";
+	}
 }
 
+export class ArrayGroupItem<
+	K extends keyof SettingPropTypes,
+	T extends SettingType,
+	J extends ArrayItemTypeKeys,
+> extends GroupItem<K, T> {
+	readonly subType: ArrayItemTypeKeys;
+	constructor(
+		name: string,
+		key: K,
+		type: T,
+		subType: J,
+		props: Partial<ItemOptions[T]> = {},
+		unused?: boolean,
+	) {
+		super(name, key, type, props, unused);
+		this.subType = subType;
+	}
+	isArrayString(): this is ArrayGroupItem<K, T, "string"> {
+		return this.subType === "string";
+	}
+}
 type GroupTypes = readonly GroupItem<keyof SettingPropTypes, SettingType>[];
 
 export type StringKeys = {
@@ -71,7 +100,11 @@ export type BooleanKeys = {
 export type CustomThemeKeys = "CUSTOM_THEME";
 export type EnumKeys = "THEME" | "DEFAULT_SCREEN";
 export type EnumTypes = "AppTheme" | "Screens";
-
+export type ArrayItemsKeys = {
+	[K in keyof SettingPropTypes]: SettingPropTypes[K] extends ArrayItems<ArrayItemType>
+		? K
+		: never;
+}[keyof SettingPropTypes];
 export type ItemProps = {
 	string: {
 		password: boolean;
@@ -82,7 +115,7 @@ export type ItemProps = {
 	AppTheme: Record<string, never>;
 	Screens: Record<string, never>;
 	CustomTheme: Record<string, never>;
-	encrypted_string: Record<string, never>;
+	ArrayItems: Record<string, never>;
 };
 export const ItemPropsDefaults: {
 	[K in keyof ItemProps]: ItemProps[K];
@@ -96,7 +129,7 @@ export const ItemPropsDefaults: {
 	AppTheme: {},
 	Screens: {},
 	CustomTheme: {},
-	encrypted_string: {},
+	ArrayItems: {},
 };
 export type SettingType = keyof ItemProps;
 

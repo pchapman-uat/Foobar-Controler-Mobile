@@ -3,6 +3,7 @@ import { Screen } from "enum/Screens";
 import { CustomTheme } from "./Themes";
 import { Orientation } from "hooks/useOrientation";
 import { setItemAsync, getItemAsync } from "expo-secure-store";
+import { ArrayItems } from "./ArrayItems";
 class Settings {
 	readonly PROPS = SettingProps.create();
 
@@ -68,6 +69,7 @@ type SettingPropTypes = {
 	[K in keyof typeof SettingsDefaults]: (typeof SettingsDefaults)[K];
 };
 
+export type ExtractArrayItem<T> = T extends ArrayItems<infer U> ? U : never;
 class SettingProps {
 	static create(): {
 		[K in keyof SettingPropTypes]: SettingsProperty<SettingPropTypes[K]>;

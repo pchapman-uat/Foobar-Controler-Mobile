@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import {
+	ArrayGroupItem,
+	ArrayItemsKeys,
 	BooleanKeys,
 	CustomThemeKeys,
 	EnumKeys,
@@ -11,10 +13,15 @@ import {
 } from "classes/SettingGroups";
 import { Picker } from "@react-native-picker/picker";
 import { SettingPropTypes, AppTheme } from "classes/Settings";
+import {
+	ArrayItemType,
+	ArrayItems,
+	ArrayItemTypeKeys,
+} from "classes/ArrayItems";
 import { CustomTheme, Color, Theme } from "classes/Themes";
 import { getEnumKeys } from "helpers/helpers";
 import { getColor, getCustomTheme } from "managers/ThemeManager";
-import { View, TextInput, Switch, Alert } from "react-native";
+import { View, TextInput, Switch, Alert, Text } from "react-native";
 import { Button } from "react-native-elements";
 import { renderPicker } from "./EnumPicker";
 import { StyleMapType } from "managers/StyleManager";
@@ -68,7 +75,7 @@ function BaseSettingsControl<
 	onSet,
 	ctx,
 	customThemeProps,
-}: SettingsControlProps<K>) {
+}: SettingsControlProps<K>): React.JSX.Element {
 	const [val, setVal] = useState<SettingPropTypes[K] | undefined>(value);
 
 	useEffect(() => {
@@ -122,6 +129,17 @@ function BaseSettingsControl<
 			set,
 			customThemeProps,
 		});
+	} else if (item.isArrayItems()) {
+		throw new Error(
+			"Array Items is removed at this time, error should not occur",
+		);
+		// return ArrayItemsControl({
+		// 	item,
+		// 	Styles,
+		// 	ctx,
+		// 	value: val as ArrayItems<ArrayItemType>,
+		// 	set: set as (v: SettingPropTypes[ArrayItemsKeys]) => void,
+		// });
 	} else {
 		throw new Error("Unhandled Setting Type of: " + item.type);
 	}
@@ -252,7 +270,6 @@ function CustomThemeControl<K extends CustomThemeKeys>({
 	} = customThemeProps;
 
 	const custom = getCustomTheme();
-	if (!(custom instanceof CustomTheme)) return;
 
 	useEffect(() => {
 		setCustomTheme(custom);
@@ -304,5 +321,67 @@ const SettingsControl = Object.assign(BaseSettingsControl, {
 	Enum: EnumControl,
 	CustomTheme: CustomThemeControl,
 });
+type ArrayItemsFunctionProps<K extends keyof SettingPropTypes> = Omit<
+	ControlProps<K, "ArrayItems">,
+	"value"
+> & {
+	item: ArrayGroupItem<K, "ArrayItems", ArrayItemTypeKeys>;
+	value: ArrayItems<ArrayItemType>;
+};
+function ArrayItemsControl<K extends ArrayItemsKeys>({
+	value,
+	set,
+	Styles,
+}: ArrayItemsFunctionProps<K>): React.JSX.Element {
+	const [items, setItems] = useState<string[]>();
+	const [inputBoxValue, setInputBoxValue] = useState("");
+	useEffect(() => {
+		setItems(value.items.map((item) => item.toString()));
+	}, [value]);
+
+	const updateValue = (newItems: typeof value.items) => {
+		const newValue = new ArrayItems(value.settings, ...newItems);
+		newValue.limit = value.limit;
+		newValue.selectedItems = [...value.selectedItems];
+		set(newValue as SettingPropTypes[K]);
+	};
+
+	const onAddPress = (newValue: string) => {
+		if (newValue == "") return;
+		const updatedItems = [...value.items, newValue];
+		updateValue(updatedItems);
+	};
+
+	const onRemovePress = () => {
+		const updatedItems = value.items.slice(0, -1);
+		updateValue(updatedItems);
+	};
+
+	return (
+		<View>
+			<View>
+				<Text>Items ({items?.length ?? 0})</Text>
+				<Text>{items?.join()}</Text>
+			</View>
+			<View></View>
+			<View>
+				<TextInput
+					style={{ ...Styles.Main.textInput, width: 200 }}
+					onChangeText={setInputBoxValue}
+				/>
+				<View
+					style={{
+						display: "flex",
+						flexDirection: "row",
+						justifyContent: "space-around",
+					}}
+				>
+					<Button onPress={onRemovePress} title={"Remove"} />
+					<Button title={"Add Item"} onPress={() => onAddPress(inputBoxValue)} />
+				</View>
+			</View>
+		</View>
+	);
+}
 
 export default SettingsControl;
