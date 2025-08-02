@@ -30,3 +30,8 @@ export function printTree(
 		});
 	}
 }
+export function isPrimitive(val: unknown): val is string | number | boolean {
+	return (
+		typeof val === "string" || typeof val === "number" || typeof val === "boolean"
+	);
+}
