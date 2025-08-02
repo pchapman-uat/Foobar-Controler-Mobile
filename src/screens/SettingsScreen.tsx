@@ -1,7 +1,7 @@
 import AppContext from "AppContext";
 import { SettingPropTypes, SettingsDefaults } from "classes/Settings";
 import { useStyles } from "managers/StyleManager";
-import { initCustomTheme } from "managers/ThemeManager";
+import { getColor, initCustomTheme } from "managers/ThemeManager";
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import { View, Text, ScrollView, TouchableOpacity, Modal } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -18,6 +18,8 @@ import { Color, CustomTheme, Theme } from "classes/Themes";
 import ColorPickers, { ColorPickerOptions } from "elements/ColorPickers";
 import { ColorFormatsObject } from "reanimated-color-picker";
 import SettingsControl from "elements/SettingsControl";
+import { InfoSVG } from "managers/SVGManager";
+import { isPrimitive } from "helpers/helpers";
 type SettingsNavigationProp = NativeStackNavigationProp<
 	RootStackParamList,
 	"Settings"
@@ -38,7 +40,10 @@ export default function SettingsScreen({ navigation }: SettingsProps) {
 	const [selectedColorKey, setSelectedColorKey] = useState<keyof Theme>();
 	const [selectedColor, setSelectedColor] = useState<ColorFormatsObject>();
 	const [customTheme, setCustomTheme] = useState<CustomTheme>();
-
+	const [infoHeading, setInfoHeading] = useState("");
+	const [infoText, setInfoText] = useState("");
+	const [infoModalVisable, setInfoModalVisable] = useState(false);
+	const [infoDefaultValue, setInfoDefaultValue] = useState("");
 	const onSave = async () => {
 		const entries = Object.entries(values) as [
 			keyof SettingPropTypes,
@@ -76,7 +81,17 @@ export default function SettingsScreen({ navigation }: SettingsProps) {
 			setLoaded(true);
 		})();
 	}, []);
-
+	const onInfoPress = (text: string, heading: string, defaultValue: unknown) => {
+		setInfoText(text);
+		setInfoHeading(heading);
+		setInfoModalVisable(true);
+		if (isPrimitive(defaultValue)) {
+			const value = defaultValue.toString();
+			setInfoDefaultValue(value === "" ? "None" : value);
+		} else {
+			setInfoDefaultValue("Unable to show default");
+		}
+	};
 	const renderItem = useCallback(
 		(item: GroupItem<keyof SettingPropTypes, SettingType>, index: number) => (
 			<View
@@ -86,7 +101,25 @@ export default function SettingsScreen({ navigation }: SettingsProps) {
 				]}
 				key={index}
 			>
-				<Text style={Styles.Settings.itemLabel}>{item.name}</Text>
+				<View style={{ display: "flex", flexDirection: "row" }}>
+					<Text style={Styles.Settings.itemLabel}>{item.name}</Text>
+					<TouchableOpacity
+						onPress={() =>
+							onInfoPress(
+								item.getDescription(),
+								`${item.name} - (${item.getType()})`,
+								item.getDefault(ctx.Settings),
+							)
+						}
+					>
+						<InfoSVG
+							color={getColor(ctx.theme, "buttonPrimary")}
+							width={15}
+							height={15}
+						/>
+					</TouchableOpacity>
+				</View>
+
 				<SettingsControl
 					item={item}
 					value={values[item.key]}
@@ -212,6 +245,20 @@ export default function SettingsScreen({ navigation }: SettingsProps) {
 							/>
 							<Button title={"Cancel"} onPress={() => onColorClose()} />
 						</View>
+					</View>
+				</View>
+			</Modal>
+			<Modal
+				transparent
+				visible={infoModalVisable}
+				animationType="fade"
+				onRequestClose={() => setInfoModalVisable(false)}
+			>
+				<View style={Styles.Modal.modalOverlay}>
+					<View style={Styles.Modal.menu}>
+						<Text style={Styles.Main.header2}>{infoHeading}</Text>
+						<Text>{infoText}</Text>
+						<Text>Default: {infoDefaultValue}</Text>
 					</View>
 				</View>
 			</Modal>

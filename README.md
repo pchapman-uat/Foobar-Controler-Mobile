@@ -65,6 +65,7 @@ Below is information regarding the assets and libraries used for this project.
 - [Play](./src/assets/controls/play.svg) - [SVG Repo](https://www.svgrepo.com/svg/512667/play-1000) _(Public Domain)_
 - [Previous](./src/assets/controls/previous.svg) - [SVG Repo](https://www.svgrepo.com/svg/512685/previous-999) _(Public Domain)_
 - [Stop](./src/assets/controls/stop.svg) - [SVG Repo](https://www.svgrepo.com/svg/522297/stop) _(CC Attribution License)_
+- [Info](./src/assets/info.svg) - [SVG Repo](https://www.svgrepo.com/svg/524660/info-circle) _(CC Attribution License)_
 - [GitHub](./src/assets/icons/) - [GitHub](https://github.com/logos)
 - [Loading](./src/assets/lottie/loading.lottie.json) – [LottieFiles](https://lottiefiles.com/free-animation/music-play-Izr4xf80lB) _(Lottie Simple License)_
 

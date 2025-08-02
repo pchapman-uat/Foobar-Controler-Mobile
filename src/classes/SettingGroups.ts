@@ -8,6 +8,7 @@ class GroupItem<K extends keyof SettingPropTypes, T extends SettingType> {
 	readonly type: SettingType;
 	readonly props: ItemOptions[T];
 	readonly unused: boolean = false;
+	private readonly description: string;
 	constructor(
 		name: string,
 		key: K,
@@ -24,8 +25,14 @@ class GroupItem<K extends keyof SettingPropTypes, T extends SettingType> {
 			...defaultProps,
 			...props,
 		} as ItemOptions[T];
+		this.description = SETTINGS_DESCRIPTIONS[this.key];
 	}
-
+	public getDescription(): string {
+		return this.hasDescription ? "No Description Provided" : this.description;
+	}
+	public get hasDescription(): boolean {
+		return this.description === "";
+	}
 	public get(settings: SettingsClass): Promise<SettingPropTypes[K]> {
 		return settings.get(this.key);
 	}
@@ -147,6 +154,29 @@ class Group<TItems extends GroupTypes> {
 	}
 }
 
+const SETTINGS_DESCRIPTIONS: { [K in keyof SettingPropTypes]: string } = {
+	IP_ADDRESS:
+		"The IP Address of the machine that is currently running Foobar2000. Run ipconfig in CMD and enter the IPv4 or IPv6 address",
+	REMEMBER_IP: "This is unused and should be disregarded",
+	THEME:
+		"The current theme of the applicatio, custom will default to the 'Light' theme",
+	DYNAMIC_BACKGROUND:
+		"Change the background of the now playing screen based on the album art of the current song",
+	AUTOMATIC_UPDATES:
+		"This will enable or disable the updates for the application. This requires a restart of the application",
+	UPDATE_FREQUENCY:
+		"Change how often the application updates. WARNING: The lower the number the more processing power the app will use, it is recomended to keep it at the default",
+	DEFAULT_SCREEN: "Change the screen that the application will first open to",
+	CUSTOM_THEME:
+		"Create your own custom theme by adjusting the values, theme mustbe set to 'Custom' for the changes to apply",
+	USERNAME:
+		"When authentication is enabled this will be the username that will be provided to the server. NOTE: Due to the server this is sent over HTTP, meaning anyone can see this value",
+	PASSWORD:
+		"When authentication is enabled this will be the password that will be provided to the server. NOTE: Due to the server this is sent over HTTP, meaning anyone can see this value",
+	AUTHENTICATION:
+		"Enable or disable the application from using the Username/Password",
+	PORT: "Change the port that the server is running on",
+};
 const ALL_SETTINGS: {
 	[K in keyof SettingPropTypes]: GroupItem<K, SettingType>;
 } = {
