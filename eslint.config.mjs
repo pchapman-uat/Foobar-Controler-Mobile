@@ -2,6 +2,7 @@ import js from "@eslint/js";
 import globals from "globals";
 import tseslint from "typescript-eslint";
 import pluginReact from "eslint-plugin-react";
+import reactNamingConventionPlugin from "eslint-plugin-react-naming-convention";
 import { defineConfig, globalIgnores } from "eslint/config";
 
 export default defineConfig([
@@ -19,6 +20,7 @@ export default defineConfig([
 			js,
 			"@typescript-eslint": tseslint.plugin,
 			react: pluginReact,
+			"react-naming-convention": reactNamingConventionPlugin,
 		},
 	},
 
@@ -26,8 +28,28 @@ export default defineConfig([
 
 	{
 		files: ["**/*.{jsx,tsx}"],
+		plugins: {
+			react: pluginReact,
+			"react-naming-convention": reactNamingConventionPlugin,
+		},
+		settings: {
+			react: {
+				version: "detect",
+			},
+		},
 		rules: {
 			...pluginReact.configs.flat.recommended.rules,
+			"react-naming-convention/context-name": "warn",
+			"react-naming-convention/filename": ["warn", { rule: "PascalCase" }],
+			"react-naming-convention/filename-extension": ["warn", "as-needed"],
+			"react-naming-convention/use-state": "warn",
+			"react/jsx-pascal-case": [
+				"warn",
+				{
+					allowAllCaps: true,
+					ignore: [],
+				},
+			],
 		},
 	},
 
@@ -38,6 +60,15 @@ export default defineConfig([
 			"@typescript-eslint/no-unused-vars": "warn",
 			"react/no-unescaped-entities": "warn",
 			"react/prop-types": "off",
+			"@typescript-eslint/explicit-function-return-type": "off", // NOTE: Enable at a later date
+			"@typescript-eslint/naming-convention": [
+				"warn",
+				{
+					selector: "memberLike",
+					modifiers: ["readonly"],
+					format: ["UPPER_CASE"],
+				},
+			],
 		},
 	},
 	{

@@ -15,6 +15,7 @@
 		"@react-navigation/native": "^7.1.9",
 		"@react-navigation/native-stack": "^7.3.14",
 		"axios": "^1.9.0",
+		"eslint-plugin-react-naming-convention": "^1.52.3",
 		"expo": "~53.0.9",
 		"expo-dev-client": "^5.1.8",
 		"expo-screen-orientation": "^8.1.6",
