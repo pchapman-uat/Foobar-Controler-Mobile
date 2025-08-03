@@ -112,7 +112,7 @@ export default function SetupApplication({
 							setIP(newVal);
 							setValues((prev) => ({
 								...prev,
-								[ALL_SETTINGS.IP_ADDRESS.key]: newVal,
+								[ALL_SETTINGS.IP_ADDRESS.KEY]: newVal,
 							}));
 						}}
 					/>

@@ -8,13 +8,13 @@ import { useStyles } from "managers/StyleManager";
 import { getColor } from "managers/ThemeManager";
 import updateColors, { LottieLoading } from "managers/LottiManager";
 
-export default function App() {
+export default function app() {
 	const ctx = useContext(AppContext);
 	const Styles = useStyles("Main", "Modal");
-	const [infoName, setInfoname] = useState<string>("");
+	const [infoName, setInfoName] = useState<string>("");
 	const [infoTitle, setInfoTitle] = useState<string>("");
 	const [infoVersion, setInfoVersion] = useState<string>("");
-	const [infoPluginVersion, setPluginInfoVersion] = useState<string>("");
+	const [infoPluginVersion, setInfoPluginVersion] = useState<string>("");
 	const [status, setStatus] = useState<string>("");
 
 	const connectToBeefweb = useCallback(async () => {
@@ -27,10 +27,10 @@ export default function App() {
 
 	const onConnectSucess = (response: PlayerResponse) => {
 		setStatus("Connected!");
-		setInfoname(response.info.name);
+		setInfoName(response.info.name);
 		setInfoTitle(response.info.title);
 		setInfoVersion(response.info.version);
-		setPluginInfoVersion(response.info.pluginVersion);
+		setInfoPluginVersion(response.info.pluginVersion);
 	};
 
 	const onConnectFail = () => {

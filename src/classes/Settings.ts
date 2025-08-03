@@ -18,7 +18,7 @@ class Settings {
 		key: K,
 	): SettingPropTypes[K] {
 		const prop = this.PROPS[key];
-		return prop.fallback;
+		return prop.FALLBACK;
 	}
 
 	public set<K extends keyof SettingPropTypes>(
@@ -121,17 +121,17 @@ class SettingProps {
 	}
 }
 class SettingsProperty<T> {
-	readonly key: string;
-	readonly fallback: T;
-	protected readonly prefix = "@";
+	readonly KEY: string;
+	readonly FALLBACK: T;
+	protected readonly PREFIX = "@";
 
 	constructor(key: string, fallback: T) {
-		this.key = key;
-		this.fallback = fallback;
+		this.KEY = key;
+		this.FALLBACK = fallback;
 	}
 
 	protected getKey(): string {
-		return this.prefix + this.key;
+		return this.PREFIX + this.KEY;
 	}
 
 	async set(value?: T) {
@@ -162,7 +162,7 @@ class SettingsProperty<T> {
 	}
 
 	async get(): Promise<T> {
-		return await this.getHelper(this.fallback);
+		return await this.getHelper(this.FALLBACK);
 	}
 	async getNullable(): Promise<T | null> {
 		return await this.getHelper(null);
@@ -173,7 +173,7 @@ class EncryptedSettingsProperty extends SettingsProperty<string> {
 	override async set(value?: string) {
 		if (value == null || value == undefined) return;
 		try {
-			await setItemAsync(this.key, value);
+			await setItemAsync(this.KEY, value);
 		} catch (e) {
 			console.error(e);
 		}
@@ -181,16 +181,16 @@ class EncryptedSettingsProperty extends SettingsProperty<string> {
 	override async getHelper(fallback: string): Promise<string>;
 	override async getHelper(fallback: null): Promise<string | null>;
 	override async getHelper(fallback: string | null): Promise<string | null> {
-		console.warn("Look at me!", this.key);
+		console.warn("Look at me!", this.KEY);
 		try {
-			return getItemAsync(this.key);
+			return getItemAsync(this.KEY);
 		} catch (e) {
-			console.error(`Error retrieving item with key "${this.key}":`, e);
+			console.error(`Error retrieving item with key "${this.KEY}":`, e);
 			return fallback;
 		}
 	}
 	protected getKey(): string {
-		return this.prefix + this.key;
+		return this.PREFIX + this.KEY;
 	}
 }
 export default new Settings();

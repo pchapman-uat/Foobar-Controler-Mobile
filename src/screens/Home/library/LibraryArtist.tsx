@@ -18,7 +18,7 @@ export default function LibraryArtist() {
 	const [gridItems, setGridItems] = useState<GridItem[]>([]);
 	const [songs, setSongs] = useState<Columns[]>();
 	const [artist, setArtist] = useState<string>();
-	const [filteredSongs, setfilteredSongs] = useState<Columns[]>([]);
+	const [filteredSongs, setFilteredSongs] = useState<Columns[]>([]);
 	const [loading, setLoading] = useState(false);
 	useEffect(() => {
 		const getAllSongs = async () => {
@@ -41,13 +41,13 @@ export default function LibraryArtist() {
 		getAllSongs();
 	}, []);
 	const searchSongs = (text: string) => {
-		setfilteredSongs(filterSongs(text, songs, "artist"));
+		setFilteredSongs(filterSongs(text, songs, "artist"));
 	};
 	const onArtistChange = (artist: string) => {
 		setArtist(artist);
 		const newSongs = filterSongs(artist, songs, "artist");
 		console.log(newSongs);
-		setfilteredSongs(newSongs);
+		setFilteredSongs(newSongs);
 		return newSongs;
 	};
 	const listView = (filteredSongs: Columns[] | undefined) => {

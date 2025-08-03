@@ -23,7 +23,7 @@ import { getEnumKeys } from "helpers/helpers";
 import { getColor, getCustomTheme } from "managers/ThemeManager";
 import { View, TextInput, Switch, Alert, Text } from "react-native";
 import { Button } from "react-native-elements";
-import { renderPicker } from "./EnumPicker";
+import EnumPicker from "./EnumPicker";
 import { StyleMapType } from "managers/StyleManager";
 import { AppContextType } from "AppContext";
 import { Screen } from "enum/Screens";
@@ -141,7 +141,7 @@ function BaseSettingsControl<
 		// 	set: set as (v: SettingPropTypes[ArrayItemsKeys]) => void,
 		// });
 	} else {
-		throw new Error("Unhandled Setting Type of: " + item.type);
+		throw new Error("Unhandled Setting Type of: " + item.TYPE);
 	}
 }
 
@@ -152,7 +152,7 @@ function StringControl<K extends StringKeys>({
 	value: val,
 	set,
 }: ControlProps<K, "string">) {
-	const props = item.props;
+	const props = item.PROPS;
 	const [hiddenPassword, setHiddenPassword] = useState<boolean>(props.password);
 	const setString = (newVal: string) => set(newVal as SettingPropTypes[K]);
 	return (
@@ -224,9 +224,9 @@ function EnumControl<K extends EnumKeys>({
 	set,
 }: ControlProps<K, "AppTheme" | "CustomTheme">) {
 	const values =
-		item.type === "AppTheme"
+		item.TYPE === "AppTheme"
 			? AppTheme
-			: item.type === "Screens"
+			: item.TYPE === "Screens"
 				? Screen
 				: (() => {
 						throw new Error("This error should never happen");
@@ -242,7 +242,7 @@ function EnumControl<K extends EnumKeys>({
 			mode="dropdown"
 			selectedValue={val}
 		>
-			{renderPicker(keys, values)}
+			<EnumPicker keys={keys} values={values} />
 		</Picker>
 	);
 }
@@ -273,7 +273,7 @@ function CustomThemeControl<K extends CustomThemeKeys>({
 
 	useEffect(() => {
 		setCustomTheme(custom);
-	}, [item.key]);
+	}, [item.KEY]);
 
 	const onPress = (key: keyof Theme) => {
 		setColorModalVisable(true);
@@ -336,11 +336,11 @@ function ArrayItemsControl<K extends ArrayItemsKeys>({
 	const [items, setItems] = useState<string[]>();
 	const [inputBoxValue, setInputBoxValue] = useState("");
 	useEffect(() => {
-		setItems(value.items.map((item) => item.toString()));
+		setItems(value.ITEMS.map((item) => item.toString()));
 	}, [value]);
 
-	const updateValue = (newItems: typeof value.items) => {
-		const newValue = new ArrayItems(value.settings, ...newItems);
+	const updateValue = (newItems: typeof value.ITEMS) => {
+		const newValue = new ArrayItems(value.SETTINGS, ...newItems);
 		newValue.limit = value.limit;
 		newValue.selectedItems = [...value.selectedItems];
 		set(newValue as SettingPropTypes[K]);
@@ -348,12 +348,12 @@ function ArrayItemsControl<K extends ArrayItemsKeys>({
 
 	const onAddPress = (newValue: string) => {
 		if (newValue == "") return;
-		const updatedItems = [...value.items, newValue];
+		const updatedItems = [...value.ITEMS, newValue];
 		updateValue(updatedItems);
 	};
 
 	const onRemovePress = () => {
-		const updatedItems = value.items.slice(0, -1);
+		const updatedItems = value.ITEMS.slice(0, -1);
 		updateValue(updatedItems);
 	};
 

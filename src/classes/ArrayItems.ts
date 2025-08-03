@@ -12,21 +12,21 @@ const defaults: ArrayItemSettingsProps = {
 	min: 0,
 };
 export class ArrayItems<T extends ArrayItemType> {
-	readonly items: T[];
+	readonly ITEMS: T[];
 	selectedItems: number[] = [];
 	limit = 0;
-	readonly settings: ArrayItemSettingsProps;
+	readonly SETTINGS: ArrayItemSettingsProps;
 	constructor(settings?: Partial<ArrayItemSettingsProps>, ...items: T[]) {
-		this.items = items;
-		this.settings = { ...defaults, ...settings };
+		this.ITEMS = items;
+		this.SETTINGS = { ...defaults, ...settings };
 	}
 
 	getSelection(limit = this.limit) {
 		const selection: T[] = [];
 		for (const index of this.selectedItems) {
-			if (index < 0 || index >= this.items.length) continue;
+			if (index < 0 || index >= this.ITEMS.length) continue;
 			if (limit !== 0 && selection.length >= limit) break;
-			selection.push(this.items[index]);
+			selection.push(this.ITEMS[index]);
 		}
 		return selection;
 	}

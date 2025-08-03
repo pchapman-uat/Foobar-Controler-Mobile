@@ -3,12 +3,12 @@ import { SettingPropTypes, SettingsClass } from "./Settings";
 import { ArrayItems, ArrayItemType, ArrayItemTypeKeys } from "./ArrayItems";
 
 class GroupItem<K extends keyof SettingPropTypes, T extends SettingType> {
-	readonly name: string;
-	readonly key: K;
-	readonly type: SettingType;
-	readonly props: ItemOptions[T];
-	readonly unused: boolean = false;
-	private readonly description: string;
+	readonly NAME: string;
+	readonly KEY: K;
+	readonly TYPE: SettingType;
+	readonly PROPS: ItemOptions[T];
+	readonly UNUSED: boolean = false;
+	private readonly DESCRIPTION: string;
 	constructor(
 		name: string,
 		key: K,
@@ -16,59 +16,59 @@ class GroupItem<K extends keyof SettingPropTypes, T extends SettingType> {
 		props: Partial<ItemOptions[T]> = {},
 		unused?: boolean,
 	) {
-		this.name = name;
-		this.key = key;
-		this.type = type;
-		if (unused) this.unused = unused;
+		this.NAME = name;
+		this.KEY = key;
+		this.TYPE = type;
+		if (unused) this.UNUSED = unused;
 		const defaultProps = ItemPropsDefaults[type] as ItemOptions[T];
-		this.props = {
+		this.PROPS = {
 			...defaultProps,
 			...props,
 		} as ItemOptions[T];
-		this.description = SETTINGS_DESCRIPTIONS[this.key];
+		this.DESCRIPTION = SETTINGS_DESCRIPTIONS[this.KEY];
 	}
 	public getDescription(): string {
-		return this.hasDescription ? "No Description Provided" : this.description;
+		return this.hasDescription ? "No Description Provided" : this.DESCRIPTION;
 	}
 	public get hasDescription(): boolean {
-		return this.description === "";
+		return this.DESCRIPTION === "";
 	}
 	public get(settings: SettingsClass): Promise<SettingPropTypes[K]> {
-		return settings.get(this.key);
+		return settings.get(this.KEY);
 	}
 
 	public getDefault(settings: SettingsClass): SettingPropTypes[K] {
-		return settings.getDefault(this.key);
+		return settings.getDefault(this.KEY);
 	}
 
 	public getType() {
-		return this.type;
+		return this.TYPE;
 	}
 
 	public set(settings: SettingsClass, value: SettingPropTypes[K]) {
-		settings.set(this.key, value);
+		settings.set(this.KEY, value);
 	}
 	isString(): this is GroupItem<StringKeys, "string"> {
-		return this.type == "string";
+		return this.TYPE == "string";
 	}
 	isBoolean(): this is GroupItem<BooleanKeys, "boolean"> {
-		return this.type == "boolean";
+		return this.TYPE == "boolean";
 	}
 	isNumber(): this is GroupItem<NumberKeys, "number"> {
-		return this.type == "number";
+		return this.TYPE == "number";
 	}
 	isEnum(): this is GroupItem<EnumKeys, EnumTypes> {
-		return this.type == "AppTheme" || this.type == "Screens";
+		return this.TYPE == "AppTheme" || this.TYPE == "Screens";
 	}
 	isCustomTheme(): this is GroupItem<CustomThemeKeys, "CustomTheme"> {
-		return this.type == "CustomTheme";
+		return this.TYPE == "CustomTheme";
 	}
 	isArrayItems(): this is ArrayGroupItem<
 		ArrayItemsKeys,
 		"ArrayItems",
 		ArrayItemTypeKeys
 	> {
-		return this.type == "ArrayItems";
+		return this.TYPE == "ArrayItems";
 	}
 }
 
@@ -77,7 +77,7 @@ export class ArrayGroupItem<
 	T extends SettingType,
 	J extends ArrayItemTypeKeys,
 > extends GroupItem<K, T> {
-	readonly subType: ArrayItemTypeKeys;
+	readonly SUBTYPE: ArrayItemTypeKeys;
 	constructor(
 		name: string,
 		key: K,
@@ -87,10 +87,10 @@ export class ArrayGroupItem<
 		unused?: boolean,
 	) {
 		super(name, key, type, props, unused);
-		this.subType = subType;
+		this.SUBTYPE = subType;
 	}
 	isArrayString(): this is ArrayGroupItem<K, T, "string"> {
-		return this.subType === "string";
+		return this.SUBTYPE === "string";
 	}
 }
 type GroupTypes = readonly GroupItem<keyof SettingPropTypes, SettingType>[];
@@ -145,12 +145,12 @@ type ItemOptions = {
 };
 
 class Group<TItems extends GroupTypes> {
-	readonly name: string;
-	readonly items: TItems;
+	readonly NAME: string;
+	readonly ITEMS: TItems;
 
 	constructor(name: string, ...items: TItems) {
-		this.name = name;
-		this.items = items;
+		this.NAME = name;
+		this.ITEMS = items;
 	}
 }
 
@@ -212,7 +212,7 @@ const ALL_SETTINGS: {
 	REMEMBER_IP: new GroupItem("Rememeber IP", "REMEMBER_IP", "boolean", {}, true),
 };
 class SettingGroups {
-	readonly groups = [
+	readonly GROUPS = [
 		new Group(
 			"General",
 			ALL_SETTINGS.THEME,
@@ -233,11 +233,11 @@ class SettingGroups {
 	];
 
 	[Symbol.iterator]() {
-		return this.groups[Symbol.iterator]();
+		return this.GROUPS[Symbol.iterator]();
 	}
 
 	get length() {
-		return this.groups.length;
+		return this.GROUPS.length;
 	}
 }
 export default new SettingGroups();

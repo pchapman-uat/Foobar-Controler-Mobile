@@ -15,7 +15,7 @@ export default function LibraryPlaylist() {
 	const Styles = useStyles("Main", "Library");
 	const [playlistId, setPlaylistId] = useState<string>();
 	const [songs, setSongs] = useState<Columns[]>();
-	const [filteredSongs, setfilteredSongs] = useState<Columns[]>([]);
+	const [filteredSongs, setFilteredSongs] = useState<Columns[]>([]);
 	const ctx = useContext(AppContext);
 	const [playlists, setPlaylists] = useState<{ id: string; title: string }[]>(
 		[],
@@ -31,7 +31,7 @@ export default function LibraryPlaylist() {
 			if (response) {
 				console.log("Setting Songs");
 				setSongs(response.data.items);
-				setfilteredSongs(response.data.items);
+				setFilteredSongs(response.data.items);
 			}
 		}
 	};
@@ -49,7 +49,7 @@ export default function LibraryPlaylist() {
 	}, []);
 
 	const searchSongs = (text: string) => {
-		setfilteredSongs(filterSongs(text, songs));
+		setFilteredSongs(filterSongs(text, songs));
 	};
 
 	const listView = (

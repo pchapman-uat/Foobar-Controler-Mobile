@@ -80,10 +80,10 @@ export class Beefweb {
 	status = Status.Offline;
 	con = new Connection();
 	state = State.Disconnected;
-	readonly timeout = { timeout: 5000 };
+	readonly TIMEOUT = { timeout: 5000 };
 	updateFrequency = SettingsDefaults.UPDATE_FREQUENCY;
 	lastPlayer?: PlayerResponse;
-	readonly mobilePlaylistTitle = "Mobile Playlist";
+	readonly MOBILE_PLAYLIST_TITLE = "Mobile Playlist";
 
 	authentication = {
 		enabled: false,
@@ -518,14 +518,14 @@ export class Beefweb {
 		if (playlists) {
 			let id: string | null = null;
 			for (const item of playlists.data) {
-				if (item.title == this.mobilePlaylistTitle) {
+				if (item.title == this.MOBILE_PLAYLIST_TITLE) {
 					console.log("Found it!", item);
 					id = item.id;
 					break;
 				}
 			}
 			if (!id) {
-				const result = await this.addPlaylist(this.mobilePlaylistTitle, true, 999);
+				const result = await this.addPlaylist(this.MOBILE_PLAYLIST_TITLE, true, 999);
 				if (result) {
 					id = result.data.id;
 				}
@@ -564,7 +564,7 @@ export class Beefweb {
 			const fullUrl = this.combineUrl(url, path);
 			const auth = this.getAuth();
 			try {
-				const response = await axios.get(fullUrl, { ...this.timeout, auth });
+				const response = await axios.get(fullUrl, { ...this.TIMEOUT, auth });
 				return response;
 			} catch (error) {
 				console.warn("Fetch Failed!");
@@ -584,10 +584,10 @@ export class Beefweb {
 		const url = this.con.getUrl();
 		if (url) {
 			try {
-				console.log(this.combineUrl(url, path), this.timeout);
+				console.log(this.combineUrl(url, path), this.TIMEOUT);
 				const auth = this.getAuth();
 				return await axios.post(this.combineUrl(url, path), body, {
-					...this.timeout,
+					...this.TIMEOUT,
 					auth,
 				});
 			} catch (error) {

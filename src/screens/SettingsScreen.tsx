@@ -102,12 +102,12 @@ export default function SettingsScreen({ navigation }: SettingsProps) {
 				key={index}
 			>
 				<View style={{ display: "flex", flexDirection: "row" }}>
-					<Text style={Styles.Settings.itemLabel}>{item.name}</Text>
+					<Text style={Styles.Settings.itemLabel}>{item.NAME}</Text>
 					<TouchableOpacity
 						onPress={() =>
 							onInfoPress(
 								item.getDescription(),
-								`${item.name} - (${item.getType()})`,
+								`${item.NAME} - (${item.getType()})`,
 								item.getDefault(ctx.Settings),
 							)
 						}
@@ -122,10 +122,10 @@ export default function SettingsScreen({ navigation }: SettingsProps) {
 
 				<SettingsControl
 					item={item}
-					value={values[item.key]}
+					value={values[item.KEY]}
 					Styles={Styles}
 					ctx={ctx}
-					onSet={(newVal) => setValues((prev) => ({ ...prev, [item.key]: newVal }))}
+					onSet={(newVal) => setValues((prev) => ({ ...prev, [item.KEY]: newVal }))}
 					customThemeProps={{
 						setSelectedColorKey,
 						selectedColorKey,
@@ -155,17 +155,17 @@ export default function SettingsScreen({ navigation }: SettingsProps) {
 				onPress={onPress}
 			>
 				<Text style={Styles.Settings.itemLabel}>
-					{group.name} - {group.items.length}
+					{group.NAME} - {group.ITEMS.length}
 				</Text>
 			</TouchableOpacity>
 		);
 	};
 	const groupSelector = () => {
-		return <ScrollView>{SettingGroups.groups.map(renderGroup)}</ScrollView>;
+		return <ScrollView>{SettingGroups.GROUPS.map(renderGroup)}</ScrollView>;
 	};
 
 	const groupSettings = (groupIndex: number) =>
-		SettingGroups.groups[groupIndex].items.map(renderItem);
+		SettingGroups.GROUPS[groupIndex].ITEMS.map(renderItem);
 
 	const onColorSave = (
 		customTheme: CustomTheme,
