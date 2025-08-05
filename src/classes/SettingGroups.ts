@@ -176,6 +176,8 @@ const SETTINGS_DESCRIPTIONS: { [K in keyof SettingPropTypes]: string } = {
 	AUTHENTICATION:
 		"Enable or disable the application from using the Username/Password",
 	PORT: "Change the port that the server is running on",
+	CUSTOM_PLAYLIST_TYPES: "Add a custom playlist file type for the browser",
+	CUSTOM_AUDIO_TYPES: "Add a custom audio file type for the browser",
 };
 const ALL_SETTINGS: {
 	[K in keyof SettingPropTypes]: GroupItem<K, SettingType>;
@@ -209,6 +211,16 @@ const ALL_SETTINGS: {
 		"UPDATE_FREQUENCY",
 		"number",
 	),
+	CUSTOM_AUDIO_TYPES: new GroupItem(
+		"Custom Audio Types",
+		"CUSTOM_AUDIO_TYPES",
+		"ArrayItems",
+	),
+	CUSTOM_PLAYLIST_TYPES: new GroupItem(
+		"Custom Playlist Types",
+		"CUSTOM_PLAYLIST_TYPES",
+		"ArrayItems",
+	),
 	REMEMBER_IP: new GroupItem("Rememeber IP", "REMEMBER_IP", "boolean", {}, true),
 };
 class SettingGroups {
@@ -229,7 +241,12 @@ class SettingGroups {
 			ALL_SETTINGS.PASSWORD,
 		),
 		new Group("Themes", ALL_SETTINGS.THEME, ALL_SETTINGS.CUSTOM_THEME),
-		new Group("Advanced", ALL_SETTINGS.UPDATE_FREQUENCY),
+		new Group(
+			"Advanced",
+			ALL_SETTINGS.UPDATE_FREQUENCY,
+			ALL_SETTINGS.CUSTOM_AUDIO_TYPES,
+			ALL_SETTINGS.CUSTOM_PLAYLIST_TYPES,
+		),
 	];
 
 	[Symbol.iterator]() {

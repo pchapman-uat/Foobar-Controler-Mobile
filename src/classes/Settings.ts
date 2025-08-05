@@ -63,6 +63,8 @@ const SettingsDefaults = {
 	PASSWORD: "",
 	AUTHENTICATION: false,
 	PORT: 8880,
+	CUSTOM_PLAYLIST_TYPES: new ArrayItems<string>(),
+	CUSTOM_AUDIO_TYPES: new ArrayItems<string>(),
 };
 
 type SettingPropTypes = {
@@ -117,6 +119,14 @@ class SettingProps {
 				SettingsDefaults.AUTHENTICATION,
 			),
 			PORT: new SettingsProperty<number>("port", SettingsDefaults.PORT),
+			CUSTOM_AUDIO_TYPES: new SettingsProperty<ArrayItems<string>>(
+				"custom_audio_types",
+				SettingsDefaults.CUSTOM_AUDIO_TYPES,
+			),
+			CUSTOM_PLAYLIST_TYPES: new SettingsProperty<ArrayItems<string>>(
+				"custom_playlist_types",
+				SettingsDefaults.CUSTOM_PLAYLIST_TYPES,
+			),
 		};
 	}
 }

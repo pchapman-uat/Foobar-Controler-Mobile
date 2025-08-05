@@ -130,16 +130,13 @@ function BaseSettingsControl<
 			customThemeProps,
 		});
 	} else if (item.isArrayItems()) {
-		throw new Error(
-			"Array Items is removed at this time, error should not occur",
-		);
-		// return ArrayItemsControl({
-		// 	item,
-		// 	Styles,
-		// 	ctx,
-		// 	value: val as ArrayItems<ArrayItemType>,
-		// 	set: set as (v: SettingPropTypes[ArrayItemsKeys]) => void,
-		// });
+		return ArrayItemsControl({
+			item,
+			Styles,
+			ctx,
+			value: val as ArrayItems<ArrayItemType>,
+			set: set as (v: SettingPropTypes[ArrayItemsKeys]) => void,
+		});
 	} else {
 		throw new Error("Unhandled Setting Type of: " + item.TYPE);
 	}

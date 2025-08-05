@@ -51,6 +51,7 @@ export abstract class BrowserItem {
 	isFile(): this is BrowserFile {
 		return this.kind === BrowserItemType.FILE;
 	}
+
 	getAncestors(): BrowserDirectory[] {
 		const ancestors: BrowserDirectory[] = [];
 		let current = this.parent;
@@ -62,6 +63,7 @@ export abstract class BrowserItem {
 
 		return ancestors;
 	}
+	abstract filter(): boolean;
 }
 
 export class BrowserEntriesResponse {
@@ -136,9 +138,16 @@ export class BrowserFile extends BrowserItem {
 	private detectFileCategory(ext: string): FileCategory {
 		return ExtensionToCategoryMap[ext] ?? FileCategory.UNKNOWN;
 	}
-
+	public checkCustomCatigory(custom: Record<string, FileCategory>) {
+		const ext = this.fileExtension;
+		if (this.fileCategory == FileCategory.UNKNOWN)
+			this.fileCategory = custom[ext] ?? FileCategory.UNKNOWN;
+	}
 	static fromJSON(json: BrowserEntryItem) {
 		return new BrowserFile(json.name, json.path, json.size, json.timestamp);
+	}
+	filter(): boolean {
+		return this.fileCategory !== FileCategory.UNKNOWN;
 	}
 }
 
@@ -146,18 +155,19 @@ export class BrowserDirectory extends BrowserItem {
 	kind = BrowserItemType.DIRECTORY;
 	children: (BrowserFile | BrowserDirectory)[] = [];
 
-	public async init(beefweb: Beefweb) {
+	public async init(beefweb: Beefweb, custom: Record<string, FileCategory>) {
 		console.log("Initializing: ", this.name);
 		const response = await beefweb.getBrowserEntries(this.path);
 		if (response) this.children = response.data.entries;
 		for (const child of this.children) {
 			child.parent = this;
+			if (child instanceof BrowserFile) child.checkCustomCatigory(custom);
 		}
 		if (this.children) {
 			await Promise.all(
 				this.children
 					.filter((child) => child instanceof BrowserDirectory)
-					.map((child) => (child as BrowserDirectory).init(beefweb)),
+					.map((child) => (child as BrowserDirectory).init(beefweb, custom)),
 			);
 		} else {
 		}
@@ -201,6 +211,15 @@ export class BrowserDirectory extends BrowserItem {
 	}
 	static fromJSON(json: BrowserEntryItem) {
 		return new BrowserDirectory(json.name, json.path, json.size, json.timestamp);
+	}
+	filter(): boolean {
+		this.children = this.children.filter((child) => {
+			const keep = child.filter();
+			if (keep) child.parent = this;
+			return keep;
+		});
+
+		return this.children.length > 0;
 	}
 }
 

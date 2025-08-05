@@ -25,20 +25,38 @@ export default function LibraryBrowser() {
 	const ctx = useContext(AppContext);
 
 	useEffect(() => {
-		ctx.BeefWeb.getBrowserRoots().then((response) => {
-			const data = response?.data;
-			if (!data) return;
-			data.roots[0].init(ctx.BeefWeb).then(() => {
-				console.warn("hello!");
-				setSelectedFolder(data.roots[0].getFilteredCopy() ?? undefined);
-				setLoaded(true);
+		const fetch = async () => {
+			const playlistsArray = await ctx.Settings.get("CUSTOM_PLAYLIST_TYPES");
+			const customPlaylistTypes = Object.fromEntries(
+				playlistsArray.ITEMS.map((item) => [item, FileCategory.PLAYLIST]),
+			);
+
+			const audioArray = await ctx.Settings.get("CUSTOM_AUDIO_TYPES");
+			const customAudioTypes = Object.fromEntries(
+				audioArray.ITEMS.map((item) => [item, FileCategory.AUDIO]),
+			);
+
+			const customTypes = { ...customPlaylistTypes, ...customAudioTypes };
+
+			ctx.BeefWeb.getBrowserRoots().then(async (response) => {
+				const data = response?.data;
+				if (!data) return;
+
+				data.roots[0].init(ctx.BeefWeb, customTypes).then(() => {
+					console.warn("hello!");
+					console.log(data.roots[0].children[0].kind);
+					setSelectedFolder(data.roots[0].getFilteredCopy() ?? undefined);
+					setLoaded(true);
+				});
 			});
-		});
+		};
+		fetch();
 	}, []);
 	const goBack = (item: BrowserDirectory) => {
 		if (item.parent) setSelectedFolder(item.parent);
 	};
 	const createList = (dir: BrowserDirectory) => {
+		console.error("Creating List");
 		const handlePress = (item: BrowserDirectory | BrowserFile) => {
 			if (item.isDirectory()) {
 				setSelectedFolder(item);
