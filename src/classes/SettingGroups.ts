@@ -1,6 +1,7 @@
 import { KeyboardTypeOptions } from "react-native";
 import { SettingPropTypes, SettingsClass } from "./Settings";
 import { ArrayItems, ArrayItemType, ArrayItemTypeKeys } from "./ArrayItems";
+import { EnumTypes, isEnumType } from "managers/EnumManager";
 
 class GroupItem<K extends keyof SettingPropTypes, T extends SettingType> {
 	readonly NAME: string;
@@ -14,12 +15,12 @@ class GroupItem<K extends keyof SettingPropTypes, T extends SettingType> {
 		key: K,
 		type: T,
 		props: Partial<ItemOptions[T]> = {},
-		unused?: boolean,
+		unused = false,
 	) {
 		this.NAME = name;
 		this.KEY = key;
 		this.TYPE = type;
-		if (unused) this.UNUSED = unused;
+		this.UNUSED = unused;
 		const defaultProps = ItemPropsDefaults[type] as ItemOptions[T];
 		this.PROPS = {
 			...defaultProps,
@@ -58,8 +59,9 @@ class GroupItem<K extends keyof SettingPropTypes, T extends SettingType> {
 		return this.TYPE == "number";
 	}
 	isEnum(): this is GroupItem<EnumKeys, EnumTypes> {
-		return this.TYPE == "AppTheme" || this.TYPE == "Screens";
+		return isEnumType(this.TYPE);
 	}
+
 	isCustomTheme(): this is GroupItem<CustomThemeKeys, "CustomTheme"> {
 		return this.TYPE == "CustomTheme";
 	}
@@ -105,8 +107,7 @@ export type BooleanKeys = {
 	[K in keyof SettingPropTypes]: SettingPropTypes[K] extends boolean ? K : never;
 }[keyof SettingPropTypes];
 export type CustomThemeKeys = "CUSTOM_THEME";
-export type EnumKeys = "THEME" | "DEFAULT_SCREEN";
-export type EnumTypes = "AppTheme" | "Screens";
+export type EnumKeys = "THEME" | "DEFAULT_SCREEN" | "RECURSIVE_BROWSER";
 export type ArrayItemsKeys = {
 	[K in keyof SettingPropTypes]: SettingPropTypes[K] extends ArrayItems<ArrayItemType>
 		? K
@@ -120,9 +121,10 @@ export type ItemProps = {
 	boolean: Record<string, never>;
 	number: Record<string, never>;
 	AppTheme: Record<string, never>;
-	Screens: Record<string, never>;
+	Screen: Record<string, never>;
 	CustomTheme: Record<string, never>;
 	ArrayItems: Record<string, never>;
+	Recursive: Record<string, never>;
 };
 export const ItemPropsDefaults: {
 	[K in keyof ItemProps]: ItemProps[K];
@@ -134,9 +136,10 @@ export const ItemPropsDefaults: {
 	boolean: {},
 	number: {},
 	AppTheme: {},
-	Screens: {},
+	Screen: {},
 	CustomTheme: {},
 	ArrayItems: {},
+	Recursive: {},
 };
 export type SettingType = keyof ItemProps;
 
@@ -178,6 +181,7 @@ const SETTINGS_DESCRIPTIONS: { [K in keyof SettingPropTypes]: string } = {
 	PORT: "Change the port that the server is running on",
 	CUSTOM_PLAYLIST_TYPES: "Add a custom playlist file type for the browser",
 	CUSTOM_AUDIO_TYPES: "Add a custom audio file type for the browser",
+	RECURSIVE_BROWSER: "Change if all items are retrived at once or per folder",
 };
 const ALL_SETTINGS: {
 	[K in keyof SettingPropTypes]: GroupItem<K, SettingType>;
@@ -193,7 +197,7 @@ const ALL_SETTINGS: {
 		"AUTOMATIC_UPDATES",
 		"boolean",
 	),
-	DEFAULT_SCREEN: new GroupItem("Default Screen", "DEFAULT_SCREEN", "Screens"),
+	DEFAULT_SCREEN: new GroupItem("Default Screen", "DEFAULT_SCREEN", "Screen"),
 	IP_ADDRESS: new GroupItem("IP Address", "IP_ADDRESS", "string", {
 		keyboardType: "url",
 	}),
@@ -222,6 +226,11 @@ const ALL_SETTINGS: {
 		"ArrayItems",
 	),
 	REMEMBER_IP: new GroupItem("Rememeber IP", "REMEMBER_IP", "boolean", {}, true),
+	RECURSIVE_BROWSER: new GroupItem(
+		"Recursive Browser",
+		"RECURSIVE_BROWSER",
+		"Recursive",
+	),
 };
 class SettingGroups {
 	readonly GROUPS = [
@@ -246,6 +255,7 @@ class SettingGroups {
 			ALL_SETTINGS.UPDATE_FREQUENCY,
 			ALL_SETTINGS.CUSTOM_AUDIO_TYPES,
 			ALL_SETTINGS.CUSTOM_PLAYLIST_TYPES,
+			ALL_SETTINGS.RECURSIVE_BROWSER,
 		),
 	];
 

@@ -150,12 +150,20 @@ export class BrowserFile extends BrowserItem {
 		return this.fileCategory !== FileCategory.UNKNOWN;
 	}
 }
-
+export enum Recursive {
+	NONE,
+	ONCE,
+	ALL,
+}
 export class BrowserDirectory extends BrowserItem {
 	kind = BrowserItemType.DIRECTORY;
 	children: (BrowserFile | BrowserDirectory)[] = [];
-
-	public async init(beefweb: Beefweb, custom: Record<string, FileCategory>) {
+	public initialized = false;
+	public async init(
+		beefweb: Beefweb,
+		custom: Record<string, FileCategory>,
+		recursive: Recursive,
+	) {
 		console.log("Initializing: ", this.name);
 		const response = await beefweb.getBrowserEntries(this.path);
 		if (response) this.children = response.data.entries;
@@ -163,58 +171,36 @@ export class BrowserDirectory extends BrowserItem {
 			child.parent = this;
 			if (child instanceof BrowserFile) child.checkCustomCatigory(custom);
 		}
-		if (this.children) {
-			await Promise.all(
-				this.children
-					.filter((child) => child instanceof BrowserDirectory)
-					.map((child) => (child as BrowserDirectory).init(beefweb, custom)),
-			);
+		if (this.children && recursive) {
+			switch (recursive) {
+				case Recursive.ONCE:
+					await Promise.all(
+						this.children
+							.filter((child) => child instanceof BrowserDirectory)
+							.map((child) => child.init(beefweb, custom, Recursive.NONE)),
+					);
+					break;
+				case Recursive.ALL:
+					await Promise.all(
+						this.children
+							.filter((child) => child instanceof BrowserDirectory)
+							.map((child) => child.init(beefweb, custom, recursive)),
+					);
+					break;
+			}
+			this.initialized = true;
 		} else {
 		}
+
+		return this;
 	}
-	public getFilteredCopy(): BrowserDirectory | null {
-		const filtered = new BrowserDirectory(
-			this.name,
-			this.path,
-			this.size,
-			this.timestamp,
-		);
 
-		for (const child of this.children) {
-			if (child.isDirectory()) {
-				const subdir = (child as BrowserDirectory).getFilteredCopy();
-				if (subdir) {
-					subdir.parent = filtered;
-					filtered.children.push(subdir);
-				}
-			} else if (
-				child.isFile() &&
-				(child.fileCategory === FileCategory.AUDIO ||
-					child.fileCategory === FileCategory.PLAYLIST)
-			) {
-				const fileCopy = new BrowserFile(
-					child.name,
-					child.path,
-					child.size,
-					child.timestamp,
-				);
-				fileCopy.parent = filtered;
-				filtered.children.push(fileCopy);
-			}
-		}
-
-		if (filtered.children.length === 0) {
-			return null;
-		}
-
-		return filtered;
-	}
 	static fromJSON(json: BrowserEntryItem) {
 		return new BrowserDirectory(json.name, json.path, json.size, json.timestamp);
 	}
 	filter(): boolean {
 		this.children = this.children.filter((child) => {
-			const keep = child.filter();
+			const keep = child.filter() || child instanceof BrowserDirectory;
 			if (keep) child.parent = this;
 			return keep;
 		});

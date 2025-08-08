@@ -3,6 +3,7 @@ import {
 	BrowserDirectory,
 	BrowserFile,
 	FileCategory,
+	Recursive,
 } from "classes/responses/Browser";
 import LottieView from "lottie-react-native";
 import { LottieLoading } from "managers/LottiManager";
@@ -23,7 +24,9 @@ export default function LibraryBrowser() {
 	const [loaded, setLoaded] = useState(false);
 	const Styles = useStyles("Main", "Library");
 	const ctx = useContext(AppContext);
-
+	const [customTypes, setCustomTypes] = useState<Record<string, FileCategory>>(
+		{},
+	);
 	useEffect(() => {
 		const fetch = async () => {
 			const playlistsArray = await ctx.Settings.get("CUSTOM_PLAYLIST_TYPES");
@@ -38,14 +41,16 @@ export default function LibraryBrowser() {
 
 			const customTypes = { ...customPlaylistTypes, ...customAudioTypes };
 
+			setCustomTypes(customTypes);
+
 			ctx.BeefWeb.getBrowserRoots().then(async (response) => {
 				const data = response?.data;
 				if (!data) return;
 
-				data.roots[0].init(ctx.BeefWeb, customTypes).then(() => {
+				data.roots[0].init(ctx.BeefWeb, customTypes, Recursive.ONCE).then((dir) => {
 					console.warn("hello!");
-					console.log(data.roots[0].children[0].kind);
-					setSelectedFolder(data.roots[0].getFilteredCopy() ?? undefined);
+					dir.filter();
+					setSelectedFolder(data.roots[0]);
 					setLoaded(true);
 				});
 			});
@@ -57,15 +62,17 @@ export default function LibraryBrowser() {
 	};
 	const createList = (dir: BrowserDirectory) => {
 		console.error("Creating List");
-		const handlePress = (item: BrowserDirectory | BrowserFile) => {
+		const handlePress = async (item: BrowserDirectory | BrowserFile) => {
 			if (item.isDirectory()) {
+				if (!item.initialized)
+					await item.init(ctx.BeefWeb, customTypes, Recursive.ONCE);
 				setSelectedFolder(item);
 			} else {
 				switch (item.fileCategory) {
 					case FileCategory.AUDIO:
 						return ctx.BeefWeb.addToMobilePlaylist([item.path], false, true);
 					case FileCategory.PLAYLIST:
-						return alert("Error: Not a supported file type");
+						return alert("Error: Playlists are not supported");
 					case FileCategory.UNKNOWN:
 						return alert("Error: Not a supported file type");
 				}

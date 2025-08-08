@@ -18,7 +18,11 @@ import {
 	ArrayItemTypeKeys,
 } from "classes/ArrayItems";
 import { CustomTheme, Color, Theme } from "classes/Themes";
-import { getEnumKeys } from "helpers/helpers";
+import {
+	EnumTypes,
+	getEnumValuesAndKeys,
+	isEnumType,
+} from "managers/EnumManager";
 import { getColor, getCustomTheme } from "managers/ThemeManager";
 import { View, TextInput, Switch, Alert, Text } from "react-native";
 import { Button } from "react-native-elements";
@@ -112,7 +116,7 @@ function BaseSettingsControl<
 		});
 	} else if (item.isEnum()) {
 		return EnumControl({
-			item: item as GroupItem<EnumKeys, "AppTheme" | "CustomTheme">,
+			item: item as GroupItem<EnumKeys, EnumTypes>,
 			Styles,
 			ctx,
 			value: val as AppTheme | Screen | undefined,
@@ -218,21 +222,11 @@ function EnumControl<K extends EnumKeys>({
 	ctx,
 	value: val,
 	set,
-}: ControlProps<K, "AppTheme" | "CustomTheme">) {
-	let values: typeof AppTheme | typeof Screen;
-	let keys: (keyof typeof AppTheme)[] | (keyof typeof Screen)[];
-	switch (item.TYPE) {
-		case "AppTheme":
-			values = AppTheme;
-			keys = getEnumKeys<typeof AppTheme>(values);
-			break;
-		case "Screens":
-			values = Screen;
-			keys = getEnumKeys<typeof Screen>(values);
-			break;
-		default:
-			throw new Error(`Unhandled TYPE: ${item.TYPE}`);
-	}
+}: ControlProps<K, EnumTypes>) {
+	if (!isEnumType(item.TYPE))
+		throw new Error("This error should not occor should not happen");
+	const { values, keys } = getEnumValuesAndKeys(item.TYPE);
+
 	return (
 		<EnumPicker
 			style={Styles.Main.picker}

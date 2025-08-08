@@ -4,6 +4,7 @@ import { CustomTheme } from "./Themes";
 import { Orientation } from "hooks/useOrientation";
 import { setItemAsync, getItemAsync } from "expo-secure-store";
 import { ArrayItems } from "./ArrayItems";
+import { Recursive } from "./responses/Browser";
 class Settings {
 	readonly PROPS = SettingProps.create();
 
@@ -65,6 +66,7 @@ const SettingsDefaults = {
 	PORT: 8880,
 	CUSTOM_PLAYLIST_TYPES: new ArrayItems<string>(),
 	CUSTOM_AUDIO_TYPES: new ArrayItems<string>(),
+	RECURSIVE_BROWSER: Recursive.ONCE,
 };
 
 type SettingPropTypes = {
@@ -126,6 +128,10 @@ class SettingProps {
 			CUSTOM_PLAYLIST_TYPES: new SettingsProperty<ArrayItems<string>>(
 				"custom_playlist_types",
 				SettingsDefaults.CUSTOM_PLAYLIST_TYPES,
+			),
+			RECURSIVE_BROWSER: new SettingsProperty<Recursive>(
+				"recursive_browser",
+				SettingsDefaults.RECURSIVE_BROWSER,
 			),
 		};
 	}

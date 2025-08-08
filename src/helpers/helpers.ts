@@ -6,12 +6,6 @@ export function formatTime(seconds: number = 0): string {
 	return `${mins}:${secs.toString().padStart(2, "0")}`;
 }
 
-export function getEnumKeys<T extends Record<string, string | number>>(
-	e: T,
-): (keyof T)[] {
-	return Object.keys(e).filter((k) => isNaN(Number(k))) as (keyof T)[];
-}
-
 export function printTree(
 	item: BrowserItem,
 	prefix: string = "",
