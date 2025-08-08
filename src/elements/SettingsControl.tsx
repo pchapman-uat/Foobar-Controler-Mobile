@@ -11,7 +11,6 @@ import {
 	SettingType,
 	StringKeys,
 } from "classes/SettingGroups";
-import { Picker } from "@react-native-picker/picker";
 import { SettingPropTypes, AppTheme } from "classes/Settings";
 import {
 	ArrayItemType,
@@ -220,27 +219,30 @@ function EnumControl<K extends EnumKeys>({
 	value: val,
 	set,
 }: ControlProps<K, "AppTheme" | "CustomTheme">) {
-	const values =
-		item.TYPE === "AppTheme"
-			? AppTheme
-			: item.TYPE === "Screens"
-				? Screen
-				: (() => {
-						throw new Error("This error should never happen");
-					})();
-
-	const keys = getEnumKeys(values);
-
+	let values: typeof AppTheme | typeof Screen;
+	let keys: (keyof typeof AppTheme)[] | (keyof typeof Screen)[];
+	switch (item.TYPE) {
+		case "AppTheme":
+			values = AppTheme;
+			keys = getEnumKeys<typeof AppTheme>(values);
+			break;
+		case "Screens":
+			values = Screen;
+			keys = getEnumKeys<typeof Screen>(values);
+			break;
+		default:
+			throw new Error(`Unhandled TYPE: ${item.TYPE}`);
+	}
 	return (
-		<Picker
+		<EnumPicker
 			style={Styles.Main.picker}
-			onValueChange={set}
+			onValueChange={(item) => set(item as SettingPropTypes[K])}
 			dropdownIconColor={getColor(ctx.theme, "textPrimary")}
 			mode="dropdown"
 			selectedValue={val}
-		>
-			<EnumPicker keys={keys} values={values} />
-		</Picker>
+			keys={keys}
+			values={values}
+		/>
 	);
 }
 
