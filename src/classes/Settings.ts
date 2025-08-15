@@ -5,34 +5,37 @@ import { Orientation } from "hooks/useOrientation";
 import { setItemAsync, getItemAsync } from "expo-secure-store";
 import { ArrayItems } from "./ArrayItems";
 import { Recursive } from "./responses/Browser";
+import {
+	RASActions,
+	RASProps,
+	ResetAllSettingsModal,
+} from "elements/modal/ResetAllSettingsModal";
+import { AllModalProps } from "elements/modal/ModalTypes";
+import { ButtonKeys } from "./SettingGroups";
 class Settings {
 	readonly PROPS = SettingProps.create();
-
 	public async get<K extends keyof SettingPropTypes>(
 		key: K,
 	): Promise<SettingPropTypes[K]> {
 		const prop = this.PROPS[key];
-
-		return await prop.get();
+		return (await prop.get()) as SettingPropTypes[K];
 	}
 	public getDefault<K extends keyof SettingPropTypes>(
 		key: K,
 	): SettingPropTypes[K] {
 		const prop = this.PROPS[key];
-		return prop.FALLBACK;
+		return prop.FALLBACK as SettingPropTypes[K];
 	}
-
 	public set<K extends keyof SettingPropTypes>(
 		key: K,
 		value?: SettingPropTypes[K],
 	) {
-		this.PROPS[key].set(value);
+		const setting = this.PROPS[key];
+		if (!(setting instanceof ActionSettingsProperty))
+			(setting as SettingsProperty<SettingPropTypes[K]>).set(value);
 	}
-	setOnlyNew<K extends keyof SettingPropTypes>(
-		key: K,
-		value: SettingPropTypes[K],
-	) {
-		this.PROPS[key].setOnlyNew(value);
+	public resetAll() {
+		Object.values(this.PROPS).forEach((item) => item.reset());
 	}
 }
 
@@ -67,6 +70,7 @@ const SettingsDefaults = {
 	CUSTOM_PLAYLIST_TYPES: new ArrayItems<string>(),
 	CUSTOM_AUDIO_TYPES: new ArrayItems<string>(),
 	RECURSIVE_BROWSER: Recursive.ONCE,
+	RESET_ALL_SETTINGS: ResetAllSettingsModal,
 };
 
 type SettingPropTypes = {
@@ -74,10 +78,17 @@ type SettingPropTypes = {
 };
 
 export type ExtractArrayItem<T> = T extends ArrayItems<infer U> ? U : never;
+export type SettingsMap = {
+	[K in keyof SettingPropTypes]: K extends ButtonKeys
+		? ActionSettingsProperty<
+				AllModalProps,
+				(props: AllModalProps) => React.JSX.Element
+			>
+		: SettingsProperty<SettingPropTypes[K]>;
+};
+
 class SettingProps {
-	static create(): {
-		[K in keyof SettingPropTypes]: SettingsProperty<SettingPropTypes[K]>;
-	} {
+	static create(): SettingsMap {
 		return {
 			IP_ADDRESS: new SettingsProperty<string>(
 				"ip_address",
@@ -133,6 +144,10 @@ class SettingProps {
 				"recursive_browser",
 				SettingsDefaults.RECURSIVE_BROWSER,
 			),
+			RESET_ALL_SETTINGS: new ActionSettingsProperty<
+				RASProps,
+				typeof ResetAllSettingsModal
+			>("", ResetAllSettingsModal, "AAA", RASActions),
 		};
 	}
 }
@@ -160,14 +175,9 @@ class SettingsProperty<T> {
 		}
 	}
 
-	async setOnlyNew(value: T) {
-		const current = await this.get();
-		if (current == null) await this.set(value);
-	}
-
-	async getHelper<T>(fallback: T): Promise<T>;
-	async getHelper<T>(fallback: null): Promise<T | null>;
-	async getHelper(fallback: T | null): Promise<T | null> {
+	protected async getHelper<T>(fallback: T): Promise<T>;
+	protected async getHelper<T>(fallback: null): Promise<T | null>;
+	protected async getHelper(fallback: T | null): Promise<T | null> {
 		try {
 			const jsonValue = await AsyncStorage.getItem(this.getKey());
 			return jsonValue != null ? (JSON.parse(jsonValue) as T) : fallback;
@@ -183,6 +193,9 @@ class SettingsProperty<T> {
 	async getNullable(): Promise<T | null> {
 		return await this.getHelper(null);
 	}
+	public async reset() {
+		this.set(this.FALLBACK);
+	}
 }
 
 class EncryptedSettingsProperty extends SettingsProperty<string> {
@@ -194,9 +207,11 @@ class EncryptedSettingsProperty extends SettingsProperty<string> {
 			console.error(e);
 		}
 	}
-	override async getHelper(fallback: string): Promise<string>;
-	override async getHelper(fallback: null): Promise<string | null>;
-	override async getHelper(fallback: string | null): Promise<string | null> {
+	protected override async getHelper(fallback: string): Promise<string>;
+	protected override async getHelper(fallback: null): Promise<string | null>;
+	protected override async getHelper(
+		fallback: string | null,
+	): Promise<string | null> {
 		console.warn("Look at me!", this.KEY);
 		try {
 			return getItemAsync(this.KEY);
@@ -205,10 +220,34 @@ class EncryptedSettingsProperty extends SettingsProperty<string> {
 			return fallback;
 		}
 	}
-	protected getKey(): string {
-		return this.PREFIX + this.KEY;
+}
+class ActionSettingsProperty<
+	P extends AllModalProps,
+	R extends (props: P) => React.JSX.Element,
+> extends SettingsProperty<R> {
+	readonly BUTTON_TEXT: string;
+	readonly ACTIONS: P["action"];
+
+	constructor(
+		key: string,
+		fallback: R,
+		buttonText: string,
+		actions: P["action"],
+	) {
+		super(key, fallback);
+		this.BUTTON_TEXT = buttonText;
+		this.ACTIONS = actions;
+	}
+	override get(): Promise<R> {
+		return Promise.resolve(this.FALLBACK);
+	}
+
+	override set(value: R): Promise<void> {
+		void value;
+		return Promise.resolve();
 	}
 }
+
 export default new Settings();
 export {
 	AppTheme,
@@ -219,4 +258,5 @@ export {
 	Settings as SettingsClass,
 	SettingPropTypes,
 	StyleProps,
+	ActionSettingsProperty,
 };

@@ -3,6 +3,7 @@ import {
 	ArrayGroupItem,
 	ArrayItemsKeys,
 	BooleanKeys,
+	ButtonKeys,
 	CustomThemeKeys,
 	EnumKeys,
 	GroupItem,
@@ -69,9 +70,7 @@ type ControlProps<
 	set: (newVal: SettingPropTypes[K]) => void;
 	value: Partial<SettingPropTypes>[K];
 };
-function BaseSettingsControl<
-	K extends keyof SettingPropTypes = keyof SettingPropTypes,
->({
+function BaseSettingsControl<K extends keyof SettingPropTypes>({
 	item,
 	value,
 	Styles,
@@ -80,7 +79,6 @@ function BaseSettingsControl<
 	customThemeProps,
 }: SettingsControlProps<K>): React.JSX.Element {
 	const [val, setVal] = useState<SettingPropTypes[K] | undefined>(value);
-
 	useEffect(() => {
 		setVal(value);
 	}, [value]);
@@ -99,12 +97,12 @@ function BaseSettingsControl<
 			set,
 		});
 	} else if (item.isNumber()) {
-		return NumberControl({
+		return NumberControl<NumberKeys>({
 			item,
 			Styles,
 			ctx,
 			value: val as number | undefined,
-			set,
+			set: set as (v: SettingPropTypes[NumberKeys]) => void,
 		});
 	} else if (item.isBoolean()) {
 		return BooleanControl({
@@ -376,5 +374,31 @@ function ArrayItemsControl<K extends ArrayItemsKeys>({
 		</View>
 	);
 }
-
+type Test<K extends ButtonKeys> = {
+	item: GroupItem<K, "Button">;
+	Styles: StylesType;
+	ctx: AppContextType;
+	onSet: (newVal: React.JSX.Element) => void;
+};
+export function ButtonControl<K extends ButtonKeys>({
+	item,
+	ctx,
+	onSet,
+	Styles,
+}: Test<K>) {
+	return (
+		<Button
+			title={"test"}
+			onPress={() =>
+				item
+					.get(ctx.Settings)
+					.then((Value) =>
+						onSet(
+							Value({ Styles, action: item.getSetting(ctx.Settings).ACTIONS, ctx }),
+						),
+					)
+			}
+		/>
+	);
+}
 export default SettingsControl;

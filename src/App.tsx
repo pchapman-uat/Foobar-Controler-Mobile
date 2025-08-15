@@ -4,12 +4,15 @@ import { NavigationContainer } from "@react-navigation/native";
 import Home from "./screens/Home";
 import SettingsScreen from "screens/SettingsScreen";
 import Settings, { AppTheme, SettingsDefaults } from "classes/Settings";
-import AppContext, { AppContextType } from "AppContext";
+import AppContext, { AlertProps, AppContextType } from "AppContext";
 import { useOrientation } from "hooks/useOrientation";
 import BeefWeb from "classes/BeefWeb";
 import AboutScreen from "screens/AboutScreen";
 import { initCustomTheme } from "managers/ThemeManager";
 import Setup from "screens/Setup";
+import { Modal, View } from "react-native";
+import { useStyles } from "managers/StyleManager";
+import { Button } from "react-native-elements";
 
 export type RootStackParamList = {
 	Home: undefined;
@@ -44,7 +47,21 @@ export default function App() {
 			BeefWeb.setState(false);
 		};
 	}, []);
+	const [modalVisable, setModalVisable] = useState(false);
+	const [modalContent, setModalContent] = useState<React.JSX.Element | null>(
+		null,
+	);
 
+	const alert = ({}: AlertProps) => {
+		console.error("Alert Menu Not Created");
+	};
+
+	const setModal = (content: React.JSX.Element) => {
+		console.log("Setting Modal");
+		console.log(content);
+		setModalContent(content);
+		setModalVisable(true);
+	};
 	const contextValue = useMemo<AppContextType>(
 		() => ({
 			BeefWeb: BeefWeb,
@@ -52,10 +69,12 @@ export default function App() {
 			theme,
 			setTheme,
 			orientation,
+			setModal,
+			alert,
 		}),
-		[theme, orientation],
+		[theme, orientation, setModal, alert],
 	);
-
+	const Styles = useStyles("Main", "Modal");
 	return (
 		<AppContext.Provider value={contextValue}>
 			<NavigationContainer>
@@ -65,6 +84,21 @@ export default function App() {
 					<Stack.Screen name="About" component={AboutScreen} />
 					<Stack.Screen name="Setup" component={Setup} />
 				</Stack.Navigator>
+				<Modal
+					transparent
+					visible={modalVisable}
+					animationType="fade"
+					onRequestClose={() => setModalVisable(false)}
+				>
+					<View style={Styles.Modal.modalOverlay}>
+						<View style={Styles.Modal.menu}>
+							{modalContent}
+							<View>
+								<Button title={"Close"} onPress={() => setModalVisable(false)} />
+							</View>
+						</View>
+					</View>
+				</Modal>
 			</NavigationContainer>
 		</AppContext.Provider>
 	);

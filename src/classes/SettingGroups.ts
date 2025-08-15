@@ -2,14 +2,35 @@ import { KeyboardTypeOptions } from "react-native";
 import { SettingPropTypes, SettingsClass } from "./Settings";
 import { ArrayItems, ArrayItemType, ArrayItemTypeKeys } from "./ArrayItems";
 import { EnumTypes, isEnumType } from "managers/EnumManager";
-
-class GroupItem<K extends keyof SettingPropTypes, T extends SettingType> {
+enum GroupItemType {
+	NORMAL,
+	ACTION,
+}
+abstract class BaseGroupItem {
 	readonly NAME: string;
+	private readonly DESCRIPTION: string;
+	abstract readonly ITEM_TYPE: GroupItemType;
+	readonly UNUSED: boolean = false;
+	constructor(name: string, description: string, unused = this.UNUSED) {
+		this.NAME = name;
+		this.DESCRIPTION = description;
+		this.UNUSED = unused;
+	}
+	public get hasDescription(): boolean {
+		return this.DESCRIPTION === "";
+	}
+	public getDescription(): string {
+		return this.hasDescription ? "No Description Provided" : this.DESCRIPTION;
+	}
+}
+class GroupItem<
+	K extends keyof SettingPropTypes,
+	T extends SettingType,
+> extends BaseGroupItem {
 	readonly KEY: K;
 	readonly TYPE: SettingType;
 	readonly PROPS: ItemOptions[T];
-	readonly UNUSED: boolean = false;
-	private readonly DESCRIPTION: string;
+	readonly ITEM_TYPE = GroupItemType.NORMAL;
 	constructor(
 		name: string,
 		key: K,
@@ -17,22 +38,14 @@ class GroupItem<K extends keyof SettingPropTypes, T extends SettingType> {
 		props: Partial<ItemOptions[T]> = {},
 		unused = false,
 	) {
-		this.NAME = name;
+		super(name, SETTINGS_DESCRIPTIONS[key], unused);
 		this.KEY = key;
 		this.TYPE = type;
-		this.UNUSED = unused;
 		const defaultProps = ItemPropsDefaults[type] as ItemOptions[T];
 		this.PROPS = {
 			...defaultProps,
 			...props,
 		} as ItemOptions[T];
-		this.DESCRIPTION = SETTINGS_DESCRIPTIONS[this.KEY];
-	}
-	public getDescription(): string {
-		return this.hasDescription ? "No Description Provided" : this.DESCRIPTION;
-	}
-	public get hasDescription(): boolean {
-		return this.DESCRIPTION === "";
 	}
 	public get(settings: SettingsClass): Promise<SettingPropTypes[K]> {
 		return settings.get(this.KEY);
@@ -72,6 +85,12 @@ class GroupItem<K extends keyof SettingPropTypes, T extends SettingType> {
 	> {
 		return this.TYPE == "ArrayItems";
 	}
+	isButton(): this is GroupItem<ButtonKeys, "Button"> {
+		return this.TYPE == "Button";
+	}
+	getSetting(settings: SettingsClass) {
+		return settings.PROPS[this.KEY];
+	}
 }
 
 export class ArrayGroupItem<
@@ -108,11 +127,13 @@ export type BooleanKeys = {
 }[keyof SettingPropTypes];
 export type CustomThemeKeys = "CUSTOM_THEME";
 export type EnumKeys = "THEME" | "DEFAULT_SCREEN" | "RECURSIVE_BROWSER";
+
 export type ArrayItemsKeys = {
 	[K in keyof SettingPropTypes]: SettingPropTypes[K] extends ArrayItems<ArrayItemType>
 		? K
 		: never;
 }[keyof SettingPropTypes];
+export type ButtonKeys = "RESET_ALL_SETTINGS";
 export type ItemProps = {
 	string: {
 		password: boolean;
@@ -125,6 +146,7 @@ export type ItemProps = {
 	CustomTheme: Record<string, never>;
 	ArrayItems: Record<string, never>;
 	Recursive: Record<string, never>;
+	Button: Record<string, never>;
 };
 export const ItemPropsDefaults: {
 	[K in keyof ItemProps]: ItemProps[K];
@@ -140,6 +162,7 @@ export const ItemPropsDefaults: {
 	CustomTheme: {},
 	ArrayItems: {},
 	Recursive: {},
+	Button: {},
 };
 export type SettingType = keyof ItemProps;
 
@@ -182,6 +205,7 @@ const SETTINGS_DESCRIPTIONS: { [K in keyof SettingPropTypes]: string } = {
 	CUSTOM_PLAYLIST_TYPES: "Add a custom playlist file type for the browser",
 	CUSTOM_AUDIO_TYPES: "Add a custom audio file type for the browser",
 	RECURSIVE_BROWSER: "Change if all items are retrived at once or per folder",
+	RESET_ALL_SETTINGS: "This is a test",
 };
 const ALL_SETTINGS: {
 	[K in keyof SettingPropTypes]: GroupItem<K, SettingType>;
@@ -231,6 +255,7 @@ const ALL_SETTINGS: {
 		"RECURSIVE_BROWSER",
 		"Recursive",
 	),
+	RESET_ALL_SETTINGS: new GroupItem("Testing", "RESET_ALL_SETTINGS", "Button"),
 };
 class SettingGroups {
 	readonly GROUPS = [
@@ -256,6 +281,7 @@ class SettingGroups {
 			ALL_SETTINGS.CUSTOM_AUDIO_TYPES,
 			ALL_SETTINGS.CUSTOM_PLAYLIST_TYPES,
 			ALL_SETTINGS.RECURSIVE_BROWSER,
+			ALL_SETTINGS.RESET_ALL_SETTINGS,
 		),
 	];
 
@@ -267,5 +293,6 @@ class SettingGroups {
 		return this.GROUPS.length;
 	}
 }
+
 export default new SettingGroups();
 export { GroupItem, Group, SettingGroups, GroupTypes, ALL_SETTINGS };

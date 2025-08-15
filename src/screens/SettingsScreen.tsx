@@ -17,9 +17,10 @@ import { RootStackParamList } from "App";
 import { Color, CustomTheme, Theme } from "classes/Themes";
 import ColorPickers, { ColorPickerOptions } from "elements/ColorPickers";
 import { ColorFormatsObject } from "reanimated-color-picker";
-import SettingsControl from "elements/SettingsControl";
+import SettingsControl, { ButtonControl } from "elements/SettingsControl";
 import { InfoSVG } from "managers/SVGManager";
 import { isPrimitive } from "helpers/helpers";
+
 type SettingsNavigationProp = NativeStackNavigationProp<
 	RootStackParamList,
 	"Settings"
@@ -120,23 +121,32 @@ export default function SettingsScreen({ navigation }: SettingsProps) {
 					</TouchableOpacity>
 				</View>
 
-				<SettingsControl
-					item={item}
-					value={values[item.KEY]}
-					Styles={Styles}
-					ctx={ctx}
-					onSet={(newVal) => setValues((prev) => ({ ...prev, [item.KEY]: newVal }))}
-					customThemeProps={{
-						setSelectedColorKey,
-						selectedColorKey,
-						setSelectedColor,
-						selectedColor,
-						setCustomTheme,
-						customTheme,
-						setColorModalVisable,
-						colorModalVisable,
-					}}
-				/>
+				{item.isButton() ? (
+					<ButtonControl
+						item={item}
+						Styles={Styles}
+						ctx={ctx}
+						onSet={ctx.setModal}
+					/>
+				) : (
+					<SettingsControl
+						item={item}
+						value={values[item.KEY]}
+						Styles={Styles}
+						ctx={ctx}
+						onSet={(newVal) => setValues((prev) => ({ ...prev, [item.KEY]: newVal }))}
+						customThemeProps={{
+							setSelectedColorKey,
+							selectedColorKey,
+							setSelectedColor,
+							selectedColor,
+							setCustomTheme,
+							customTheme,
+							setColorModalVisable,
+							colorModalVisable,
+						}}
+					/>
+				)}
 			</View>
 		),
 		[loaded],
