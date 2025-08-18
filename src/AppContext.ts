@@ -2,11 +2,8 @@ import React from "react";
 import Beefweb, { BeefwebClass } from "./classes/BeefWeb";
 import Settings, { AppTheme, SettingsClass } from "./classes/Settings";
 import { Orientation } from "hooks/useOrientation";
+import { AlertProps } from "elements/AlertModal";
 
-export interface AlertProps {
-	title: string;
-	message: string;
-}
 export interface AppContextType {
 	BeefWeb: BeefwebClass;
 	Settings: SettingsClass;

@@ -4,7 +4,8 @@ import { NavigationContainer } from "@react-navigation/native";
 import Home from "./screens/Home";
 import SettingsScreen from "screens/SettingsScreen";
 import Settings, { AppTheme, SettingsDefaults } from "classes/Settings";
-import AppContext, { AlertProps, AppContextType } from "AppContext";
+import AppContext, { AppContextType } from "AppContext";
+import AlertModal, { AlertProps } from "elements/AlertModal";
 import { useOrientation } from "hooks/useOrientation";
 import BeefWeb from "classes/BeefWeb";
 import AboutScreen from "screens/AboutScreen";
@@ -51,9 +52,11 @@ export default function App() {
 	const [modalContent, setModalContent] = useState<React.JSX.Element | null>(
 		null,
 	);
-
-	const alert = ({}: AlertProps) => {
-		console.error("Alert Menu Not Created");
+	const [alertModalVisable, setAlertModalVisable] = useState(false);
+	const [alertModalProps, setAlertModalProps] = useState<AlertProps>();
+	const alert = (props: AlertProps) => {
+		setAlertModalProps(props);
+		setAlertModalVisable(true);
 	};
 
 	const setModal = (content: React.JSX.Element) => {
@@ -99,6 +102,14 @@ export default function App() {
 						</View>
 					</View>
 				</Modal>
+				<AlertModal
+					transparent
+					visible={alertModalVisable}
+					animationType="fade"
+					onRequestClose={() => setAlertModalVisable(false)}
+					Styles={Styles}
+					alertData={alertModalProps}
+				/>
 			</NavigationContainer>
 		</AppContext.Provider>
 	);
