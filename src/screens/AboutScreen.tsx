@@ -31,7 +31,7 @@ export default function AboutScreen({ navigation }: AboutProps) {
 				/>
 			</View>
 			<Text style={Styles.Main.header1}>Foobar Controller Mobile</Text>
-			<Text style={Styles.Main.header2}>Version: 0.2.0</Text>
+			<Text style={Styles.Main.header2}>Version: 0.3.0 - Dev</Text>
 
 			<View>
 				<Text style={Styles.Main.centeredText}>
