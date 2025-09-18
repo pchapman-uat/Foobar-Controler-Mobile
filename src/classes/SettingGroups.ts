@@ -205,7 +205,7 @@ const SETTINGS_DESCRIPTIONS: { [K in keyof SettingPropTypes]: string } = {
 	CUSTOM_PLAYLIST_TYPES: "Add a custom playlist file type for the browser",
 	CUSTOM_AUDIO_TYPES: "Add a custom audio file type for the browser",
 	RECURSIVE_BROWSER: "Change if all items are retrived at once or per folder",
-	RESET_ALL_SETTINGS: "This is a test",
+	RESET_ALL_SETTINGS: "Reset all settings to their defaults",
 };
 const ALL_SETTINGS: {
 	[K in keyof SettingPropTypes]: GroupItem<K, SettingType>;
@@ -255,7 +255,7 @@ const ALL_SETTINGS: {
 		"RECURSIVE_BROWSER",
 		"Recursive",
 	),
-	RESET_ALL_SETTINGS: new GroupItem("Testing", "RESET_ALL_SETTINGS", "Button"),
+	RESET_ALL_SETTINGS: new GroupItem("Reset", "RESET_ALL_SETTINGS", "Button"),
 };
 class SettingGroups {
 	readonly GROUPS = [
