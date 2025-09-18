@@ -367,14 +367,22 @@ function ArrayItemsControl<K extends ArrayItemsKeys>({
 						justifyContent: "space-around",
 					}}
 				>
-					<Button onPress={onRemovePress} title={"Remove"} />
-					<Button title={"Add Item"} onPress={() => onAddPress(inputBoxValue)} />
+					<Button
+						buttonStyle={Styles.Main.button}
+						onPress={onRemovePress}
+						title={"Remove"}
+					/>
+					<Button
+						buttonStyle={Styles.Main.button}
+						title={"Add Item"}
+						onPress={() => onAddPress(inputBoxValue)}
+					/>
 				</View>
 			</View>
 		</View>
 	);
 }
-type Test<K extends ButtonKeys> = {
+type ButtonControlProps<K extends ButtonKeys> = {
 	item: GroupItem<K, "Button">;
 	Styles: StylesType;
 	ctx: AppContextType;
@@ -385,10 +393,11 @@ export function ButtonControl<K extends ButtonKeys>({
 	ctx,
 	onSet,
 	Styles,
-}: Test<K>) {
+}: ButtonControlProps<K>) {
 	return (
 		<Button
-			title={"test"}
+			buttonStyle={Styles.Main.button}
+			title={item.NAME}
 			onPress={() =>
 				item
 					.get(ctx.Settings)
