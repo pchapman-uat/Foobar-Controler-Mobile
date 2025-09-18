@@ -351,8 +351,8 @@ function ArrayItemsControl<K extends ArrayItemsKeys>({
 	return (
 		<View>
 			<View>
-				<Text>Items ({items?.length ?? 0})</Text>
-				<Text>{items?.join()}</Text>
+				<Text style={Styles.Main.primaryText}>Items ({items?.length ?? 0})</Text>
+				<Text style={Styles.Main.primaryText}>{items?.join()}</Text>
 			</View>
 			<View></View>
 			<View>
