@@ -63,6 +63,8 @@ export default function ScrollingText({
 				animation.stop();
 				animatedValue.removeListener(listenerId);
 			};
+		} else {
+			scrollRef.current?.scrollToEnd();
 		}
 	}, [textWidth, containerWidth, speed]);
 
