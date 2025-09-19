@@ -25,8 +25,11 @@ import {
 } from "managers/SVGManager";
 import { SvgProps } from "react-native-svg";
 import ScrollingText from "elements/ScrollingText";
+import { NavBarItemProps } from "classes/NavBar";
 
-export default function NowPlaying() {
+export default function NowPlaying({
+	navigateTo,
+}: NavBarItemProps<"NowPlaying">) {
 	const ctx = useContext(AppContext);
 	const [dynamicBackground, setDynamicBackground] = useState(false);
 	const Styles = useStyles("Main", "NowPlaying");
@@ -249,10 +252,21 @@ export default function NowPlaying() {
 			<View style={Styles.NowPlaying.interfaceControler}>
 				<View>
 					<ScrollingText textStyle={Styles.NowPlaying.npText}>{title}</ScrollingText>
-					<ScrollingText textStyle={Styles.NowPlaying.npText}>
-						{artist}
-					</ScrollingText>
-					<ScrollingText textStyle={Styles.NowPlaying.npText}>{album}</ScrollingText>
+					<TouchableOpacity
+						onPress={() => navigateTo("Library", { page: "Artist", value: artist })}
+					>
+						<ScrollingText textStyle={Styles.NowPlaying.npText}>
+							{artist}
+						</ScrollingText>
+					</TouchableOpacity>
+
+					<TouchableOpacity
+						onPress={() => navigateTo("Library", { page: "Album", value: album })}
+					>
+						<ScrollingText textStyle={Styles.NowPlaying.npText}>
+							{album}
+						</ScrollingText>
+					</TouchableOpacity>
 				</View>
 				{ratingEle(rating)}
 				<View style={Styles.NowPlaying.controlsContainer}>

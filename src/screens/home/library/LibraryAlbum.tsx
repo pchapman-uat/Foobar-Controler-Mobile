@@ -8,13 +8,16 @@ import LibraryGrid, { GridItem } from "elements/LibraryGrid";
 import { getColor } from "managers/ThemeManager";
 import LottieView from "lottie-react-native";
 import updateColors, { LottieLoading } from "managers/LottiManager";
+import { LibraryItemScreenProps } from "../LibraryMain";
 
 type Views = "grid" | "list";
 
-export default function LibraryAlbum() {
+export default function LibraryAlbum({ value }: LibraryItemScreenProps) {
+	const viewState: Views = value ? "list" : "grid";
+
 	const Styles = useStyles("Main");
 	const ctx = useContext(AppContext);
-	const [view, setView] = useState<Views>("grid");
+	const [view, setView] = useState<Views>(viewState);
 	const [gridItems, setGridItems] = useState<GridItem[]>([]);
 	const [songs, setSongs] = useState<Columns[]>();
 	const [album, setAlbum] = useState<string>();
@@ -35,6 +38,7 @@ export default function LibraryAlbum() {
 					};
 				}),
 			);
+			if (value) onAlbumChange(value);
 			setSongs(songs);
 			setLoading(false);
 		};
@@ -97,6 +101,7 @@ export default function LibraryAlbum() {
 	useEffect(() => {
 		updateColors(LottieLoading, getColor(ctx.theme, "buttonPrimary"));
 	}, [ctx]);
+
 	return (
 		<View>
 			{loading && (

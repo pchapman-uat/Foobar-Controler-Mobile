@@ -7,8 +7,9 @@ import { Button } from "react-native-elements";
 import { useStyles } from "managers/StyleManager";
 import { getColor } from "managers/ThemeManager";
 import updateColors, { LottieLoading } from "managers/LottiManager";
+import { NavBarItemProps } from "classes/NavBar";
 
-export default function app() {
+export default function Connection({}: NavBarItemProps<"Connection">) {
 	const ctx = useContext(AppContext);
 	const Styles = useStyles("Main", "Modal");
 	const [infoName, setInfoName] = useState<string>("");

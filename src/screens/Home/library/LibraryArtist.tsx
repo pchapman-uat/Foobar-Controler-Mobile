@@ -8,13 +8,15 @@ import LibraryGrid, { GridItem } from "elements/LibraryGrid";
 import { getColor } from "managers/ThemeManager";
 import LottieView from "lottie-react-native";
 import updateColors, { LottieLoading } from "managers/LottiManager";
+import { LibraryItemScreenProps } from "../LibraryMain";
 
 type Views = "grid" | "list";
 
-export default function LibraryArtist() {
+export default function LibraryArtist({ value }: LibraryItemScreenProps) {
+	const viewState: Views = value ? "list" : "grid";
 	const Styles = useStyles("Main");
 	const ctx = useContext(AppContext);
-	const [view, setView] = useState<Views>("grid");
+	const [view, setView] = useState<Views>(viewState);
 	const [gridItems, setGridItems] = useState<GridItem[]>([]);
 	const [songs, setSongs] = useState<Columns[]>();
 	const [artist, setArtist] = useState<string>();
@@ -35,11 +37,15 @@ export default function LibraryArtist() {
 					};
 				}),
 			);
+			if (value) navigateFrom(songs, value);
 			setSongs(songs);
 			setLoading(false);
 		};
 		getAllSongs();
 	}, []);
+	const navigateFrom = (songs: Columns[] | undefined, value: string) => {
+		setFilteredSongs(filterSongs(value, songs, "artist"));
+	};
 	const searchSongs = (text: string) => {
 		setFilteredSongs(filterSongs(text, songs, "artist"));
 	};
@@ -93,6 +99,7 @@ export default function LibraryArtist() {
 	useEffect(() => {
 		updateColors(LottieLoading, getColor(ctx.theme, "buttonPrimary"));
 	}, [ctx]);
+
 	return (
 		<View>
 			{loading && (

@@ -11,8 +11,9 @@ import React, { useContext, useState } from "react";
 import PlayQueueResponse from "classes/responses/PlayQueue";
 import { Columns } from "classes/responses/Player";
 import { useStyles } from "managers/StyleManager";
+import { NavBarItemProps } from "classes/NavBar";
 
-export default function PlaybackQueue() {
+export default function PlaybackQueue({}: NavBarItemProps<"PlaybackQueue">) {
 	const ctx = useContext(AppContext);
 	const Styles = useStyles("Modal", "Main");
 	const [playbackQueue, setPlaybackQueue] = useState<PlayQueueResponse>();

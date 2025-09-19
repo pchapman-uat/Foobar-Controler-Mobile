@@ -4,10 +4,11 @@ import { items } from "../classes/NavBar";
 import { useStyles } from "managers/StyleManager";
 import { getColor } from "managers/ThemeManager";
 import AppContext from "AppContext";
+import { NavigateToType } from "./NavBarScreen";
 
 type NavBarProps = {
 	currentScreen: number;
-	onNavigate: (screen: number) => void;
+	onNavigate: NavigateToType;
 };
 const NavBar: React.FC<NavBarProps> = ({ currentScreen, onNavigate }) => {
 	const { theme } = useContext(AppContext);

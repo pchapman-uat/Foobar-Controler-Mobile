@@ -11,9 +11,10 @@ import { useStyles } from "managers/StyleManager";
 import { getColor } from "managers/ThemeManager";
 import { Screen } from "enum/Screens";
 import ScrollingText from "./ScrollingText";
+import { NavigateToType } from "./NavBarScreen";
 type StatusBarProps = {
 	navigator: NativeStackNavigationProp<RootStackParamList, "Home">;
-	onNavigate: (screen: number) => void;
+	onNavigate: NavigateToType;
 };
 
 const StatusBar: React.FC<StatusBarProps> = ({ navigator, onNavigate }) => {

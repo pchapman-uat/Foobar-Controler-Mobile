@@ -29,3 +29,18 @@ export function isPrimitive(val: unknown): val is string | number | boolean {
 		typeof val === "string" || typeof val === "number" || typeof val === "boolean"
 	);
 }
+export function keyToIndex<
+	T extends Record<string, unknown>,
+	K extends keyof T & string,
+>(obj: T, key: K): number {
+	const keys = Object.keys(obj) as K[];
+	return keys.indexOf(key);
+}
+
+export function indexToKey<
+	T extends Record<string, unknown>,
+	K extends keyof T & string,
+>(obj: T, index: number): K {
+	const keys = Object.keys(obj) as K[];
+	return keys[index];
+}

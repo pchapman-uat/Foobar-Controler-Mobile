@@ -11,6 +11,8 @@ import { SvgProps } from "react-native-svg";
 import AppContext from "AppContext";
 import { getColor } from "managers/ThemeManager";
 import LibraryBrowser from "./library/LibraryBrowser";
+import { LibraryMainProps, NavBarItemProps } from "classes/NavBar";
+import { keyToIndex } from "helpers/helpers";
 
 export type LibraryProps = {
 	setCurrentScreen: (screen: number) => void;
@@ -19,10 +21,10 @@ export type LibraryProps = {
 class LibraryItem {
 	name: string;
 	icon: React.FC<SvgProps>;
-	screen: () => React.JSX.Element;
+	screen: ({}: LibraryItemScreenProps) => React.JSX.Element;
 	constructor(
 		name: string,
-		screen: () => React.JSX.Element,
+		screen: ({}: LibraryItemScreenProps) => React.JSX.Element,
 		icon: React.FC<SvgProps>,
 	) {
 		this.name = name;
@@ -30,13 +32,27 @@ class LibraryItem {
 		this.screen = screen;
 	}
 }
+export type LibraryItemScreenProps = {
+	value?: string;
+};
+const itemsObj = {
+	Playlist: new LibraryItem("Playlist", Playlist, PlaybackQueueSVG),
+	Artist: new LibraryItem("Artist", LibraryArtist, LibrarySVG),
+	Album: new LibraryItem("Album", LibraryAlbum, AlbumSVG),
+	Browser: new LibraryItem("Browser", LibraryBrowser, LibrarySVG),
+};
+const items = Object.values(itemsObj);
+export type LibraryItems = keyof typeof itemsObj;
 
-export default function LibraryMain() {
-	const [currentScreen, setCurrentScreen] = useState<number>(-1);
+export default function LibraryMain({ props }: NavBarItemProps<"Library">) {
+	let page = -1;
+	if (props?.page) page = keyToIndex(itemsObj, props.page);
+
+	const [currentScreen, setCurrentScreen] = useState<number>(page);
+
 	const [prevScreen, setPrevScreen] = useState<number | null>(null);
 	const Styles = useStyles("Main", "Library");
 	const { theme } = useContext(AppContext);
-
 	const Main: React.FC<LibraryProps> = ({ setCurrentScreen }) => {
 		return (
 			<ScrollView style={Styles.Main.containerBlock}>
@@ -61,12 +77,7 @@ export default function LibraryMain() {
 			</ScrollView>
 		);
 	};
-	const items = [
-		new LibraryItem("Playlist", Playlist, PlaybackQueueSVG),
-		new LibraryItem("Artist", LibraryArtist, LibrarySVG),
-		new LibraryItem("Album", LibraryAlbum, AlbumSVG),
-		new LibraryItem("Browser", LibraryBrowser, LibrarySVG),
-	];
+
 	useEffect(() => {
 		if (prevScreen === null) {
 			setPrevScreen(currentScreen);
@@ -84,7 +95,7 @@ export default function LibraryMain() {
 				title="Back"
 				onPress={() => setCurrentScreen(-1)}
 			/>
-			<ScreenComponent setCurrentScreen={setCurrentScreen} />
+			<ScreenComponent setCurrentScreen={setCurrentScreen} value={props?.value} />
 		</SafeAreaView>
 	);
 }
