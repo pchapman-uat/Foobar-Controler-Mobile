@@ -12,7 +12,7 @@ import AppContext from "AppContext";
 import { getColor } from "managers/ThemeManager";
 import LibraryBrowser from "./library/LibraryBrowser";
 import { LibraryMainProps, NavBarItemProps } from "classes/NavBar";
-import { keyToIndex } from "helpers/helpers";
+import { keyToIndex } from "helpers";
 
 export type LibraryProps = {
 	setCurrentScreen: (screen: number) => void;

@@ -19,7 +19,7 @@ import ColorPickers, { ColorPickerOptions } from "elements/ColorPickers";
 import { ColorFormatsObject } from "reanimated-color-picker";
 import SettingsControl, { ButtonControl } from "elements/SettingsControl";
 import { InfoSVG } from "managers/SVGManager";
-import { isPrimitive } from "helpers/helpers";
+import { isPrimitive } from "helpers";
 
 type SettingsNavigationProp = NativeStackNavigationProp<
 	RootStackParamList,

@@ -12,7 +12,7 @@ import { WebPlayerResponse } from "managers/TypeManager";
 import { Icon } from "managers/ImageManager";
 import { useStyles } from "managers/StyleManager";
 import { getColor } from "managers/ThemeManager";
-import { formatTime } from "helpers/helpers";
+import { formatTime } from "helpers";
 import {
 	EmptyStar,
 	FullStar,
