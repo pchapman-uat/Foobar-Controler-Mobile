@@ -77,23 +77,58 @@ export type BeefWebEvents = {
 	songChange: WebPlayerResponse;
 };
 export class Beefweb {
-	status = Status.Offline;
-	con = new Connection();
-	state = State.Disconnected;
-	readonly TIMEOUT = { timeout: 5000 };
-	updateFrequency = SettingsDefaults.UPDATE_FREQUENCY;
+	/**
+	 * Status for the Beefweb server, defining if it is online/offline or similar
+	 * @see {@link Status}
+	 */
+	public status = Status.Offline;
+	/**
+	 * The connection manager for Beefweb, this generates the URL and manages the IP and Port
+	 * @see {@link Connection}
+	 */
+	private con = new Connection();
+	/**
+	 * The active state of Beefweb connection, if it is connected, disconnected, or having an error
+	 * @see {@link State}
+	 */
+	public state = State.Disconnected;
+
+	/**
+	 * The duration in milliseconds that Axios will time out when fetching or posting
+	 * @see {@link axios}
+	 */
+	private readonly TIMEOUT = 500;
+	/**
+	 * The frequency that which the client will update in milliseconds
+	 * - NOTE: Currently only uses the default {@link SettingsDefaults.UPDATE_FREQUENCY} and does not use the actual setting
+	 *
+	 */
+	private updateFrequency = SettingsDefaults.UPDATE_FREQUENCY;
+	/**
+	 * The most recent player response, updated ever {@link Beefweb.getPlayer}
+	 */
 	lastPlayer?: PlayerResponse;
+
 	readonly MOBILE_PLAYLIST_TITLE = "Mobile Playlist";
 
-	authentication = {
+	/**
+	 * Authentication object to handle Username and Password
+	 */
+	private authentication = {
 		enabled: false,
 		username: "",
 		password: "",
 	};
+	/**
+	 * All events with their listeners, events based on {@link BeefWebEvents}
+	 */
 	private listeners: {
 		[K in keyof BeefWebEvents]?: Array<EventHandler<BeefWebEvents[K]>>;
 	} = {};
 
+	/**
+	 * The interval in which updates the client from the server
+	 */
 	private mainInterval?: ReturnType<typeof setInterval>;
 
 	constructor() {
@@ -238,9 +273,8 @@ export class Beefweb {
 		const columns = activeItem.columns;
 		const track = this.createTrackNotification({
 			id: "track-" + activeItem.index,
-			/* eslint-disable */
+			// eslint-disable-next-line @typescript-eslint/no-require-imports
 			url: require("../assets/audio/silence.mp3"), // NOTE: Currently I do not know how to use a module for an mp3 file
-			/* eslint-enable */
 			title: columns.title,
 			artwork: albumArtiURI,
 			artist: columns.artist,
@@ -525,7 +559,11 @@ export class Beefweb {
 				}
 			}
 			if (!id) {
-				const result = await this.addPlaylist(this.MOBILE_PLAYLIST_TITLE, true, 999);
+				const result = await this.addPlaylist(
+					this.MOBILE_PLAYLIST_TITLE,
+					true,
+					999,
+				);
 				if (result) {
 					id = result.data.id;
 				}
@@ -564,7 +602,7 @@ export class Beefweb {
 			const fullUrl = this.combineUrl(url, path);
 			const auth = this.getAuth();
 			try {
-				const response = await axios.get(fullUrl, { ...this.TIMEOUT, auth });
+				const response = await axios.get(fullUrl, { timeout: this.TIMEOUT, auth });
 				return response;
 			} catch (error) {
 				console.warn("Fetch Failed!");
@@ -587,7 +625,7 @@ export class Beefweb {
 				console.log(this.combineUrl(url, path), this.TIMEOUT);
 				const auth = this.getAuth();
 				return await axios.post(this.combineUrl(url, path), body, {
-					...this.TIMEOUT,
+					timeout: this.TIMEOUT,
 					auth,
 				});
 			} catch (error) {
