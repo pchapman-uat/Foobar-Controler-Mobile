@@ -1,6 +1,9 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { NavigationContainer } from "@react-navigation/native";
+import {
+	createNavigationContainerRef,
+	NavigationContainer,
+} from "@react-navigation/native";
 import Home from "./screens/Home";
 import SettingsScreen from "screens/SettingsScreen";
 import Settings, { AppTheme, SettingsDefaults } from "classes/Settings";
@@ -23,14 +26,34 @@ export type RootStackParamList = {
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
+const navigationRef = createNavigationContainerRef<RootStackParamList>();
 
 export default function App() {
 	const [theme, setTheme] = useState<AppTheme>(SettingsDefaults.THEME);
 	const orientation = useOrientation();
 
-	// Set the theme from settings once on mount
-	useEffect(() => {}, []);
-
+	const firstTime = (value: boolean) => {
+		const onYes = () => {
+			console.log(navigationRef);
+			Settings.set("FIRST_TIME", false);
+			navigationRef.navigate("Setup");
+		};
+		const onNo = () => {
+			Settings.set("FIRST_TIME", false);
+		};
+		if (value) {
+			console.log("First Time!");
+			alert({
+				title: "Welcome!",
+				message:
+					"This is your first time using the application, would you like to go through the setup process?",
+				options: [
+					{ optionText: "No", onPress: onNo },
+					{ optionText: "Yes", onPress: onYes },
+				],
+			});
+		}
+	};
 	useEffect(() => {
 		Settings.PROPS.THEME.get().then(setTheme);
 		Settings.get("CUSTOM_THEME").then(initCustomTheme);
@@ -43,7 +66,7 @@ export default function App() {
 		Settings.get("PASSWORD").then(BeefWeb.setPassword);
 		Settings.get("IP_ADDRESS").then(BeefWeb.setIp);
 		Settings.get("PORT").then(BeefWeb.setPort);
-
+		Settings.get("FIRST_TIME").then(firstTime);
 		return () => {
 			BeefWeb.setState(false);
 		};
@@ -80,7 +103,7 @@ export default function App() {
 	const Styles = useStyles("Main", "Modal");
 	return (
 		<AppContext.Provider value={contextValue}>
-			<NavigationContainer>
+			<NavigationContainer ref={navigationRef}>
 				<Stack.Navigator screenOptions={{ headerShown: false }}>
 					<Stack.Screen name="Home" component={Home} />
 					<Stack.Screen name="Settings" component={SettingsScreen} />

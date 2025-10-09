@@ -71,6 +71,7 @@ const SettingsDefaults = {
 	CUSTOM_AUDIO_TYPES: new ArrayItems<string>(),
 	RECURSIVE_BROWSER: Recursive.ONCE,
 	RESET_ALL_SETTINGS: ResetAllSettingsModal,
+	FIRST_TIME: true,
 };
 
 type SettingPropTypes = {
@@ -148,6 +149,10 @@ class SettingProps {
 				RASProps,
 				typeof ResetAllSettingsModal
 			>("", ResetAllSettingsModal, "AAA", RASActions),
+			FIRST_TIME: new SettingsProperty<boolean>(
+				"first_time",
+				SettingsDefaults.FIRST_TIME,
+			),
 		};
 	}
 }
