@@ -64,6 +64,8 @@ export default function SettingsScreen({ navigation }: SettingsProps) {
 		if (values.CUSTOM_THEME != null && customTheme != null) {
 			initCustomTheme(customTheme);
 		}
+		if (values.IP_ADDRESS) ctx.BeefWeb.setIp(values.IP_ADDRESS);
+		if (values.PORT) ctx.BeefWeb.setPort(values.PORT);
 		navigation.goBack();
 	};
 
@@ -224,6 +226,11 @@ export default function SettingsScreen({ navigation }: SettingsProps) {
 					buttonStyle={[Styles.Main.button, Styles.Settings.button]}
 					title={"Setup"}
 					onPress={() => navigation.navigate("Setup")}
+				/>
+				<Button
+					buttonStyle={[Styles.Main.button, Styles.Settings.button]}
+					title={"Log"}
+					onPress={() => navigation.navigate("Log")}
 				/>
 			</View>
 			<Modal

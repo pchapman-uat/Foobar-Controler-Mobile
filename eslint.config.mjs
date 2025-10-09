@@ -50,6 +50,7 @@ export default defineConfig([
 					ignore: [],
 				},
 			],
+			"no-console": "warn",
 		},
 	},
 

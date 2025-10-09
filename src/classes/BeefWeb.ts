@@ -22,6 +22,8 @@ import {
 	BrowserEntriesResponse,
 	BrowserRootsResponse,
 } from "./responses/Browser";
+import Listener, { EventHandler } from "./Listener";
+import { LoggerBaseClass, LoggerClass, LoggerEvents } from "./Logger";
 
 type AudioProTrack = {
 	id: string;
@@ -70,13 +72,13 @@ export class Connection {
 		return this.port;
 	}
 }
-type EventHandler<T = unknown> = (data: T) => void;
 
 export type BeefWebEvents = {
 	update: WebPlayerResponse;
 	songChange: WebPlayerResponse;
 };
-export class Beefweb {
+export class Beefweb extends LoggerBaseClass<BeefWebEvents> {
+	protected SOURCE: string = "BeefWeb";
 	/**
 	 * Status for the Beefweb server, defining if it is online/offline or similar
 	 * @see {@link Status}
@@ -119,19 +121,14 @@ export class Beefweb {
 		username: "",
 		password: "",
 	};
-	/**
-	 * All events with their listeners, events based on {@link BeefWebEvents}
-	 */
-	private listeners: {
-		[K in keyof BeefWebEvents]?: Array<EventHandler<BeefWebEvents[K]>>;
-	} = {};
 
 	/**
 	 * The interval in which updates the client from the server
 	 */
 	private mainInterval?: ReturnType<typeof setInterval>;
 
-	constructor() {
+	constructor(logger: LoggerClass) {
+		super(logger);
 		this.init();
 	}
 
@@ -146,7 +143,6 @@ export class Beefweb {
 		interval?: ReturnType<typeof setInterval>,
 		restart = false,
 	) {
-		console.log("HELLO??", interval);
 		if (interval) clearInterval(interval);
 		this.state = State.Stopped;
 		// this.onUpdate()
@@ -157,9 +153,7 @@ export class Beefweb {
 		try {
 			if (t) this.startInterval();
 			else this.stopInterval(this.mainInterval);
-		} catch (e) {
-			console.error(e);
-		}
+		} catch (e) {}
 	};
 
 	setUsername = (username: string) => {
@@ -226,39 +220,11 @@ export class Beefweb {
 			if (response?.data?.player?.info?.name) {
 				return ip;
 			}
-		} catch {
-			console.warn("failed to find server at: ", ip);
-		}
+		} catch {}
 		return null;
-	}
-	addEventListener<K extends keyof BeefWebEvents>(
-		event: K,
-		handler: EventHandler<BeefWebEvents[K]>,
-	): void {
-		if (!this.listeners[event]) {
-			this.listeners[event] = [];
-		}
-		this.listeners[event]!.push(handler);
-	}
-
-	removeEventListener<K extends keyof BeefWebEvents>(
-		event: K,
-		handler: EventHandler<BeefWebEvents[K]>,
-	): void {
-		if (!this.listeners[event]) return;
-		this.listeners[event] = this.listeners[event]!.filter((h) => h !== handler);
-	}
-
-	private dispatchEvent<K extends keyof BeefWebEvents>(
-		event: K,
-		data: BeefWebEvents[K],
-	): void {
-		if (!this.listeners[event]) return;
-		this.listeners[event]!.forEach((handler) => handler(data));
 	}
 
 	private async onUpdate() {
-		console.warn("Look at me!");
 		const player = await this.getPlayer();
 		if (!player) return;
 		this.dispatchEvent("update", player);
@@ -267,7 +233,6 @@ export class Beefweb {
 		player: WebPlayerResponse,
 		albumArtiURI: string,
 	) {
-		console.log("Updating Notification");
 		if (!player) return;
 		const activeItem = player.data.activeItem;
 		const columns = activeItem.columns;
@@ -282,7 +247,7 @@ export class Beefweb {
 		});
 		if (track) {
 			AudioPro.play(track, { autoPlay: false });
-		} else console.warn("Invalid Track");
+		} else this.warn("Invalid Track");
 	}
 	private createTrackNotification(track: AudioProTrack) {
 		const validate = (value?: string | number) =>
@@ -322,7 +287,6 @@ export class Beefweb {
 		const response = await this._fetch<PlayerResponse>(
 			this.combineUrl("player") + Columns.columnsQuery,
 		);
-		console.log("done");
 		if (response) {
 			const playerResponse = await this.createWebRequest<PlayerResponse>(
 				response,
@@ -330,7 +294,6 @@ export class Beefweb {
 			);
 			if (this.lastPlayer) {
 				playerResponse.data.sameSong = playerResponse.data.compare(this.lastPlayer);
-				console.log("lookat me please:", playerResponse.data.sameSong);
 				if (!playerResponse.data.sameSong)
 					this.dispatchEvent("songChange", playerResponse);
 			}
@@ -553,7 +516,6 @@ export class Beefweb {
 			let id: string | null = null;
 			for (const item of playlists.data) {
 				if (item.title == this.MOBILE_PLAYLIST_TITLE) {
-					console.log("Found it!", item);
 					id = item.id;
 					break;
 				}
@@ -605,8 +567,6 @@ export class Beefweb {
 				const response = await axios.get(fullUrl, { timeout: this.TIMEOUT, auth });
 				return response;
 			} catch (error) {
-				console.warn("Fetch Failed!");
-				console.error(error);
 				this.status = Status.Error;
 				return null;
 			}
@@ -622,15 +582,12 @@ export class Beefweb {
 		const url = this.con.getUrl();
 		if (url) {
 			try {
-				console.log(this.combineUrl(url, path), this.TIMEOUT);
 				const auth = this.getAuth();
 				return await axios.post(this.combineUrl(url, path), body, {
 					timeout: this.TIMEOUT,
 					auth,
 				});
 			} catch (error) {
-				console.warn("Post Failed!");
-				console.error(error);
 				this.status = Status.Error;
 				return null;
 			}
@@ -643,5 +600,4 @@ export class Beefweb {
 		return paths.join("/");
 	}
 }
-export default new Beefweb();
-export { Beefweb as BeefwebClass };
+export default Beefweb;

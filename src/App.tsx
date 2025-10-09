@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import {
 	createNavigationContainerRef,
@@ -10,19 +10,21 @@ import Settings, { AppTheme, SettingsDefaults } from "classes/Settings";
 import AppContext, { AppContextType } from "AppContext";
 import AlertModal, { AlertProps } from "elements/AlertModal";
 import { useOrientation } from "hooks/useOrientation";
-import BeefWeb from "classes/BeefWeb";
 import AboutScreen from "screens/AboutScreen";
 import { initCustomTheme } from "managers/ThemeManager";
 import Setup from "screens/Setup";
 import { Modal, View } from "react-native";
 import { useStyles } from "managers/StyleManager";
 import { Button } from "react-native-elements";
+import LogScreen from "screens/LogScreen";
+import Logger from "classes/Logger";
 
 export type RootStackParamList = {
 	Home: undefined;
 	Settings: undefined;
 	About: undefined;
 	Setup: undefined;
+	Log: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -31,7 +33,7 @@ const navigationRef = createNavigationContainerRef<RootStackParamList>();
 export default function App() {
 	const [theme, setTheme] = useState<AppTheme>(SettingsDefaults.THEME);
 	const orientation = useOrientation();
-
+	const { BeefWeb } = useContext(AppContext);
 	const firstTime = (value: boolean) => {
 		const onYes = () => {
 			console.log(navigationRef);
@@ -97,6 +99,7 @@ export default function App() {
 			orientation,
 			setModal,
 			alert,
+			Logger,
 		}),
 		[theme, orientation, setModal, alert],
 	);
@@ -109,6 +112,7 @@ export default function App() {
 					<Stack.Screen name="Settings" component={SettingsScreen} />
 					<Stack.Screen name="About" component={AboutScreen} />
 					<Stack.Screen name="Setup" component={Setup} />
+					<Stack.Screen name="Log" component={LogScreen} />
 				</Stack.Navigator>
 				<Modal
 					transparent
