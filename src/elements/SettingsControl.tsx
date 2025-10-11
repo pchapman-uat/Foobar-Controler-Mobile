@@ -4,6 +4,7 @@ import {
 	ArrayItemsKeys,
 	BooleanKeys,
 	ButtonKeys,
+	ChoiceArrayItemsKeys,
 	CustomThemeKeys,
 	EnumKeys,
 	GroupItem,
@@ -17,6 +18,7 @@ import {
 	ArrayItemType,
 	ArrayItems,
 	ArrayItemTypeKeys,
+	ChoiceArrayItems,
 } from "classes/ArrayItems";
 import { CustomTheme, Color, Theme } from "classes/Themes";
 import {
@@ -32,6 +34,7 @@ import { StyleMapType } from "managers/StyleManager";
 import { AppContextType } from "AppContext";
 import { Screen } from "enum/Screens";
 import { ColorFormatsObject } from "reanimated-color-picker";
+import { Picker } from "@react-native-picker/picker";
 
 type StylesType = Pick<StyleMapType, "Main">;
 type SettingsControlProps<
@@ -137,6 +140,14 @@ function BaseSettingsControl<K extends keyof SettingPropTypes>({
 			ctx,
 			value: val as ArrayItems<ArrayItemType>,
 			set: set as (v: SettingPropTypes[ArrayItemsKeys]) => void,
+		});
+	} else if (item.isChoiceArrayItems()) {
+		return ChoiceArrayItemsControl({
+			item,
+			Styles,
+			ctx,
+			value: val as ChoiceArrayItems<ArrayItemType>,
+			set: set as (v: SettingPropTypes[ChoiceArrayItemsKeys]) => void,
 		});
 	} else {
 		throw new Error("Unhandled Setting Type of: " + item.TYPE);
@@ -378,6 +389,73 @@ function ArrayItemsControl<K extends ArrayItemsKeys>({
 						onPress={() => onAddPress(inputBoxValue)}
 					/>
 				</View>
+			</View>
+		</View>
+	);
+}
+type ChoiceArrayItemsFunctionProps<K extends keyof SettingPropTypes> = Omit<
+	ControlProps<K, "ChoiceArrayItems">,
+	"value"
+> & {
+	item: ArrayGroupItem<K, "ChoiceArrayItems", ArrayItemTypeKeys>;
+	value: ChoiceArrayItems<ArrayItemType>;
+};
+function ChoiceArrayItemsControl<K extends ChoiceArrayItemsKeys>({
+	value,
+	set,
+	Styles,
+	ctx,
+}: ChoiceArrayItemsFunctionProps<K>): React.JSX.Element {
+	const [choices, setChoices] = useState(
+		value.ITEMS.map((item) => item.toString()),
+	);
+	const [inputBoxValue, setInputBoxValue] = useState("");
+	const [selectedIndex, setSelectedIndex] = useState(value.selectedIndex);
+
+	const onAddPress = (newValue: string) => {
+		if (newValue == "") return;
+		const items = [...choices, newValue];
+		setChoices(items);
+		onChange(choices, selectedIndex);
+	};
+
+	const onRemovePress = () => {
+		setChoices([]);
+	};
+	const onChange = (choices: ArrayItemType[], index: number) => {
+		const newValue = new ChoiceArrayItems(...choices);
+		newValue.selectedIndex = index;
+		setSelectedIndex(index);
+		set(newValue as SettingPropTypes[K]);
+	};
+	return (
+		<View>
+			<Picker
+				style={Styles.Main.picker}
+				dropdownIconColor={getColor(ctx.theme, "textPrimary")}
+				mode="dropdown"
+				selectedValue={value.selectedIndex}
+				onValueChange={(value, index) => onChange(choices, index)}
+			>
+				{choices.map((items, i) => (
+					<Picker.Item key={`item-${String(i)}`} label={String(items)} value={i} />
+				))}
+			</Picker>
+			<View>
+				<TextInput
+					style={{ ...Styles.Main.textInput, width: 200 }}
+					onChangeText={setInputBoxValue}
+				/>
+				<Button
+					buttonStyle={Styles.Main.button}
+					onPress={onRemovePress}
+					title={"Remove All"}
+				/>
+				<Button
+					buttonStyle={Styles.Main.button}
+					title={"Add Item"}
+					onPress={() => onAddPress(inputBoxValue)}
+				/>
 			</View>
 		</View>
 	);

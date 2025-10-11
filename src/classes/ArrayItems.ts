@@ -31,3 +31,26 @@ export class ArrayItems<T extends ArrayItemType> {
 		return selection;
 	}
 }
+
+export class ChoiceArrayItems<T extends ArrayItemType> {
+	readonly ITEMS: T[];
+	selectedIndex: number = 0;
+	constructor(...items: T[]) {
+		this.ITEMS = items;
+	}
+
+	getItem() {
+		console.warn(this.ITEMS[this.selectedIndex]);
+		return this.ITEMS[this.selectedIndex];
+	}
+	static init(json: ChoiceArrayItemsJSON<ArrayItemType>) {
+		const obj = new this(...json.ITEMS);
+		obj.selectedIndex = json.selectedIndex;
+		return obj;
+	}
+}
+
+export interface ChoiceArrayItemsJSON<T extends ArrayItemType> {
+	ITEMS: T[];
+	selectedIndex: number;
+}

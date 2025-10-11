@@ -18,6 +18,11 @@ import { useStyles } from "managers/StyleManager";
 import { Button } from "react-native-elements";
 import LogScreen from "screens/LogScreen";
 import Logger from "classes/Logger";
+import {
+	ArrayItemType,
+	ChoiceArrayItems,
+	ChoiceArrayItemsJSON,
+} from "classes/ArrayItems";
 
 export type RootStackParamList = {
 	Home: undefined;
@@ -66,7 +71,10 @@ export default function App() {
 		Settings.get("AUTHENTICATION").then(BeefWeb.setAuthenticationEnabled);
 		Settings.get("USERNAME").then(BeefWeb.setUsername);
 		Settings.get("PASSWORD").then(BeefWeb.setPassword);
-		Settings.get("IP_ADDRESS").then(BeefWeb.setIp);
+
+		Settings.get("IP_ADDRESS").then((item) =>
+			BeefWeb.setIp(ChoiceArrayItems.init(item) as ChoiceArrayItems<string>),
+		);
 		Settings.get("PORT").then(BeefWeb.setPort);
 		Settings.get("FIRST_TIME").then(firstTime);
 		return () => {

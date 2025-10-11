@@ -24,6 +24,7 @@ import {
 } from "./responses/Browser";
 import Listener, { EventHandler } from "./Listener";
 import { LoggerBaseClass, LoggerClass, LoggerEvents } from "./Logger";
+import { ChoiceArrayItems } from "./ArrayItems";
 
 type AudioProTrack = {
 	id: string;
@@ -165,8 +166,9 @@ export class Beefweb extends LoggerBaseClass<BeefWebEvents> {
 	setAuthenticationEnabled = (enabled: boolean) => {
 		this.authentication.enabled = enabled;
 	};
-	setIp = (ip: string) => {
-		this.con.setIp(ip);
+	setIp = (ip: ChoiceArrayItems<string>) => {
+		console.log("HELLO!? ");
+		this.con.setIp(ip.getItem());
 	};
 	setPort = (port: number) => {
 		this.con.setPort(port);

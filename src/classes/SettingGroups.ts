@@ -1,6 +1,11 @@
 import { KeyboardTypeOptions } from "react-native";
 import { SettingPropTypes, SettingsClass } from "./Settings";
-import { ArrayItems, ArrayItemType, ArrayItemTypeKeys } from "./ArrayItems";
+import {
+	ArrayItems,
+	ArrayItemType,
+	ArrayItemTypeKeys,
+	ChoiceArrayItems,
+} from "./ArrayItems";
 import { EnumTypes, isEnumType } from "managers/EnumManager";
 enum GroupItemType {
 	NORMAL,
@@ -85,6 +90,13 @@ class GroupItem<
 	> {
 		return this.TYPE == "ArrayItems";
 	}
+	isChoiceArrayItems(): this is ArrayGroupItem<
+		ChoiceArrayItemsKeys,
+		"ChoiceArrayItems",
+		ArrayItemTypeKeys
+	> {
+		return this.TYPE == "ChoiceArrayItems";
+	}
 	isButton(): this is GroupItem<ButtonKeys, "Button"> {
 		return this.TYPE == "Button";
 	}
@@ -133,6 +145,12 @@ export type ArrayItemsKeys = {
 		? K
 		: never;
 }[keyof SettingPropTypes];
+
+export type ChoiceArrayItemsKeys = {
+	[K in keyof SettingPropTypes]: SettingPropTypes[K] extends ChoiceArrayItems<ArrayItemType>
+		? K
+		: never;
+}[keyof SettingPropTypes];
 export type ButtonKeys = "RESET_ALL_SETTINGS";
 export type ItemProps = {
 	string: {
@@ -145,6 +163,7 @@ export type ItemProps = {
 	Screen: Record<string, never>;
 	CustomTheme: Record<string, never>;
 	ArrayItems: Record<string, never>;
+	ChoiceArrayItems: Record<string, never>;
 	Recursive: Record<string, never>;
 	Button: Record<string, never>;
 };
@@ -163,6 +182,7 @@ export const ItemPropsDefaults: {
 	ArrayItems: {},
 	Recursive: {},
 	Button: {},
+	ChoiceArrayItems: {},
 };
 export type SettingType = keyof ItemProps;
 
@@ -206,6 +226,7 @@ const SETTINGS_DESCRIPTIONS: { [K in keyof SettingPropTypes]: string } = {
 	CUSTOM_AUDIO_TYPES: "Add a custom audio file type for the browser",
 	RECURSIVE_BROWSER: "Change if all items are retrived at once or per folder",
 	RESET_ALL_SETTINGS: "Reset all settings to their defaults",
+	FIRST_TIME: "If the user has opened the application for the first time",
 };
 const ALL_SETTINGS: {
 	[K in keyof SettingPropTypes]: GroupItem<K, SettingType>;
@@ -222,9 +243,7 @@ const ALL_SETTINGS: {
 		"boolean",
 	),
 	DEFAULT_SCREEN: new GroupItem("Default Screen", "DEFAULT_SCREEN", "Screen"),
-	IP_ADDRESS: new GroupItem("IP Address", "IP_ADDRESS", "string", {
-		keyboardType: "url",
-	}),
+	IP_ADDRESS: new GroupItem("IP Address", "IP_ADDRESS", "ChoiceArrayItems"),
 	PORT: new GroupItem("Port", "PORT", "number"),
 	AUTHENTICATION: new GroupItem(
 		"Require Authentication",
@@ -256,6 +275,7 @@ const ALL_SETTINGS: {
 		"Recursive",
 	),
 	RESET_ALL_SETTINGS: new GroupItem("Reset", "RESET_ALL_SETTINGS", "Button"),
+	FIRST_TIME: new GroupItem("First Time", "FIRST_TIME", "ChoiceArrayItems"),
 };
 class SettingGroups {
 	readonly GROUPS = [

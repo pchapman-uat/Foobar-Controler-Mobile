@@ -3,7 +3,7 @@ import { Screen } from "enum/Screens";
 import { CustomTheme } from "./Themes";
 import { Orientation } from "hooks/useOrientation";
 import { setItemAsync, getItemAsync } from "expo-secure-store";
-import { ArrayItems } from "./ArrayItems";
+import { ArrayItems, ChoiceArrayItems } from "./ArrayItems";
 import { Recursive } from "./responses/Browser";
 import {
 	RASActions,
@@ -55,7 +55,7 @@ const themes = Object.keys(AppTheme).filter((k) =>
 ) as (keyof typeof AppTheme)[];
 
 const SettingsDefaults = {
-	IP_ADDRESS: "",
+	IP_ADDRESS: new ChoiceArrayItems<string>(),
 	REMEMBER_IP: false,
 	THEME: AppTheme.Light,
 	DYNAMIC_BACKGROUND: false,
@@ -91,7 +91,7 @@ export type SettingsMap = {
 class SettingProps {
 	static create(): SettingsMap {
 		return {
-			IP_ADDRESS: new SettingsProperty<string>(
+			IP_ADDRESS: new SettingsProperty<ChoiceArrayItems<string>>(
 				"ip_address",
 				SettingsDefaults.IP_ADDRESS,
 			),
