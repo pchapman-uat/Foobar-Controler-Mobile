@@ -22,46 +22,10 @@ export default defineConfig([
 			react: pluginReact,
 			"react-naming-convention": reactNamingConventionPlugin,
 		},
-	},
-
-	...tseslint.configs.recommended,
-
-	{
-		files: ["**/*.{jsx,tsx}"],
-		plugins: {
-			react: pluginReact,
-			"react-naming-convention": reactNamingConventionPlugin,
-		},
-		settings: {
-			react: {
-				version: "detect",
-			},
-		},
-		rules: {
-			...pluginReact.configs.flat.recommended.rules,
-			"react-naming-convention/context-name": "warn",
-			"react-naming-convention/filename": ["warn", { rule: "PascalCase" }],
-			"react-naming-convention/filename-extension": ["warn", "as-needed"],
-			"react-naming-convention/use-state": "warn",
-			"react/jsx-pascal-case": [
-				"warn",
-				{
-					allowAllCaps: true,
-					ignore: [],
-				},
-			],
-			"no-console": "warn",
-		},
-	},
-
-	{
-		files: ["**/*.{js,mjs,cjs,ts,mts,cts,jsx,tsx}"],
 		rules: {
 			"no-unused-vars": "off",
 			"@typescript-eslint/no-unused-vars": "warn",
-			"react/no-unescaped-entities": "warn",
-			"react/prop-types": "off",
-			"@typescript-eslint/explicit-function-return-type": "off", // NOTE: Enable at a later date
+			"@typescript-eslint/explicit-function-return-type": "off",
 			"@typescript-eslint/naming-convention": [
 				"warn",
 				{
@@ -70,13 +34,46 @@ export default defineConfig([
 					format: ["UPPER_CASE"],
 				},
 			],
+			...pluginReact.configs.flat.recommended.rules,
+			"react/no-unescaped-entities": "warn",
+			"react/prop-types": "off",
+			"react/jsx-pascal-case": [
+				"warn",
+				{
+					allowAllCaps: true,
+					ignore: [],
+				},
+			],
+
+			"react-naming-convention/context-name": "warn",
+			"react-naming-convention/filename": ["warn", { rule: "PascalCase" }],
+			"react-naming-convention/filename-extension": ["warn", "as-needed"],
+			"react-naming-convention/use-state": "warn",
+			"no-console": "warn",
+
+			"@typescript-eslint/explicit-member-accessibility": [
+				"warn",
+				{
+					accessibility: "explicit",
+					overrides: {
+						constructors: "no-public",
+					},
+				},
+			],
+		},
+		settings: {
+			react: {
+				version: "detect",
+			},
 		},
 	},
+
 	{
 		files: ["*.config.js"],
 		rules: {
 			"@typescript-eslint/no-require-imports": "off",
 		},
 	},
+
 	globalIgnores(["node_modules/*", ".expo/*", "builds/*", "android"]),
 ]);
