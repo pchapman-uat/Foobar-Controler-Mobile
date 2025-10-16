@@ -7,6 +7,7 @@ import { View, Text, ScrollView, TouchableOpacity, Modal } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Button } from "react-native-elements";
 import SettingGroups, {
+	ButtonKeys,
 	Group,
 	GroupItem,
 	GroupTypes,
@@ -19,7 +20,8 @@ import ColorPickers, { ColorPickerOptions } from "elements/ColorPickers";
 import { ColorFormatsObject } from "reanimated-color-picker";
 import SettingsControl, { ButtonControl } from "elements/SettingsControl";
 import { InfoSVG } from "managers/SVGManager";
-import { isPrimitive } from "helpers";
+import { isPrimitive } from "helpers/index";
+import Validator from "classes/Validated";
 
 type SettingsNavigationProp = NativeStackNavigationProp<
 	RootStackParamList,
@@ -28,12 +30,14 @@ type SettingsNavigationProp = NativeStackNavigationProp<
 type SettingsProps = {
 	navigation: SettingsNavigationProp;
 };
-
+type AllowedKeys = Exclude<keyof SettingPropTypes, ButtonKeys>;
 export default function SettingsScreen({ navigation }: SettingsProps) {
 	const Styles = useStyles("Main", "Settings", "Library", "Modal");
 	const ctx = useContext(AppContext);
 
-	const [values, setValues] = useState<Partial<SettingPropTypes>>({});
+	const [values, setValues] = useState<
+		Partial<Pick<SettingPropTypes, AllowedKeys>>
+	>({});
 	const [loaded, setLoaded] = useState(false);
 	const [settingIndex, setSettingIndex] = useState<number>();
 
@@ -47,25 +51,33 @@ export default function SettingsScreen({ navigation }: SettingsProps) {
 	const [infoDefaultValue, setInfoDefaultValue] = useState("");
 	const onSave = async () => {
 		const entries = Object.entries(values) as [
-			keyof SettingPropTypes,
-			SettingPropTypes[keyof SettingPropTypes],
+			AllowedKeys,
+			SettingPropTypes[AllowedKeys],
 		][];
 
-		await Promise.all(
-			entries.map(([key, value]) => {
+		try {
+			entries.forEach(([key, value]) => {
 				console.log("Setting: ", key, " To: ", value);
-				return ctx.Settings.set(key, value);
-			}),
-		);
+				ctx.Settings.set(key, Validator.validate(value));
+			});
 
-		if (values.THEME != null) {
-			ctx.setTheme(values.THEME);
+			if (values.THEME != null) {
+				ctx.setTheme(values.THEME);
+			}
+			if (values.CUSTOM_THEME != null && customTheme != null) {
+				initCustomTheme(customTheme);
+			}
+			if (values.IP_ADDRESS) {
+				const validIP = Validator.validate(values.IP_ADDRESS);
+				if (validIP.isValid()) ctx.BeefWeb.setIp(validIP);
+			}
+			if (values.PORT) {
+				const validPort = Validator.validate(values.PORT);
+				if (validPort.isValid()) ctx.BeefWeb.setPort(validPort);
+			}
+		} catch (error) {
+			console.error(error);
 		}
-		if (values.CUSTOM_THEME != null && customTheme != null) {
-			initCustomTheme(customTheme);
-		}
-		if (values.IP_ADDRESS) ctx.BeefWeb.setIp(values.IP_ADDRESS);
-		if (values.PORT) ctx.BeefWeb.setPort(values.PORT);
 		navigation.goBack();
 	};
 
@@ -123,17 +135,10 @@ export default function SettingsScreen({ navigation }: SettingsProps) {
 					</TouchableOpacity>
 				</View>
 
-				{item.isButton() ? (
-					<ButtonControl
-						item={item}
-						Styles={Styles}
-						ctx={ctx}
-						onSet={ctx.setModal}
-					/>
-				) : (
+				{!item.isButton() ? (
 					<SettingsControl
 						item={item}
-						value={values[item.KEY]}
+						value={values[item.KEY as AllowedKeys]}
 						Styles={Styles}
 						ctx={ctx}
 						onSet={(newVal) => setValues((prev) => ({ ...prev, [item.KEY]: newVal }))}
@@ -147,6 +152,13 @@ export default function SettingsScreen({ navigation }: SettingsProps) {
 							setColorModalVisable,
 							colorModalVisable,
 						}}
+					/>
+				) : (
+					<ButtonControl
+						item={item}
+						Styles={Styles}
+						ctx={ctx}
+						onSet={ctx.setModal}
 					/>
 				)}
 			</View>

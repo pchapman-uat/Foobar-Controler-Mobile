@@ -1,4 +1,5 @@
 import { Beefweb } from "classes/BeefWeb";
+import Validator from "classes/Validated";
 
 export enum BrowserItemType {
 	DIRECTORY,
@@ -165,7 +166,9 @@ export class BrowserDirectory extends BrowserItem {
 		recursive: Recursive,
 	) {
 		console.log("Initializing: ", this.name);
-		const response = await beefweb.getBrowserEntries(this.path);
+		const validPath = Validator.validate(this.path);
+		if (!validPath.isValid()) return this;
+		const response = await beefweb.getBrowserEntries(validPath);
 		if (response) this.children = response.data.entries;
 		for (const child of this.children) {
 			child.parent = this;

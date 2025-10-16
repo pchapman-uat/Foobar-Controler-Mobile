@@ -9,13 +9,14 @@ import {
 } from "react-native";
 import { Icon } from "managers/ImageManager";
 import { useStyles } from "managers/StyleManager";
-import { BeefwebClass } from "classes/BeefWeb";
+import BeefWeb from "classes/BeefWeb";
 import AppContext from "AppContext";
 import { WebPlayerResponse } from "managers/TypeManager";
+import Validator, { Valid } from "classes/Validated";
 
 type LibraryGridPops = {
 	onGridPress: (item: GridItem) => void;
-	BeefWeb: BeefwebClass;
+	BeefWeb: BeefWeb;
 	items: GridItem[];
 	actions: ModalAction[];
 };
@@ -71,11 +72,17 @@ export default function LibraryGrid({
 		songIndex?: number;
 	}) {
 		const [imageUrl, setImageUrl] = useState<string | null>(null);
+		const validPlaylistId = Validator.validate(playlistId);
+		const validIndex = Validator.validate(songIndex);
 		useEffect(() => {
 			let mounted = true;
-			BeefWeb.getArtwork(playlistId, songIndex ?? 0).then((url) => {
-				if (mounted) setImageUrl(url && url.trim() !== "" ? url : null);
-			});
+			if (validPlaylistId.isValid())
+				BeefWeb.getArtwork(
+					validPlaylistId,
+					validIndex.isValid() ? validIndex : new Valid(0),
+				).then((url) => {
+					if (mounted) setImageUrl(url && url.trim() !== "" ? url : null);
+				});
 			return () => {
 				mounted = false;
 			};

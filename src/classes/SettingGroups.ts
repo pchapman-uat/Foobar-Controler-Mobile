@@ -7,6 +7,7 @@ import {
 	ChoiceArrayItems,
 } from "./ArrayItems";
 import { EnumTypes, isEnumType } from "managers/EnumManager";
+import Validator from "./Validated";
 enum GroupItemType {
 	NORMAL,
 	ACTION,
@@ -28,6 +29,7 @@ abstract class BaseGroupItem {
 		return this.hasDescription ? "No Description Provided" : this.DESCRIPTION;
 	}
 }
+
 class GroupItem<
 	K extends keyof SettingPropTypes,
 	T extends SettingType,
@@ -46,11 +48,11 @@ class GroupItem<
 		super(name, SETTINGS_DESCRIPTIONS[key], unused);
 		this.KEY = key;
 		this.TYPE = type;
-		const defaultProps = ItemPropsDefaults[type] as ItemOptions[T];
+		const defaultProps = ItemPropsDefaults[type];
 		this.PROPS = {
 			...defaultProps,
 			...props,
-		} as ItemOptions[T];
+		};
 	}
 	public get(settings: SettingsClass): Promise<SettingPropTypes[K]> {
 		return settings.get(this.KEY);
@@ -64,9 +66,14 @@ class GroupItem<
 		return this.TYPE;
 	}
 
-	public set(settings: SettingsClass, value: SettingPropTypes[K]) {
-		settings.set(this.KEY, value);
+	public set(
+		this: GroupItem<Exclude<K, ButtonKeys>, T>,
+		settings: SettingsClass,
+		value: SettingPropTypes[Exclude<K, ButtonKeys>],
+	) {
+		settings.set(this.KEY, Validator.validate(value));
 	}
+
 	isString(): this is GroupItem<StringKeys, "string"> {
 		return this.TYPE == "string";
 	}

@@ -23,6 +23,7 @@ import {
 	ChoiceArrayItems,
 	ChoiceArrayItemsJSON,
 } from "classes/ArrayItems";
+import Validator, { Valid } from "classes/Validated";
 
 export type RootStackParamList = {
 	Home: undefined;
@@ -42,11 +43,11 @@ export default function App() {
 	const firstTime = (value: boolean) => {
 		const onYes = () => {
 			console.log(navigationRef);
-			Settings.set("FIRST_TIME", false);
+			Settings.set("FIRST_TIME", new Valid(false));
 			navigationRef.navigate("Setup");
 		};
 		const onNo = () => {
-			Settings.set("FIRST_TIME", false);
+			Settings.set("FIRST_TIME", new Valid(false));
 		};
 		if (value) {
 			console.log("First Time!");
@@ -69,13 +70,25 @@ export default function App() {
 
 		Settings.PROPS.AUTOMATIC_UPDATES.get().then(BeefWeb.setState);
 		Settings.get("AUTHENTICATION").then(BeefWeb.setAuthenticationEnabled);
-		Settings.get("USERNAME").then(BeefWeb.setUsername);
-		Settings.get("PASSWORD").then(BeefWeb.setPassword);
+		Settings.get("USERNAME").then((item) => {
+			const validItem = Validator.validate(item);
+			if (validItem.isValid()) BeefWeb.setUsername(validItem);
+		});
+		Settings.get("PASSWORD").then((item) => {
+			const validItem = Validator.validate(item);
+			if (validItem.isValid()) BeefWeb.setPassword(validItem);
+		});
 
-		Settings.get("IP_ADDRESS").then((item) =>
-			BeefWeb.setIp(ChoiceArrayItems.init(item) as ChoiceArrayItems<string>),
-		);
-		Settings.get("PORT").then(BeefWeb.setPort);
+		Settings.get("IP_ADDRESS").then((item) => {
+			const validItem = Validator.validate(
+				ChoiceArrayItems.init(item) as ChoiceArrayItems<string>,
+			);
+			if (validItem.isValid()) BeefWeb.setIp(validItem);
+		});
+		Settings.get("PORT").then((item) => {
+			const validItem = Validator.validate(item);
+			if (validItem.isValid()) BeefWeb.setPort(validItem);
+		});
 		Settings.get("FIRST_TIME").then(firstTime);
 		return () => {
 			BeefWeb.setState(false);

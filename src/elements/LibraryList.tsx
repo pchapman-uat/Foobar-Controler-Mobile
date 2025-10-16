@@ -3,6 +3,7 @@ import { View, TouchableOpacity, Modal, Text } from "react-native";
 import AppContext from "../AppContext";
 import { Columns } from "../classes/responses/Player";
 import { useStyles } from "managers/StyleManager";
+import Validator from "classes/Validated";
 
 type LibraryItemsProps = {
 	playlistId?: string;
@@ -26,17 +27,17 @@ export default function LibraryItems({ playlistId, songs }: LibraryItemsProps) {
 		setModalVisible(true);
 	};
 	const playSong = () => {
-		const plref = playlistId ?? selectedSong?.playlistId;
-		const index = selectedSong?.songIndex ?? selectedIndex;
+		const plref = Validator.validate(playlistId ?? selectedSong?.playlistId);
+		const index = Validator.validate(selectedSong?.songIndex ?? selectedIndex);
 		if (plref == null || index == null) return setModalVisible(false);
-		ctx.BeefWeb.playSong(plref, index);
+		if (plref.isValid() && index.isValid()) ctx.BeefWeb.playSong(plref, index);
 		setModalVisible(false);
 	};
 	const queueSong = () => {
-		const plref = playlistId ?? selectedSong?.playlistId;
-		const index = selectedSong?.songIndex ?? selectedIndex;
+		const plref = Validator.validate(playlistId ?? selectedSong?.playlistId);
+		const index = Validator.validate(selectedSong?.songIndex ?? selectedIndex);
 		if (plref == null || index == null) return setModalVisible(false);
-		ctx.BeefWeb.queueSong(plref, index);
+		if (plref.isValid() && index.isValid()) ctx.BeefWeb.queueSong(plref, index);
 		setModalVisible(false);
 	};
 

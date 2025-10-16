@@ -10,8 +10,16 @@ import {
 	RASProps,
 	ResetAllSettingsModal,
 } from "elements/modal/ResetAllSettingsModal";
-import { AllModalProps } from "elements/modal/ModalTypes";
+import ModalTypes, {
+	ActionMap,
+	AllModalProps,
+} from "elements/modal/ModalTypes";
 import { ButtonKeys } from "./SettingGroups";
+import { UnknownValidation } from "./Validated";
+
+export type ButtonSettingType<T extends keyof ActionMap = keyof ActionMap> = (
+	p: ModalTypes<T>,
+) => React.JSX.Element;
 class Settings {
 	readonly PROPS = SettingProps.create();
 	public async get<K extends keyof SettingPropTypes>(
@@ -26,13 +34,13 @@ class Settings {
 		const prop = this.PROPS[key];
 		return prop.FALLBACK as SettingPropTypes[K];
 	}
-	public set<K extends keyof SettingPropTypes>(
+	public set<K extends keyof Exclude<SettingPropTypes, ButtonKeys>>(
 		key: K,
-		value?: SettingPropTypes[K],
+		value: UnknownValidation<SettingPropTypes[K]>,
 	) {
 		const setting = this.PROPS[key];
-		if (!(setting instanceof ActionSettingsProperty))
-			(setting as SettingsProperty<SettingPropTypes[K]>).set(value);
+		if (value.isValid())
+			(setting as SettingsProperty<SettingPropTypes[K]>).set(value.get());
 	}
 	public resetAll() {
 		Object.values(this.PROPS).forEach((item) => item.reset());
@@ -70,7 +78,7 @@ const SettingsDefaults = {
 	CUSTOM_PLAYLIST_TYPES: new ArrayItems<string>(),
 	CUSTOM_AUDIO_TYPES: new ArrayItems<string>(),
 	RECURSIVE_BROWSER: Recursive.ONCE,
-	RESET_ALL_SETTINGS: ResetAllSettingsModal,
+	RESET_ALL_SETTINGS: ResetAllSettingsModal as ButtonSettingType<"resetAll">,
 	FIRST_TIME: true,
 };
 

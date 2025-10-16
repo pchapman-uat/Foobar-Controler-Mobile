@@ -1,3 +1,5 @@
+import { Validatable } from "./Validated";
+
 export type ArrayItemType = string | number;
 export type ArrayItemTypeKeys = "string" | "number";
 
@@ -11,7 +13,7 @@ const defaults: ArrayItemSettingsProps = {
 	max: 0,
 	min: 0,
 };
-export class ArrayItems<T extends ArrayItemType> {
+export class ArrayItems<T extends ArrayItemType> implements Validatable {
 	readonly ITEMS: T[];
 	selectedItems: number[] = [];
 	limit = 0;
@@ -30,13 +32,19 @@ export class ArrayItems<T extends ArrayItemType> {
 		}
 		return selection;
 	}
+	validate() {
+		return this.limit >= 0 && this.selectedItems.length <= this.limit;
+	}
 }
 
-export class ChoiceArrayItems<T extends ArrayItemType> {
+export class ChoiceArrayItems<T extends ArrayItemType> implements Validatable {
 	readonly ITEMS: T[];
 	selectedIndex: number = 0;
 	constructor(...items: T[]) {
 		this.ITEMS = items;
+	}
+	validate(): boolean {
+		return this.selectedIndex > 0 && this.selectedIndex < this.ITEMS.length;
 	}
 
 	getItem() {

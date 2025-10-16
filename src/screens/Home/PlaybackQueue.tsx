@@ -12,6 +12,7 @@ import PlayQueueResponse from "classes/responses/PlayQueue";
 import { Columns } from "classes/responses/Player";
 import { useStyles } from "managers/StyleManager";
 import { NavBarItemProps } from "classes/NavBar";
+import Validator from "classes/Validated";
 
 export default function PlaybackQueue({}: NavBarItemProps<"PlaybackQueue">) {
 	const ctx = useContext(AppContext);
@@ -43,19 +44,22 @@ export default function PlaybackQueue({}: NavBarItemProps<"PlaybackQueue">) {
 			setModalVisible(true);
 		};
 		const removeSong = () => {
+			const validTrackNumber = Validator.validate(selectedSong?.trackNumber);
+			const validSelectedPlaylist = Validator.validate(selectedPlaylist);
+			const validSelectedIndex = Validator.validate(selectedIndex);
 			if (
-				selectedSong == null ||
-				selectedPlaylist == null ||
-				selectedIndex == null
+				!validTrackNumber.isValid() ||
+				!validSelectedPlaylist.isValid() ||
+				!validSelectedIndex.isValid()
 			) {
 				console.log(selectedSong?.trackNumber, selectedPlaylist, selectedIndex);
 				console.warn("No Song Selected");
 				return;
 			}
 			ctx.BeefWeb.removeFromQueue(
-				selectedPlaylist,
-				selectedSong.trackNumber,
-				selectedIndex,
+				validSelectedPlaylist,
+				validTrackNumber,
+				validSelectedIndex,
 			);
 			setModalVisible(false);
 			getPlaybackQueue();

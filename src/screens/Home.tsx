@@ -9,7 +9,7 @@ import {
 	NavBarItemProps,
 	PagePropsMap,
 } from "classes/NavBar";
-import { indexToKey, keyToIndex } from "helpers";
+import { indexToKey, keyToIndex } from "helpers/index";
 import NavBarScreen, { NavigateToType } from "elements/NavBarScreen";
 import AppContext from "AppContext";
 

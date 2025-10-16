@@ -1,3 +1,5 @@
+import { Validatable } from "./Validated";
+
 export enum ThemeType {
 	Light,
 	Dark,
@@ -199,9 +201,12 @@ export type ThemeJSON = {
 	rowOdd: string;
 };
 
-export class CustomTheme extends Light {
+export class CustomTheme extends Light implements Validatable {
 	constructor() {
 		super();
+	}
+	validate(): boolean {
+		return true;
 	}
 
 	init(json: ThemeJSON) {

@@ -8,6 +8,7 @@ import { getColor } from "managers/ThemeManager";
 import LibraryGrid, { GridItem } from "elements/LibraryGrid";
 import LottieView from "lottie-react-native";
 import updateColors, { LottieLoading } from "managers/LottiManager";
+import Validator from "classes/Validated";
 
 type Views = "grid" | "list";
 
@@ -25,9 +26,10 @@ export default function LibraryPlaylist() {
 
 	const onPlaylistChange = async (playlistID: string) => {
 		setPlaylistId(playlistID);
-		if (playlistID && playlistID !== "") {
+		const validPlaylistID = Validator.validate(playlistID);
+		if (validPlaylistID.isValid()) {
 			console.log(playlistID);
-			const response = await ctx.BeefWeb.getPlaylistItems(playlistID);
+			const response = await ctx.BeefWeb.getPlaylistItems(validPlaylistID);
 			if (response) {
 				console.log("Setting Songs");
 				setSongs(response.data.items);
@@ -83,7 +85,8 @@ export default function LibraryPlaylist() {
 			setView("list");
 		};
 		const loadPlaylist = (item: GridItem) => {
-			if (item.id) ctx.BeefWeb.playPlaylist(item.id);
+			const itemId = Validator.validate(item.id);
+			if (itemId.isValid()) ctx.BeefWeb.playPlaylist(itemId);
 		};
 		switch (view) {
 			case "grid":

@@ -25,6 +25,7 @@ import {
 import Listener, { EventHandler } from "./Listener";
 import { LoggerBaseClass, LoggerClass, LoggerEvents } from "./Logger";
 import { ChoiceArrayItems } from "./ArrayItems";
+import { Valid } from "./Validated";
 
 type AudioProTrack = {
 	id: string;
@@ -150,28 +151,27 @@ export class Beefweb extends LoggerBaseClass<BeefWebEvents> {
 		if (restart) this.startInterval();
 	}
 
-	setState = (t: boolean) => {
+	public setState = (t: boolean) => {
 		try {
 			if (t) this.startInterval();
 			else this.stopInterval(this.mainInterval);
 		} catch (e) {}
 	};
 
-	setUsername = (username: string) => {
-		this.authentication.username = username;
+	public setUsername = (username: Valid<string>) => {
+		this.authentication.username = username.get();
 	};
-	setPassword = (password: string) => {
-		this.authentication.password = password;
+	public setPassword = (password: Valid<string>) => {
+		this.authentication.password = password.get();
 	};
-	setAuthenticationEnabled = (enabled: boolean) => {
+	public setAuthenticationEnabled = (enabled: boolean) => {
 		this.authentication.enabled = enabled;
 	};
-	setIp = (ip: ChoiceArrayItems<string>) => {
-		console.log("HELLO!? ");
-		this.con.setIp(ip.getItem());
+	public setIp = (ip: Valid<ChoiceArrayItems<string>>) => {
+		this.con.setIp(ip.get().getItem());
 	};
-	setPort = (port: number) => {
-		this.con.setPort(port);
+	public setPort = (port: Valid<number>) => {
+		this.con.setPort(port.get());
 	};
 	restart = () => {
 		this.stopInterval(this.mainInterval, true);
@@ -194,7 +194,7 @@ export class Beefweb extends LoggerBaseClass<BeefWebEvents> {
 			}
 		});
 	}
-	async findBeefwebServer(port = 8880) {
+	public async findBeefwebServer(port = 8880) {
 		const base = await this.getLocalSubnetBase();
 		const ips = [];
 
@@ -285,7 +285,7 @@ export class Beefweb extends LoggerBaseClass<BeefWebEvents> {
 		this.fromRequestStatus(_response.status);
 		return _response;
 	}
-	async getPlayer(): AsyncWebPlayerResponse {
+	public async getPlayer(): AsyncWebPlayerResponse {
 		const response = await this._fetch<PlayerResponse>(
 			this.combineUrl("player") + Columns.columnsQuery,
 		);
@@ -318,15 +318,15 @@ export class Beefweb extends LoggerBaseClass<BeefWebEvents> {
 		}
 	}
 
-	async getPlaylistItems(playlistId: string) {
+	public async getPlaylistItems(playlistId: Valid<string>) {
 		const playlistInfo = await this._fetch<Playlist>(
-			this.combineUrl("playlists", playlistId),
+			this.combineUrl("playlists", playlistId.get()),
 		);
 		if (playlistInfo && playlistInfo.data.itemCount) {
 			const response = await this._fetch<PlaylistItemsResponse>(
 				this.combineUrl(
 					"playlists",
-					playlistId,
+					playlistId.get(),
 					"items",
 					`0:${playlistInfo.data.itemCount}`,
 				) + Columns.columnsQuery,
@@ -351,7 +351,7 @@ export class Beefweb extends LoggerBaseClass<BeefWebEvents> {
 			);
 		}
 	}
-	async getBrowserRoots() {
+	public async getBrowserRoots() {
 		const response = await this._fetch<BrowserRootsResponse>(
 			this.combineUrl("browser", "roots"),
 		);
@@ -362,7 +362,7 @@ export class Beefweb extends LoggerBaseClass<BeefWebEvents> {
 			);
 		}
 	}
-	async getBrowserEntries(path: string) {
+	public async getBrowserEntries(path: Valid<string>) {
 		const url = this.combineUrl("browser", "entries") + "?path=" + path;
 		const response = await this._fetch<BrowserEntriesResponse>(url);
 		if (response) {
@@ -373,14 +373,14 @@ export class Beefweb extends LoggerBaseClass<BeefWebEvents> {
 		}
 	}
 
-	async getAllSongs(): Promise<Columns[]> {
+	private async getAllSongs(): Promise<Columns[]> {
 		const playlists = await this.getPlaylists();
 		if (!playlists) return [];
 
 		const totalItems: Columns[] = [];
 
 		for (const playlist of playlists.data) {
-			const response = await this.getPlaylistItems(playlist.id);
+			const response = await this.getPlaylistItems(new Valid(playlist.id));
 			if (!response) continue;
 			response.data.items.forEach((item, index) => {
 				item.playlistId = playlist.id;
@@ -396,11 +396,11 @@ export class Beefweb extends LoggerBaseClass<BeefWebEvents> {
 		return this.getUnique("path");
 	}
 
-	async getUniqueArtists() {
+	public async getUniqueArtists() {
 		return this.getUnique("artist");
 	}
 
-	async getUnique(key: keyof Columns) {
+	public async getUnique(key: keyof Columns) {
 		const songs = await this.getAllSongs();
 		return {
 			songs: [...new Map(songs.map((item) => [item.path, item])).values()],
@@ -408,26 +408,26 @@ export class Beefweb extends LoggerBaseClass<BeefWebEvents> {
 		};
 	}
 
-	async getArtwork(playlistId: string, index: number) {
+	public async getArtwork(playlistId: Valid<string>, index: Valid<number>) {
 		const url = this.con.getUrl();
 		return url
-			? this.combineUrl(url, "artwork", playlistId, index.toString())
+			? this.combineUrl(url, "artwork", playlistId.get(), index.get().toString())
 			: null;
 	}
-	async playSong(playlistId: string, songId: number) {
+	public async playSong(playlistId: Valid<string>, songId: Valid<number>) {
 		await this._post(
-			this.combineUrl("player", "play", playlistId, songId.toString()),
+			this.combineUrl("player", "play", playlistId.get(), songId.get().toString()),
 		);
 	}
 
-	async queueSong(playlistId: string, songId: number) {
+	public async queueSong(playlistId: Valid<string>, songId: Valid<number>) {
 		await this._post(this.combineUrl("playqueue", "add"), {
-			plref: playlistId,
-			itemIndex: songId,
+			plref: playlistId.get(),
+			itemIndex: songId.get(),
 		});
 	}
 
-	async toggle() {
+	public async toggle() {
 		if (this.lastPlayer?.playbackState == "stopped") {
 			this.play();
 		} else {
@@ -435,40 +435,40 @@ export class Beefweb extends LoggerBaseClass<BeefWebEvents> {
 		}
 	}
 
-	async skip() {
+	public async skip() {
 		await this._post(this.combineUrl("player", "next"));
 	}
-	async play() {
+	public async play() {
 		await this._post(this.combineUrl("player", "play"));
 	}
-	async stop() {
+	public async stop() {
 		await this._post(this.combineUrl("player", "stop"));
 	}
 
-	async previous() {
+	public async previous() {
 		await this._post(this.combineUrl("player", "previous"));
 	}
-	async removeFromQueue(
-		plref: string | number,
-		itemIndex: number,
-		queueIndex: number,
+	public async removeFromQueue(
+		plref: Valid<string> | Valid<number>,
+		itemIndex: Valid<number>,
+		queueIndex: Valid<number>,
 	) {
 		await this._post(this.combineUrl("playqueue", "remove"), {
-			plref,
-			itemIndex,
-			queueIndex,
+			plref: plref.get(),
+			itemIndex: itemIndex.get(),
+			queueIndex: queueIndex.get(),
 		});
 	}
 
-	async setVolume(volume: number) {
+	public async setVolume(volume: number) {
 		await this._post(this.combineUrl("player"), { volume });
 	}
 
-	async setPosition(position: number) {
+	public async setPosition(position: number) {
 		await this._post(this.combineUrl("player"), { position });
 	}
 
-	async addPlaylist(
+	private async addPlaylist(
 		title: string,
 		setCurrent: boolean,
 		index: number,
@@ -497,7 +497,7 @@ export class Beefweb extends LoggerBaseClass<BeefWebEvents> {
 		}
 	}
 
-	async addItemsToPlaylist(
+	public async addItemsToPlaylist(
 		items: string[],
 		playlistId: string,
 		replace = true,
@@ -512,7 +512,11 @@ export class Beefweb extends LoggerBaseClass<BeefWebEvents> {
 		});
 	}
 
-	async addToMobilePlaylist(items: string[], replace = true, play = true) {
+	public async addToMobilePlaylist(
+		items: string[],
+		replace = true,
+		play = true,
+	) {
 		const playlists = await this.getPlaylists();
 		if (playlists) {
 			let id: string | null = null;
@@ -538,20 +542,20 @@ export class Beefweb extends LoggerBaseClass<BeefWebEvents> {
 		}
 	}
 
-	async playPlaylist(playlistId: string, index = 0) {
+	public async playPlaylist(playlistId: Valid<string>, index = 0) {
 		await this._post(
-			this.combineUrl("player", "play", playlistId, index.toString()),
+			this.combineUrl("player", "play", playlistId.get(), index.toString()),
 		);
 	}
-	get albumArtiURI() {
+	public get albumArtiURI() {
 		const url = this.con.getUrl();
 		return url
 			? this.combineUrl(url, "artwork", "current") + `?d=${Date.now()}`
 			: "";
 	}
 
-	setConnection(ip: string, port: number) {
-		this.con.set(ip, port);
+	public setConnection(ip: Valid<string>, port: Valid<number>) {
+		this.con.set(ip.get(), port.get());
 	}
 	private getAuth() {
 		if (!this.authentication.enabled) return undefined;

@@ -46,7 +46,6 @@ export default defineConfig([
 			],
 
 			"react-naming-convention/context-name": "warn",
-			"react-naming-convention/filename": ["warn", { rule: "PascalCase" }],
 			"react-naming-convention/filename-extension": ["warn", "as-needed"],
 			"react-naming-convention/use-state": "warn",
 			"no-console": "warn",
@@ -67,7 +66,12 @@ export default defineConfig([
 			},
 		},
 	},
-
+	{
+		files: ["*.ts", "*.mts", "*cts"],
+		rules: {
+			"react-naming-convention/filename": ["warn", { rule: "PascalCase" }],
+		},
+	},
 	{
 		files: ["*.config.js"],
 		rules: {

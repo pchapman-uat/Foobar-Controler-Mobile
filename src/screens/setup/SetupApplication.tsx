@@ -1,6 +1,8 @@
 import AppContext from "AppContext";
-import { ALL_SETTINGS } from "classes/SettingGroups";
+import { ChoiceArrayItems } from "classes/ArrayItems";
+import { ALL_SETTINGS, ButtonKeys } from "classes/SettingGroups";
 import { SettingPropTypes } from "classes/Settings";
+import Validator, { Valid } from "classes/Validated";
 import SettingsControl from "elements/SettingsControl";
 import LottieView from "lottie-react-native";
 import { LottieLoading } from "managers/LottiManager";
@@ -8,7 +10,9 @@ import { useStyles } from "managers/StyleManager";
 import React, { useContext, useEffect, useState } from "react";
 import { View, Text, Modal, TouchableOpacity, Alert } from "react-native";
 import { Button } from "react-native-elements";
+import { TextInput } from "react-native-gesture-handler";
 import { SetupScreenProps } from "screens/Setup";
+type AllowedKeys = Exclude<keyof SettingPropTypes, ButtonKeys>;
 
 export default function SetupApplication({
 	setReady,
@@ -17,27 +21,36 @@ export default function SetupApplication({
 	const Styles = useStyles("Main", "Setup", "Modal");
 	const ctx = useContext(AppContext);
 	const centeredText = Styles.Main.centeredText;
-	const [values, setValues] = useState<Partial<SettingPropTypes>>({});
+	const [values, setValues] = useState<
+		Partial<Pick<SettingPropTypes, AllowedKeys>>
+	>({});
+
 	const [modalVisible, setModalVisible] = useState(false);
 	const [scannedIps, setScannedIps] = useState<string[]>([]);
 	const [ipAddress, setIpAddress] = useState<string>();
 	const onSave = () => {
 		const entries = Object.entries(values) as [
-			keyof SettingPropTypes,
-			SettingPropTypes[keyof SettingPropTypes],
+			AllowedKeys,
+			SettingPropTypes[AllowedKeys],
 		][];
 
 		entries.map(([key, value]) => {
 			console.log("Setting: ", key, " To: ", value);
-			return ctx.Settings.set(key, value);
+			return ctx.Settings.set(key, Validator.validate(value));
 		});
 	};
 	useEffect(() => {
 		setOnReady(onSave);
 	}, []);
 	const setIP = (ip: string) => {
-		ctx.BeefWeb.setConnection(ip, 8880);
-		ctx.Settings.PROPS.IP_ADDRESS.set(ip);
+		const validIp = Validator.validate(ip);
+		if (validIp.isValid()) {
+			ctx.BeefWeb.setConnection(validIp, new Valid(8880));
+			ctx.Settings.PROPS.IP_ADDRESS.set(
+				new ChoiceArrayItems<string>(validIp.get()),
+			);
+		}
+
 		setIpAddress(ip);
 		setModalVisible(false);
 	};
@@ -103,19 +116,7 @@ export default function SetupApplication({
 				</Text>
 				<View style={Styles.Setup.inputView}>
 					<Text style={Styles.Setup.inputLabel}>IP Address</Text>
-					<SettingsControl
-						Styles={Styles}
-						ctx={ctx}
-						item={ALL_SETTINGS.IP_ADDRESS}
-						value={ipAddress}
-						onSet={(newVal) => {
-							setIP(newVal);
-							setValues((prev) => ({
-								...prev,
-								[ALL_SETTINGS.IP_ADDRESS.KEY]: newVal,
-							}));
-						}}
-					/>
+					<TextInput onChangeText={setIP} />
 				</View>
 			</View>
 			<View>
