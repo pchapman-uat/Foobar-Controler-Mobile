@@ -21,7 +21,7 @@ export type ButtonSettingType<T extends keyof ActionMap = keyof ActionMap> = (
 	p: ModalTypes<T>,
 ) => React.JSX.Element;
 class Settings {
-	readonly PROPS = SettingProps.create();
+	public readonly PROPS = SettingProps.create();
 	public async get<K extends keyof SettingPropTypes>(
 		key: K,
 	): Promise<SettingPropTypes[K]> {
@@ -97,7 +97,7 @@ export type SettingsMap = {
 };
 
 class SettingProps {
-	static create(): SettingsMap {
+	public static create(): SettingsMap {
 		return {
 			IP_ADDRESS: new SettingsProperty<ChoiceArrayItems<string>>(
 				"ip_address",
@@ -165,8 +165,8 @@ class SettingProps {
 	}
 }
 class SettingsProperty<T> {
-	readonly KEY: string;
-	readonly FALLBACK: T;
+	public readonly KEY: string;
+	public readonly FALLBACK: T;
 	protected readonly PREFIX = "@";
 
 	constructor(key: string, fallback: T) {
@@ -178,7 +178,7 @@ class SettingsProperty<T> {
 		return this.PREFIX + this.KEY;
 	}
 
-	async set(value?: T) {
+	public async set(value?: T) {
 		if (value == null || value == undefined) return;
 		try {
 			const json = JSON.stringify(value);
@@ -200,10 +200,10 @@ class SettingsProperty<T> {
 		}
 	}
 
-	async get(): Promise<T> {
+	public async get(): Promise<T> {
 		return await this.getHelper(this.FALLBACK);
 	}
-	async getNullable(): Promise<T | null> {
+	public async getNullable(): Promise<T | null> {
 		return await this.getHelper(null);
 	}
 	public async reset() {
@@ -212,7 +212,7 @@ class SettingsProperty<T> {
 }
 
 class EncryptedSettingsProperty extends SettingsProperty<string> {
-	override async set(value?: string) {
+	public override async set(value?: string) {
 		if (value == null || value == undefined) return;
 		try {
 			await setItemAsync(this.KEY, value);
@@ -238,8 +238,8 @@ class ActionSettingsProperty<
 	P extends AllModalProps,
 	R extends (props: P) => React.JSX.Element,
 > extends SettingsProperty<R> {
-	readonly BUTTON_TEXT: string;
-	readonly ACTIONS: P["action"];
+	public readonly BUTTON_TEXT: string;
+	public readonly ACTIONS: P["action"];
 
 	constructor(
 		key: string,
@@ -251,11 +251,11 @@ class ActionSettingsProperty<
 		this.BUTTON_TEXT = buttonText;
 		this.ACTIONS = actions;
 	}
-	override get(): Promise<R> {
+	public override get(): Promise<R> {
 		return Promise.resolve(this.FALLBACK);
 	}
 
-	override set(value: R): Promise<void> {
+	public override set(value: R): Promise<void> {
 		void value;
 		return Promise.resolve();
 	}

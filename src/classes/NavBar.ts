@@ -31,9 +31,9 @@ export type LibraryMainProps = {
 };
 
 class NavBarItem<T extends ItemsType> {
-	icon: Icon;
-	location: string;
-	screen: (props: NavBarItemProps<T>) => React.JSX.Element;
+	public icon: Icon;
+	private location: string;
+	public screen: (props: NavBarItemProps<T>) => React.JSX.Element;
 
 	constructor(
 		icon: Icon,

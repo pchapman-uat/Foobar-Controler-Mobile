@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import Listener from "./Listener";
 
 export enum LogType {
@@ -6,10 +7,10 @@ export enum LogType {
 	ERROR,
 }
 export class LogMessage<T extends LogType = LogType> {
-	readonly TYPE: T;
-	readonly DATA: string;
-	readonly SOURCE: string;
-	readonly PROPS: LoggerProps | undefined;
+	public readonly TYPE: T;
+	protected readonly DATA: string;
+	protected readonly SOURCE: string;
+	protected readonly PROPS: LoggerProps | undefined;
 	constructor(type: T, data: string, source: string, props?: LoggerProps) {
 		this.TYPE = type;
 		this.DATA = data;
@@ -89,14 +90,17 @@ export abstract class LoggerBaseClass<
 		this.LOGGER = logger;
 	}
 
-	log(message: string, props?: LoggerProps) {
+	protected log(message: string, props?: LoggerProps) {
 		this.LOGGER.log(this.SOURCE, message, props);
 	}
-	warn(message: string, props?: LoggerProps) {
+	protected warn(message: string, props?: LoggerProps) {
 		this.LOGGER.warn(this.SOURCE, message, props);
 	}
-	error(message: string, props?: LoggerProps) {
-		this.LOGGER.error(this.SOURCE, message, props);
+	protected error(message: string | unknown, props?: LoggerProps): void {
+		if (message instanceof Error) this.error(message.message, props);
+		else if (typeof message == "string")
+			this.LOGGER.error(this.SOURCE, message, props);
+		else this.LOGGER.error(this.SOURCE, "Unknown Error Occurred", props);
 	}
 }
 

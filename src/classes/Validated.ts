@@ -27,7 +27,7 @@ export class Invalid<T> extends UnknownValidation<T> {
 		this.VALUE = value;
 	}
 
-	isValid(): this is Valid<T> {
+	public isValid(): this is Valid<T> {
 		return false;
 	}
 }

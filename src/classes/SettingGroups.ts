@@ -13,10 +13,10 @@ enum GroupItemType {
 	ACTION,
 }
 abstract class BaseGroupItem {
-	readonly NAME: string;
+	public readonly NAME: string;
 	private readonly DESCRIPTION: string;
-	abstract readonly ITEM_TYPE: GroupItemType;
-	readonly UNUSED: boolean = false;
+	protected abstract readonly ITEM_TYPE: GroupItemType;
+	public readonly UNUSED: boolean = false;
 	constructor(name: string, description: string, unused = this.UNUSED) {
 		this.NAME = name;
 		this.DESCRIPTION = description;
@@ -34,10 +34,10 @@ class GroupItem<
 	K extends keyof SettingPropTypes,
 	T extends SettingType,
 > extends BaseGroupItem {
-	readonly KEY: K;
-	readonly TYPE: SettingType;
-	readonly PROPS: ItemOptions[T];
-	readonly ITEM_TYPE = GroupItemType.NORMAL;
+	public readonly KEY: K;
+	public readonly TYPE: SettingType;
+	public readonly PROPS: ItemOptions[T];
+	protected readonly ITEM_TYPE = GroupItemType.NORMAL;
 	constructor(
 		name: string,
 		key: K,
@@ -74,40 +74,40 @@ class GroupItem<
 		settings.set(this.KEY, Validator.validate(value));
 	}
 
-	isString(): this is GroupItem<StringKeys, "string"> {
+	public isString(): this is GroupItem<StringKeys, "string"> {
 		return this.TYPE == "string";
 	}
-	isBoolean(): this is GroupItem<BooleanKeys, "boolean"> {
+	public isBoolean(): this is GroupItem<BooleanKeys, "boolean"> {
 		return this.TYPE == "boolean";
 	}
-	isNumber(): this is GroupItem<NumberKeys, "number"> {
+	public isNumber(): this is GroupItem<NumberKeys, "number"> {
 		return this.TYPE == "number";
 	}
-	isEnum(): this is GroupItem<EnumKeys, EnumTypes> {
+	public isEnum(): this is GroupItem<EnumKeys, EnumTypes> {
 		return isEnumType(this.TYPE);
 	}
 
-	isCustomTheme(): this is GroupItem<CustomThemeKeys, "CustomTheme"> {
+	public isCustomTheme(): this is GroupItem<CustomThemeKeys, "CustomTheme"> {
 		return this.TYPE == "CustomTheme";
 	}
-	isArrayItems(): this is ArrayGroupItem<
+	public isArrayItems(): this is ArrayGroupItem<
 		ArrayItemsKeys,
 		"ArrayItems",
 		ArrayItemTypeKeys
 	> {
 		return this.TYPE == "ArrayItems";
 	}
-	isChoiceArrayItems(): this is ArrayGroupItem<
+	public isChoiceArrayItems(): this is ArrayGroupItem<
 		ChoiceArrayItemsKeys,
 		"ChoiceArrayItems",
 		ArrayItemTypeKeys
 	> {
 		return this.TYPE == "ChoiceArrayItems";
 	}
-	isButton(): this is GroupItem<ButtonKeys, "Button"> {
+	public isButton(): this is GroupItem<ButtonKeys, "Button"> {
 		return this.TYPE == "Button";
 	}
-	getSetting(settings: SettingsClass) {
+	public getSetting(settings: SettingsClass) {
 		return settings.PROPS[this.KEY];
 	}
 }
@@ -117,7 +117,7 @@ export class ArrayGroupItem<
 	T extends SettingType,
 	J extends ArrayItemTypeKeys,
 > extends GroupItem<K, T> {
-	readonly SUBTYPE: ArrayItemTypeKeys;
+	private readonly SUBTYPE: ArrayItemTypeKeys;
 	constructor(
 		name: string,
 		key: K,
@@ -129,7 +129,7 @@ export class ArrayGroupItem<
 		super(name, key, type, props, unused);
 		this.SUBTYPE = subType;
 	}
-	isArrayString(): this is ArrayGroupItem<K, T, "string"> {
+	public isArrayString(): this is ArrayGroupItem<K, T, "string"> {
 		return this.SUBTYPE === "string";
 	}
 }
@@ -198,8 +198,8 @@ type ItemOptions = {
 };
 
 class Group<TItems extends GroupTypes> {
-	readonly NAME: string;
-	readonly ITEMS: TItems;
+	public readonly NAME: string;
+	public readonly ITEMS: TItems;
 
 	constructor(name: string, ...items: TItems) {
 		this.NAME = name;
@@ -212,16 +212,16 @@ const SETTINGS_DESCRIPTIONS: { [K in keyof SettingPropTypes]: string } = {
 		"The IP Address of the machine that is currently running Foobar2000. Run ipconfig in CMD and enter the IPv4 or IPv6 address",
 	REMEMBER_IP: "This is unused and should be disregarded",
 	THEME:
-		"The current theme of the applicatio, custom will default to the 'Light' theme",
+		"The current theme of the application, custom will default to the 'Light' theme",
 	DYNAMIC_BACKGROUND:
 		"Change the background of the now playing screen based on the album art of the current song",
 	AUTOMATIC_UPDATES:
 		"This will enable or disable the updates for the application. This requires a restart of the application",
 	UPDATE_FREQUENCY:
-		"Change how often the application updates. WARNING: The lower the number the more processing power the app will use, it is recomended to keep it at the default",
+		"Change how often the application updates. WARNING: The lower the number the more processing power the app will use, it is recommended to keep it at the default",
 	DEFAULT_SCREEN: "Change the screen that the application will first open to",
 	CUSTOM_THEME:
-		"Create your own custom theme by adjusting the values, theme mustbe set to 'Custom' for the changes to apply",
+		"Create your own custom theme by adjusting the values, theme must be set to 'Custom' for the changes to apply",
 	USERNAME:
 		"When authentication is enabled this will be the username that will be provided to the server. NOTE: Due to the server this is sent over HTTP, meaning anyone can see this value",
 	PASSWORD:
@@ -231,7 +231,7 @@ const SETTINGS_DESCRIPTIONS: { [K in keyof SettingPropTypes]: string } = {
 	PORT: "Change the port that the server is running on",
 	CUSTOM_PLAYLIST_TYPES: "Add a custom playlist file type for the browser",
 	CUSTOM_AUDIO_TYPES: "Add a custom audio file type for the browser",
-	RECURSIVE_BROWSER: "Change if all items are retrived at once or per folder",
+	RECURSIVE_BROWSER: "Change if all items are retrieved at once or per folder",
 	RESET_ALL_SETTINGS: "Reset all settings to their defaults",
 	FIRST_TIME: "If the user has opened the application for the first time",
 };
@@ -275,7 +275,7 @@ const ALL_SETTINGS: {
 		"CUSTOM_PLAYLIST_TYPES",
 		"ArrayItems",
 	),
-	REMEMBER_IP: new GroupItem("Rememeber IP", "REMEMBER_IP", "boolean", {}, true),
+	REMEMBER_IP: new GroupItem("Remember IP", "REMEMBER_IP", "boolean", {}, true),
 	RECURSIVE_BROWSER: new GroupItem(
 		"Recursive Browser",
 		"RECURSIVE_BROWSER",
@@ -285,7 +285,7 @@ const ALL_SETTINGS: {
 	FIRST_TIME: new GroupItem("First Time", "FIRST_TIME", "ChoiceArrayItems"),
 };
 class SettingGroups {
-	readonly GROUPS = [
+	public readonly GROUPS = [
 		new Group(
 			"General",
 			ALL_SETTINGS.THEME,
@@ -312,11 +312,11 @@ class SettingGroups {
 		),
 	];
 
-	[Symbol.iterator]() {
+	public [Symbol.iterator]() {
 		return this.GROUPS[Symbol.iterator]();
 	}
 
-	get length() {
+	public get length() {
 		return this.GROUPS.length;
 	}
 }

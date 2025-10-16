@@ -2,7 +2,6 @@ import { AxiosResponse } from "axios";
 import FromJSON from "interfaces/iFromJSON";
 
 export enum RequestStatus {
-	// Sucess
 	OK = 200,
 
 	// Error
@@ -13,15 +12,15 @@ export enum RequestStatus {
 }
 
 export class WebRequest<T> {
-	status: RequestStatus;
-	data: T;
+	public status: RequestStatus;
+	public data: T;
 
 	private constructor(status: number, data: T) {
 		this.status = status;
 		this.data = data;
 	}
 
-	static async create<T>(
+	public static async create<T>(
 		response: AxiosResponse,
 		type: FromJSON<T>,
 	): Promise<WebRequest<T>> {

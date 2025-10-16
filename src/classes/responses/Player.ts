@@ -13,11 +13,11 @@ export type RawColumns = [
 ];
 export type PlaybackState = "stopped" | "playing" | "paused" | undefined;
 export class PlayerResponse {
-	info: PlayerInfo;
-	activeItem: ActiveItem;
-	volume: Volume;
-	playbackState: PlaybackState;
-	sameSong = false;
+	public info: PlayerInfo;
+	public activeItem: ActiveItem;
+	public volume: Volume;
+	public playbackState: PlaybackState;
+	public sameSong = false;
 	constructor(
 		info: PlayerInfo,
 		activeItem: ActiveItem,
@@ -30,7 +30,7 @@ export class PlayerResponse {
 		this.playbackState = playbackState;
 	}
 
-	static fromJSON(json: FullPlayerResponseJSON): PlayerResponse {
+	public static fromJSON(json: FullPlayerResponseJSON): PlayerResponse {
 		console.log("Creating from JSON");
 		const rawActiveItem = json.player.activeItem;
 		const rawColumns = rawActiveItem.columns;
@@ -47,7 +47,7 @@ export class PlayerResponse {
 			json.player.playbackState,
 		);
 	}
-	compare(old: PlayerResponse) {
+	public compare(old: PlayerResponse) {
 		const oldColumns = old.activeItem.columns;
 		const newColumns = this.activeItem.columns;
 		return newColumns.path == oldColumns.path;
@@ -87,19 +87,19 @@ export interface ActiveItem {
 }
 
 export class Columns {
-	isPlaying: boolean;
-	isPaused: boolean;
-	albumArtist: string;
-	album: string;
-	artist: string;
-	title: string;
-	trackNumber: number;
-	length: number;
-	elapsed: number;
-	path: string;
-	playlistId?: string;
-	songIndex?: number;
-	rating?: number;
+	public isPlaying: boolean;
+	public isPaused: boolean;
+	public albumArtist: string;
+	public album: string;
+	public artist: string;
+	public title: string;
+	public trackNumber: number;
+	public length: number;
+	public elapsed: number;
+	public path: string;
+	public playlistId?: string;
+	public songIndex?: number;
+	public rating?: number;
 
 	private static params = [
 		"%isplaying%",
@@ -130,7 +130,7 @@ export class Columns {
 		this.playlistId = playlistId;
 		this.songIndex = songIndex;
 	}
-	static get columnsQuery() {
+	public static get columnsQuery() {
 		return "?columns=" + this.params.join(",");
 	}
 }

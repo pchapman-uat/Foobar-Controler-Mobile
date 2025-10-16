@@ -1,10 +1,10 @@
 export class AddPlaylistResponse {
-	id: string;
-	index: number;
-	title: string;
-	isCurrent: boolean;
-	itemCount: number;
-	totalTime: number;
+	public id: string;
+	public index: number;
+	public title: string;
+	public isCurrent: boolean;
+	public itemCount: number;
+	public totalTime: number;
 	constructor(
 		id: string,
 		index: number,
@@ -20,7 +20,7 @@ export class AddPlaylistResponse {
 		this.itemCount = itemCount;
 		this.totalTime = totalTime;
 	}
-	static fromJSON(json: AddPlaylistResponseJSON): AddPlaylistResponse {
+	public static fromJSON(json: AddPlaylistResponseJSON): AddPlaylistResponse {
 		return new AddPlaylistResponse(
 			json.id,
 			json.index,

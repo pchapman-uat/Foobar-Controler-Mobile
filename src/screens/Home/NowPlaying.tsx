@@ -65,7 +65,7 @@ export default function NowPlaying({
 			setLength(columns.length);
 
 			if (firstTime || !response.data.sameSong) {
-				setAlbumArt(ctx.BeefWeb.albumArtiURI);
+				setAlbumArt(ctx.BeefWeb.albumArtURI);
 			}
 			setVolumeValue(data.volume.value);
 			setIsMuted(data.volume.isMuted);

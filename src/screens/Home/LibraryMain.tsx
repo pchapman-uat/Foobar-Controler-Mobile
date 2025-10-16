@@ -19,9 +19,9 @@ export type LibraryProps = {
 };
 
 class LibraryItem {
-	name: string;
-	icon: React.FC<SvgProps>;
-	screen: ({}: LibraryItemScreenProps) => React.JSX.Element;
+	public name: string;
+	public icon: React.FC<SvgProps>;
+	public screen: ({}: LibraryItemScreenProps) => React.JSX.Element;
 	constructor(
 		name: string,
 		screen: ({}: LibraryItemScreenProps) => React.JSX.Element,

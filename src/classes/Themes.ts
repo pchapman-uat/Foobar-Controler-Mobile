@@ -16,13 +16,13 @@ export class Color {
 		this.b = b;
 		this.a = a;
 	}
-	toString() {
+	public toString() {
 		return `rgba(${this.r},${this.g},${this.b},${this.a})`;
 	}
-	valueOf(): string {
+	public valueOf(): string {
 		return this.toString();
 	}
-	toArgbInt() {
+	public toArgbInt() {
 		return (
 			((this.a & 0xff) << 24) |
 			((this.r & 0xff) << 16) |
@@ -30,7 +30,7 @@ export class Color {
 			(this.b & 0xff)
 		);
 	}
-	static stringToLottie(rgba: string): [number, number, number, number] {
+	public static stringToLottie(rgba: string): [number, number, number, number] {
 		const regex = /rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?\)/;
 		const match = rgba.match(regex);
 
@@ -45,7 +45,7 @@ export class Color {
 
 		return [r, g, b, a];
 	}
-	toHex(): string {
+	public toHex(): string {
 		const rHex = this.r.toString(16).padStart(2, "0");
 		const gHex = this.g.toString(16).padStart(2, "0");
 		const bHex = this.b.toString(16).padStart(2, "0");
@@ -56,16 +56,16 @@ export class Color {
 		return `#${rHex}${gHex}${bHex}${aHex}`;
 	}
 
-	toJSON() {
+	public toJSON() {
 		return this.toHex();
 	}
 
-	isDark(): boolean {
+	public isDark(): boolean {
 		const luminance = 0.299 * this.r + 0.587 * this.g + 0.114 * this.b;
 		return luminance < 128;
 	}
 
-	static fromHex(hex: string): Color {
+	public static fromHex(hex: string): Color {
 		console.log("Look at me!", hex);
 
 		hex = hex.replace(/^#/, "").toLowerCase();
@@ -94,31 +94,31 @@ export class Color {
 	}
 }
 export abstract class Theme {
-	abstract name: string;
+	public abstract name: string;
 
-	abstract type: ThemeType;
+	public abstract type: ThemeType;
 
-	abstract primary: Color;
-	abstract secondary: Color;
-	abstract accent: Color;
+	public abstract primary: Color;
+	public abstract secondary: Color;
+	public abstract accent: Color;
 
-	abstract background: Color;
-	abstract backgroundAccent: Color;
+	public abstract background: Color;
+	public abstract backgroundAccent: Color;
 
-	abstract textPrimary: Color;
-	abstract textSecondary: Color;
-	abstract textDisabled: Color;
+	public abstract textPrimary: Color;
+	public abstract textSecondary: Color;
+	public abstract textDisabled: Color;
 
-	abstract buttonPrimary: Color;
-	abstract buttonSecondary: Color;
+	public abstract buttonPrimary: Color;
+	public abstract buttonSecondary: Color;
 
-	abstract border: Color;
-	abstract shadow: Color;
+	public abstract border: Color;
+	public abstract shadow: Color;
 
-	abstract rowEven: Color;
-	abstract rowOdd: Color;
+	public abstract rowEven: Color;
+	public abstract rowOdd: Color;
 
-	get(val: keyof Theme, alpha?: number): string {
+	public get(val: keyof Theme, alpha?: number): string {
 		if (alpha && val != "name") {
 			const color = this[val];
 			if (color instanceof Color) return color.getAlpha(alpha).toString();
@@ -127,54 +127,54 @@ export abstract class Theme {
 	}
 }
 class Dark extends Theme {
-	name = "Dark";
-	type = ThemeType.Dark;
-	primary = new Color(0, 0, 0);
-	secondary = new Color(0, 0, 0);
-	accent = new Color(103, 58, 183);
-	background = new Color(0, 0, 0);
-	textPrimary = new Color(255, 255, 255);
-	textSecondary = new Color(255, 255, 255);
-	textDisabled = new Color(100, 100, 100);
-	buttonPrimary = new Color(103, 58, 183);
-	buttonSecondary = new Color(0, 0, 0);
-	border = new Color(255, 255, 255);
-	shadow = new Color(255, 255, 255, 0.5);
-	overlay = new Color(255, 255, 255);
-	backgroundAccent = new Color(50, 50, 50);
-	rowOdd = new Color(100, 100, 100);
-	rowEven = new Color(75, 75, 75);
+	public name = "Dark";
+	public type = ThemeType.Dark;
+	public primary = new Color(0, 0, 0);
+	public secondary = new Color(0, 0, 0);
+	public accent = new Color(103, 58, 183);
+	public background = new Color(0, 0, 0);
+	public textPrimary = new Color(255, 255, 255);
+	public textSecondary = new Color(255, 255, 255);
+	public textDisabled = new Color(100, 100, 100);
+	public buttonPrimary = new Color(103, 58, 183);
+	public buttonSecondary = new Color(0, 0, 0);
+	public border = new Color(255, 255, 255);
+	public shadow = new Color(255, 255, 255, 0.5);
+	public overlay = new Color(255, 255, 255);
+	public backgroundAccent = new Color(50, 50, 50);
+	public rowOdd = new Color(100, 100, 100);
+	public rowEven = new Color(75, 75, 75);
 }
 class Light extends Theme {
-	name = "Light";
-	type = ThemeType.Light;
-	primary = new Color(255, 255, 255);
-	secondary = new Color(255, 255, 255);
-	accent = new Color(30, 144, 255);
-	background = new Color(200, 200, 200);
-	backgroundAccent = new Color(255, 255, 255);
-	textPrimary = new Color(0, 0, 0);
-	textSecondary = new Color(0, 0, 0);
-	textDisabled = new Color(100, 100, 100);
-	buttonPrimary = new Color(30, 144, 255);
-	buttonSecondary = new Color(255, 255, 255);
-	border = new Color(0, 0, 0);
-	shadow = new Color(0, 0, 0, 0.5);
-	overlay = new Color(0, 0, 0);
-	rowOdd = new Color(225, 225, 225);
-	rowEven = new Color(200, 200, 200);
+	public name = "Light";
+	public type = ThemeType.Light;
+	public primary = new Color(255, 255, 255);
+	public secondary = new Color(255, 255, 255);
+	public accent = new Color(30, 144, 255);
+	public background = new Color(200, 200, 200);
+	public backgroundAccent = new Color(255, 255, 255);
+	public textPrimary = new Color(0, 0, 0);
+	public textSecondary = new Color(0, 0, 0);
+	public textDisabled = new Color(100, 100, 100);
+	public buttonPrimary = new Color(30, 144, 255);
+	public buttonSecondary = new Color(255, 255, 255);
+	public border = new Color(0, 0, 0);
+	public shadow = new Color(0, 0, 0, 0.5);
+	public overlay = new Color(0, 0, 0);
+	public rowOdd = new Color(225, 225, 225);
+	public rowEven = new Color(200, 200, 200);
 }
 
 class DarkRed extends Dark {
-	name = "Dark Red";
-	accent = new Color(194, 6, 47);
-	buttonPrimary = new Color(194, 6, 47);
+	public name = "Dark Red";
+	public accent = new Color(194, 6, 47);
+	public buttonPrimary = new Color(194, 6, 47);
 }
 
 class LightRed extends Light {
-	name = "Light Red";
-	accent = new Color(194, 6, 47);
-	buttonPrimary = new Color(194, 6, 47);
+	public name = "Light Red";
+	public accent = new Color(194, 6, 47);
+	public buttonPrimary = new Color(194, 6, 47);
 }
 export type ThemeJSON = {
 	name: string;
@@ -205,11 +205,11 @@ export class CustomTheme extends Light implements Validatable {
 	constructor() {
 		super();
 	}
-	validate(): boolean {
+	public validate(): boolean {
 		return true;
 	}
 
-	init(json: ThemeJSON) {
+	public init(json: ThemeJSON) {
 		console.warn(json);
 		this.name = json.name;
 		this.type = json.type;
@@ -248,11 +248,11 @@ export class CustomTheme extends Light implements Validatable {
 		this.rowOdd = parse(json.rowOdd, "rowOdd");
 	}
 
-	set<K extends keyof this>(key: K, val: this[K]): void {
+	public set<K extends keyof this>(key: K, val: this[K]): void {
 		this[key] = val;
 	}
 
-	reset<K extends keyof this>(key: K): void {
+	public reset<K extends keyof this>(key: K): void {
 		this[key] = (custom_default as this)[key];
 	}
 }

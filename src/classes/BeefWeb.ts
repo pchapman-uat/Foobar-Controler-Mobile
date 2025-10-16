@@ -48,28 +48,28 @@ export enum State {
 export class Connection {
 	protected ip?: string;
 	protected port?: number;
-	valid() {
+	public valid() {
 		return !!this.ip && !!this.port;
 	}
-	set(ip: string, port: number) {
+	public set(ip: string, port: number) {
 		this.setIp(ip);
 		this.setPort(port);
 	}
-	setIp(ip: string) {
+	public setIp(ip: string) {
 		this.ip = ip;
 	}
-	setPort(port: number) {
+	public setPort(port: number) {
 		this.port = port;
 	}
-	getUrl(): string | null {
+	public getUrl(): string | null {
 		if (this.valid()) return `http://${this.ip}:${this.port}/api`;
 		return null;
 	}
 
-	getIp() {
+	public getIp() {
 		return this.ip;
 	}
-	getPort() {
+	public getPort() {
 		return this.port;
 	}
 }
@@ -110,9 +110,9 @@ export class Beefweb extends LoggerBaseClass<BeefWebEvents> {
 	/**
 	 * The most recent player response, updated ever {@link Beefweb.getPlayer}
 	 */
-	lastPlayer?: PlayerResponse;
+	public lastPlayer?: PlayerResponse;
 
-	readonly MOBILE_PLAYLIST_TITLE = "Mobile Playlist";
+	private readonly MOBILE_PLAYLIST_TITLE = "Mobile Playlist";
 
 	/**
 	 * Authentication object to handle Username and Password
@@ -154,7 +154,9 @@ export class Beefweb extends LoggerBaseClass<BeefWebEvents> {
 		try {
 			if (t) this.startInterval();
 			else this.stopInterval(this.mainInterval);
-		} catch (e) {}
+		} catch (e) {
+			this.error(e);
+		}
 	};
 
 	public setUsername = (username: Valid<string>) => {
@@ -172,7 +174,7 @@ export class Beefweb extends LoggerBaseClass<BeefWebEvents> {
 	public setPort = (port: Valid<number>) => {
 		this.con.setPort(port.get());
 	};
-	restart = () => {
+	public restart = () => {
 		this.stopInterval(this.mainInterval, true);
 	};
 
@@ -182,7 +184,7 @@ export class Beefweb extends LoggerBaseClass<BeefWebEvents> {
 			debug: true,
 		});
 		this.addEventListener("songChange", (e) =>
-			this.updateNotificationPannel(e, this.albumArtiURI),
+			this.updateNotificationPannel(e, this.albumArtURI),
 		);
 		AudioPro.addEventListener((event) => {
 			switch (event.type) {
@@ -232,17 +234,16 @@ export class Beefweb extends LoggerBaseClass<BeefWebEvents> {
 	}
 	private async updateNotificationPannel(
 		player: WebPlayerResponse,
-		albumArtiURI: string,
+		albumArtURI: string,
 	) {
 		if (!player) return;
 		const activeItem = player.data.activeItem;
 		const columns = activeItem.columns;
 		const track = this.createTrackNotification({
 			id: "track-" + activeItem.index,
-			// eslint-disable-next-line @typescript-eslint/no-require-imports
 			url: require("../assets/audio/silence.mp3"), // NOTE: Currently I do not know how to use a module for an mp3 file
 			title: columns.title,
-			artwork: albumArtiURI,
+			artwork: albumArtURI,
 			artist: columns.artist,
 			album: columns.album,
 		});
@@ -304,7 +305,7 @@ export class Beefweb extends LoggerBaseClass<BeefWebEvents> {
 		}
 	}
 
-	async getPlaylists() {
+	public async getPlaylists() {
 		const response = await this._fetch<PlaylistsResponse>(
 			this.combineUrl("playlists"),
 		);
@@ -339,7 +340,7 @@ export class Beefweb extends LoggerBaseClass<BeefWebEvents> {
 		}
 	}
 
-	async getPlaybackQueue() {
+	public async getPlaybackQueue() {
 		const response = await this._fetch<PlayQueueResponse>(
 			this.combineUrl("playqueue") + Columns.columnsQuery,
 		);
@@ -391,7 +392,7 @@ export class Beefweb extends LoggerBaseClass<BeefWebEvents> {
 		return totalItems;
 	}
 
-	async getUniqueSongs() {
+	public async getUniqueSongs() {
 		return this.getUnique("path");
 	}
 
@@ -546,7 +547,7 @@ export class Beefweb extends LoggerBaseClass<BeefWebEvents> {
 			this.combineUrl("player", "play", playlistId.get(), index.toString()),
 		);
 	}
-	public get albumArtiURI() {
+	public get albumArtURI() {
 		const url = this.con.getUrl();
 		return url
 			? this.combineUrl(url, "artwork", "current") + `?d=${Date.now()}`
@@ -572,6 +573,7 @@ export class Beefweb extends LoggerBaseClass<BeefWebEvents> {
 				const response = await axios.get(fullUrl, { timeout: this.TIMEOUT, auth });
 				return response;
 			} catch (error) {
+				this.error(error);
 				this.status = Status.Error;
 				return null;
 			}
@@ -593,6 +595,7 @@ export class Beefweb extends LoggerBaseClass<BeefWebEvents> {
 					auth,
 				});
 			} catch (error) {
+				this.error(error);
 				this.status = Status.Error;
 				return null;
 			}

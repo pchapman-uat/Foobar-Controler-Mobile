@@ -2,7 +2,7 @@ export class PlaylistsResponse extends Array<Playlist> {
 	constructor(items: Playlist[]) {
 		super(...items);
 	}
-	static fromJSON(json: PlaylistResponseJSON): PlaylistsResponse {
+	public static fromJSON(json: PlaylistResponseJSON): PlaylistsResponse {
 		return new PlaylistsResponse(json.playlists);
 	}
 }

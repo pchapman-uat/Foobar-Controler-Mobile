@@ -17,8 +17,8 @@ export interface SetupScreenProps {
 type SetupScreen = React.ComponentType<SetupScreenProps>;
 
 class SetupStep {
-	name: string;
-	screen: SetupScreen;
+	public name: string;
+	public screen: SetupScreen;
 	constructor(name: string, screen: SetupScreen) {
 		this.name = name;
 		this.screen = screen;

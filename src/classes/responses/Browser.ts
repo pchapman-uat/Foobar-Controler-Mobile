@@ -6,14 +6,14 @@ export enum BrowserItemType {
 	FILE,
 }
 export class BrowserRootsResponse {
-	pathSeparator: string;
-	roots: BrowserDirectory[];
+	public pathSeparator: string;
+	public roots: BrowserDirectory[];
 
 	constructor(pathSeparator: string, roots: BrowserDirectory[]) {
 		this.pathSeparator = pathSeparator;
 		this.roots = roots;
 	}
-	static fromJSON(json: BrowserRootsResponseJSON) {
+	public static fromJSON(json: BrowserRootsResponseJSON) {
 		return new BrowserRootsResponse(
 			json.pathSeparator,
 			json.roots.map(BrowserDirectory.fromJSON),
@@ -26,12 +26,12 @@ interface BrowserRootsResponseJSON {
 }
 
 export abstract class BrowserItem {
-	name: string;
-	path: string;
-	size: number;
-	timestamp: number;
-	abstract kind: BrowserItemType;
-	parent?: BrowserDirectory;
+	public name: string;
+	public path: string;
+	public size: number;
+	public timestamp: number;
+	public abstract kind: BrowserItemType;
+	public parent?: BrowserDirectory;
 	constructor(
 		name: string,
 		path: string,
@@ -45,15 +45,15 @@ export abstract class BrowserItem {
 		this.timestamp = timestamp;
 		this.parent = parent;
 	}
-	isDirectory(): this is BrowserDirectory {
+	public isDirectory(): this is BrowserDirectory {
 		return this.kind === BrowserItemType.DIRECTORY;
 	}
 
-	isFile(): this is BrowserFile {
+	public isFile(): this is BrowserFile {
 		return this.kind === BrowserItemType.FILE;
 	}
 
-	getAncestors(): BrowserDirectory[] {
+	public getAncestors(): BrowserDirectory[] {
 		const ancestors: BrowserDirectory[] = [];
 		let current = this.parent;
 
@@ -64,16 +64,16 @@ export abstract class BrowserItem {
 
 		return ancestors;
 	}
-	abstract filter(): boolean;
+	public abstract filter(): boolean;
 }
 
 export class BrowserEntriesResponse {
-	entries: (BrowserFile | BrowserDirectory)[];
+	public entries: (BrowserFile | BrowserDirectory)[];
 
 	constructor(entries: (BrowserFile | BrowserDirectory)[]) {
 		this.entries = entries;
 	}
-	static fromJSON(json: BrowserEntriesResponseJSON) {
+	public static fromJSON(json: BrowserEntriesResponseJSON) {
 		const entries = json.entries.map((item) => {
 			if (item.type == "D") {
 				return BrowserDirectory.fromJSON(item);
@@ -123,9 +123,9 @@ const ExtensionToCategoryMap: Record<string, FileCategory> = {
 };
 
 export class BrowserFile extends BrowserItem {
-	kind = BrowserItemType.FILE;
-	fileExtension: string;
-	fileCategory: FileCategory;
+	public kind = BrowserItemType.FILE;
+	private fileExtension: string;
+	public fileCategory: FileCategory;
 	constructor(name: string, path: string, size: number, timestamp: number) {
 		super(name, path, size, timestamp);
 
@@ -139,15 +139,15 @@ export class BrowserFile extends BrowserItem {
 	private detectFileCategory(ext: string): FileCategory {
 		return ExtensionToCategoryMap[ext] ?? FileCategory.UNKNOWN;
 	}
-	public checkCustomCatigory(custom: Record<string, FileCategory>) {
+	public checkCustomCategory(custom: Record<string, FileCategory>) {
 		const ext = this.fileExtension;
 		if (this.fileCategory == FileCategory.UNKNOWN)
 			this.fileCategory = custom[ext] ?? FileCategory.UNKNOWN;
 	}
-	static fromJSON(json: BrowserEntryItem) {
+	public static fromJSON(json: BrowserEntryItem) {
 		return new BrowserFile(json.name, json.path, json.size, json.timestamp);
 	}
-	filter(): boolean {
+	public filter(): boolean {
 		return this.fileCategory !== FileCategory.UNKNOWN;
 	}
 }
@@ -157,8 +157,8 @@ export enum Recursive {
 	ALL,
 }
 export class BrowserDirectory extends BrowserItem {
-	kind = BrowserItemType.DIRECTORY;
-	children: (BrowserFile | BrowserDirectory)[] = [];
+	public kind = BrowserItemType.DIRECTORY;
+	public children: (BrowserFile | BrowserDirectory)[] = [];
 	public initialized = false;
 	public async init(
 		beefweb: Beefweb,
@@ -172,7 +172,7 @@ export class BrowserDirectory extends BrowserItem {
 		if (response) this.children = response.data.entries;
 		for (const child of this.children) {
 			child.parent = this;
-			if (child instanceof BrowserFile) child.checkCustomCatigory(custom);
+			if (child instanceof BrowserFile) child.checkCustomCategory(custom);
 		}
 		if (this.children && recursive) {
 			switch (recursive) {
@@ -198,10 +198,10 @@ export class BrowserDirectory extends BrowserItem {
 		return this;
 	}
 
-	static fromJSON(json: BrowserEntryItem) {
+	public static fromJSON(json: BrowserEntryItem) {
 		return new BrowserDirectory(json.name, json.path, json.size, json.timestamp);
 	}
-	filter(): boolean {
+	public filter(): boolean {
 		this.children = this.children.filter((child) => {
 			const keep = child.filter() || child instanceof BrowserDirectory;
 			if (keep) child.parent = this;

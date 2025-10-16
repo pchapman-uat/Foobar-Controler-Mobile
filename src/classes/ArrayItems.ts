@@ -14,16 +14,16 @@ const defaults: ArrayItemSettingsProps = {
 	min: 0,
 };
 export class ArrayItems<T extends ArrayItemType> implements Validatable {
-	readonly ITEMS: T[];
-	selectedItems: number[] = [];
-	limit = 0;
-	readonly SETTINGS: ArrayItemSettingsProps;
+	public readonly ITEMS: T[];
+	public selectedItems: number[] = [];
+	public limit = 0;
+	public readonly SETTINGS: ArrayItemSettingsProps;
 	constructor(settings?: Partial<ArrayItemSettingsProps>, ...items: T[]) {
 		this.ITEMS = items;
 		this.SETTINGS = { ...defaults, ...settings };
 	}
 
-	getSelection(limit = this.limit) {
+	public getSelection(limit = this.limit) {
 		const selection: T[] = [];
 		for (const index of this.selectedItems) {
 			if (index < 0 || index >= this.ITEMS.length) continue;
@@ -32,26 +32,26 @@ export class ArrayItems<T extends ArrayItemType> implements Validatable {
 		}
 		return selection;
 	}
-	validate() {
+	public validate() {
 		return this.limit >= 0 && this.selectedItems.length <= this.limit;
 	}
 }
 
 export class ChoiceArrayItems<T extends ArrayItemType> implements Validatable {
-	readonly ITEMS: T[];
-	selectedIndex: number = 0;
+	public readonly ITEMS: T[];
+	public selectedIndex: number = 0;
 	constructor(...items: T[]) {
 		this.ITEMS = items;
 	}
-	validate(): boolean {
+	public validate(): boolean {
 		return this.selectedIndex > 0 && this.selectedIndex < this.ITEMS.length;
 	}
 
-	getItem() {
+	public getItem() {
 		console.warn(this.ITEMS[this.selectedIndex]);
 		return this.ITEMS[this.selectedIndex];
 	}
-	static init(json: ChoiceArrayItemsJSON<ArrayItemType>) {
+	public static init(json: ChoiceArrayItemsJSON<ArrayItemType>) {
 		const obj = new this(...json.ITEMS);
 		obj.selectedIndex = json.selectedIndex;
 		return obj;

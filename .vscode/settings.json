@@ -1,5 +1,15 @@
 {
     "editor.codeActionsOnSave": {
         "source.organizeImports": "always"
-    }
+    },
+    "cSpell.words": [
+        "alac",
+        "Argb",
+        "cdxa",
+        "flac",
+        "playqueue",
+        "plref",
+        "speex",
+        "Validatable"
+    ]
 }
