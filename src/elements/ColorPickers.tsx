@@ -1,6 +1,6 @@
-import React from "react";
 import { useStyles } from "managers/StyleManager";
-import { View, Text } from "react-native";
+import React from "react";
+import { Text, View } from "react-native";
 import ColorPicker, {
 	BlueSlider,
 	ColorFormatsObject,

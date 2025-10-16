@@ -1,4 +1,11 @@
-import React, { useEffect, useState } from "react";
+import { Picker } from "@react-native-picker/picker";
+import { AppContextType } from "AppContext";
+import {
+	ArrayItems,
+	ArrayItemType,
+	ArrayItemTypeKeys,
+	ChoiceArrayItems,
+} from "classes/ArrayItems";
 import {
 	ArrayGroupItem,
 	ArrayItemsKeys,
@@ -13,28 +20,21 @@ import {
 	SettingType,
 	StringKeys,
 } from "classes/SettingGroups";
-import { SettingPropTypes, AppTheme } from "classes/Settings";
-import {
-	ArrayItemType,
-	ArrayItems,
-	ArrayItemTypeKeys,
-	ChoiceArrayItems,
-} from "classes/ArrayItems";
-import { CustomTheme, Color, Theme } from "classes/Themes";
+import { AppTheme, SettingPropTypes } from "classes/Settings";
+import { Color, CustomTheme, Theme } from "classes/Themes";
+import { Screen } from "enum/Screens";
 import {
 	EnumTypes,
 	getEnumValuesAndKeys,
 	isEnumType,
 } from "managers/EnumManager";
-import { getColor, getCustomTheme } from "managers/ThemeManager";
-import { View, TextInput, Switch, Alert, Text } from "react-native";
-import { Button } from "react-native-elements";
-import EnumPicker from "./EnumPicker";
 import { StyleMapType } from "managers/StyleManager";
-import { AppContextType } from "AppContext";
-import { Screen } from "enum/Screens";
+import { getColor, getCustomTheme } from "managers/ThemeManager";
+import React, { useEffect, useState } from "react";
+import { Alert, Switch, Text, TextInput, View } from "react-native";
+import { Button } from "react-native-elements";
 import { ColorFormatsObject } from "reanimated-color-picker";
-import { Picker } from "@react-native-picker/picker";
+import EnumPicker from "./EnumPicker";
 
 type StylesType = Pick<StyleMapType, "Main">;
 type SettingsControlProps<

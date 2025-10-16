@@ -1,17 +1,17 @@
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { RootStackParamList } from "App";
+import { Screen } from "enum/Screens";
+import { useStyles } from "managers/StyleManager";
+import { getColor } from "managers/ThemeManager";
 import React, { useContext, useEffect, useState } from "react";
-import AppContext from "../AppContext";
 import { TouchableOpacity, View } from "react-native";
+import AppContext from "../AppContext";
 import { State, Status } from "../classes/BeefWeb";
 import { WebRequest } from "../classes/WebRequest";
 import { PlayerResponse } from "../classes/responses/Player";
 import { MenuSVG } from "../managers/SVGManager";
-import { RootStackParamList } from "App";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { useStyles } from "managers/StyleManager";
-import { getColor } from "managers/ThemeManager";
-import { Screen } from "enum/Screens";
-import ScrollingText from "./ScrollingText";
 import { NavigateToType } from "./NavBarScreen";
+import ScrollingText from "./ScrollingText";
 type StatusBarProps = {
 	navigator: NativeStackNavigationProp<RootStackParamList, "Home">;
 	onNavigate: NavigateToType;

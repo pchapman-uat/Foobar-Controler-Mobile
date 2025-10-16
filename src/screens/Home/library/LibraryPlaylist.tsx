@@ -1,14 +1,14 @@
-import React, { useContext, useEffect, useState } from "react";
-import { ScrollView, TextInput, View } from "react-native";
 import AppContext from "AppContext";
 import { Columns } from "classes/responses/Player";
-import LibraryItems, { filterSongs } from "elements/LibraryList";
-import { useStyles } from "managers/StyleManager";
-import { getColor } from "managers/ThemeManager";
+import Validator from "classes/Validated";
 import LibraryGrid, { GridItem } from "elements/LibraryGrid";
+import LibraryItems, { filterSongs } from "elements/LibraryList";
 import LottieView from "lottie-react-native";
 import updateColors, { LottieLoading } from "managers/LottiManager";
-import Validator from "classes/Validated";
+import { useStyles } from "managers/StyleManager";
+import { getColor } from "managers/ThemeManager";
+import React, { useContext, useEffect, useState } from "react";
+import { ScrollView, TextInput, View } from "react-native";
 
 type Views = "grid" | "list";
 

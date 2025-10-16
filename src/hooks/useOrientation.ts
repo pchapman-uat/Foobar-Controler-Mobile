@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
 import * as ScreenOrientation from "expo-screen-orientation";
+import { useEffect, useState } from "react";
 
 export type Orientation = "landscape" | "portrait" | "unknown";
 

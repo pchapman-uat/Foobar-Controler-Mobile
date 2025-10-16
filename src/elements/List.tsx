@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, ViewStyle, TextStyle } from "react-native";
+import { Text, TextStyle, View, ViewStyle } from "react-native";
 
 type ListProps = {
 	type: "ordered" | "unordered";

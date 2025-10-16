@@ -1,12 +1,12 @@
+import { EnumTypes, isEnumType } from "managers/EnumManager";
 import { KeyboardTypeOptions } from "react-native";
-import { SettingPropTypes, SettingsClass } from "./Settings";
 import {
 	ArrayItems,
 	ArrayItemType,
 	ArrayItemTypeKeys,
 	ChoiceArrayItems,
 } from "./ArrayItems";
-import { EnumTypes, isEnumType } from "managers/EnumManager";
+import { SettingPropTypes, SettingsClass } from "./Settings";
 import Validator from "./Validated";
 enum GroupItemType {
 	NORMAL,
@@ -322,4 +322,4 @@ class SettingGroups {
 }
 
 export default new SettingGroups();
-export { GroupItem, Group, SettingGroups, GroupTypes, ALL_SETTINGS };
+export { ALL_SETTINGS, Group, GroupItem, GroupTypes, SettingGroups };

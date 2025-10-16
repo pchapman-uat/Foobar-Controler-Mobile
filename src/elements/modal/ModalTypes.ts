@@ -1,6 +1,6 @@
+import { AppContextType } from "AppContext";
 import { StyleMapType } from "managers/StyleManager";
 import { RASProps } from "./ResetAllSettingsModal";
-import { AppContextType } from "AppContext";
 
 export type ActionMap = {
 	resetAll: (ctx: AppContextType) => void;

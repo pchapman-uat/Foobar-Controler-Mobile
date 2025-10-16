@@ -1,18 +1,18 @@
-import React, { useState, useEffect, useContext, useCallback } from "react";
-import {
-	TouchableOpacity,
-	Image,
-	View,
-	Text,
-	FlatList,
-	Modal,
-} from "react-native";
+import AppContext from "AppContext";
+import BeefWeb from "classes/BeefWeb";
+import Validator, { Valid } from "classes/Validated";
 import { Icon } from "managers/ImageManager";
 import { useStyles } from "managers/StyleManager";
-import BeefWeb from "classes/BeefWeb";
-import AppContext from "AppContext";
 import { WebPlayerResponse } from "managers/TypeManager";
-import Validator, { Valid } from "classes/Validated";
+import React, { useCallback, useContext, useEffect, useState } from "react";
+import {
+	FlatList,
+	Image,
+	Modal,
+	Text,
+	TouchableOpacity,
+	View,
+} from "react-native";
 
 type LibraryGridPops = {
 	onGridPress: (item: GridItem) => void;

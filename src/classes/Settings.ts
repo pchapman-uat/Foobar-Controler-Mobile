@@ -1,20 +1,20 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Screen } from "enum/Screens";
-import { CustomTheme } from "./Themes";
-import { Orientation } from "hooks/useOrientation";
-import { setItemAsync, getItemAsync } from "expo-secure-store";
-import { ArrayItems, ChoiceArrayItems } from "./ArrayItems";
-import { Recursive } from "./responses/Browser";
+import ModalTypes, {
+	ActionMap,
+	AllModalProps,
+} from "elements/modal/ModalTypes";
 import {
 	RASActions,
 	RASProps,
 	ResetAllSettingsModal,
 } from "elements/modal/ResetAllSettingsModal";
-import ModalTypes, {
-	ActionMap,
-	AllModalProps,
-} from "elements/modal/ModalTypes";
+import { Screen } from "enum/Screens";
+import { getItemAsync, setItemAsync } from "expo-secure-store";
+import { Orientation } from "hooks/useOrientation";
+import { ArrayItems, ChoiceArrayItems } from "./ArrayItems";
+import { Recursive } from "./responses/Browser";
 import { ButtonKeys } from "./SettingGroups";
+import { CustomTheme } from "./Themes";
 import { UnknownValidation } from "./Validated";
 
 export type ButtonSettingType<T extends keyof ActionMap = keyof ActionMap> = (
@@ -263,13 +263,13 @@ class ActionSettingsProperty<
 
 export default new Settings();
 export {
-	AppTheme,
-	SettingsDefaults,
-	SettingProps,
-	SettingsProperty,
-	themes,
-	Settings as SettingsClass,
-	SettingPropTypes,
-	StyleProps,
 	ActionSettingsProperty,
+	AppTheme,
+	SettingProps,
+	SettingPropTypes,
+	Settings as SettingsClass,
+	SettingsDefaults,
+	SettingsProperty,
+	StyleProps,
+	themes,
 };

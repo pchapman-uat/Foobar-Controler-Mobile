@@ -1,7 +1,7 @@
-import { Dimensions, StyleSheet } from "react-native";
-import { getColor } from "managers/ThemeManager";
-import { getOri } from "hooks/useOrientation";
 import { StyleProps } from "classes/Settings";
+import { getOri } from "hooks/useOrientation";
+import { getColor } from "managers/ThemeManager";
+import { Dimensions, StyleSheet } from "react-native";
 
 export default ({ theme, ori }: StyleProps) => {
 	const { width, height } = Dimensions.get("window");

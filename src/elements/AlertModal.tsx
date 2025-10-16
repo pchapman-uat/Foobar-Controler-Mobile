@@ -1,6 +1,6 @@
 import { StyleMapType } from "managers/StyleManager";
 import React from "react";
-import { View, Text, Modal, ModalProps } from "react-native";
+import { Modal, ModalProps, Text, View } from "react-native";
 import { Button } from "react-native-elements";
 export interface AlertProps {
 	title: string;

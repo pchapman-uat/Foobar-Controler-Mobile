@@ -1,18 +1,18 @@
-import React, { useContext, useEffect, useState } from "react";
-import { TouchableOpacity, Text, ScrollView } from "react-native";
-import Playlist from "./library/LibraryPlaylist";
-import LibraryArtist from "./library/LibraryArtist";
+import AppContext from "AppContext";
+import { NavBarItemProps } from "classes/NavBar";
+import { keyToIndex } from "helpers/index";
 import { useStyles } from "managers/StyleManager";
+import { AlbumSVG, LibrarySVG, PlaybackQueueSVG } from "managers/SVGManager";
+import { getColor } from "managers/ThemeManager";
+import React, { useContext, useEffect, useState } from "react";
+import { ScrollView, Text, TouchableOpacity } from "react-native";
 import { Button } from "react-native-elements";
 import { SafeAreaView } from "react-native-safe-area-context";
-import LibraryAlbum from "./library/LibraryAlbum";
-import { AlbumSVG, LibrarySVG, PlaybackQueueSVG } from "managers/SVGManager";
 import { SvgProps } from "react-native-svg";
-import AppContext from "AppContext";
-import { getColor } from "managers/ThemeManager";
+import LibraryAlbum from "./library/LibraryAlbum";
+import LibraryArtist from "./library/LibraryArtist";
 import LibraryBrowser from "./library/LibraryBrowser";
-import { LibraryMainProps, NavBarItemProps } from "classes/NavBar";
-import { keyToIndex } from "helpers/index";
+import Playlist from "./library/LibraryPlaylist";
 
 export type LibraryProps = {
 	setCurrentScreen: (screen: number) => void;

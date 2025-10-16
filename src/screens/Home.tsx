@@ -1,7 +1,6 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import React, { useState, useRef, useEffect, useContext } from "react";
-import { Animated, Dimensions, StyleSheet } from "react-native";
 import { RootStackParamList } from "App";
+import AppContext from "AppContext";
 import {
 	items,
 	itemsObj,
@@ -9,9 +8,10 @@ import {
 	NavBarItemProps,
 	PagePropsMap,
 } from "classes/NavBar";
-import { indexToKey, keyToIndex } from "helpers/index";
 import NavBarScreen, { NavigateToType } from "elements/NavBarScreen";
-import AppContext from "AppContext";
+import { indexToKey, keyToIndex } from "helpers/index";
+import React, { useContext, useEffect, useRef, useState } from "react";
+import { Animated, Dimensions, StyleSheet } from "react-native";
 
 type HomeNavigationProp = NativeStackNavigationProp<RootStackParamList, "Home">;
 type HomeProps = {

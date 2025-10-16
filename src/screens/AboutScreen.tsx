@@ -1,14 +1,14 @@
-import { useStyles } from "managers/StyleManager";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { Text, TouchableOpacity, View, Linking } from "react-native";
-import { GitHubMark, GitHubMarkWhite } from "managers/SVGManager";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "App";
-import { Button } from "react-native-elements";
-import React, { useContext } from "react";
 import AppContext from "AppContext";
-import { getTheme } from "managers/ThemeManager";
 import { ThemeType } from "classes/Themes";
+import { useStyles } from "managers/StyleManager";
+import { GitHubMark, GitHubMarkWhite } from "managers/SVGManager";
+import { getTheme } from "managers/ThemeManager";
+import React, { useContext } from "react";
+import { Linking, Text, TouchableOpacity, View } from "react-native";
+import { Button } from "react-native-elements";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 type AboutNavigationProp = NativeStackNavigationProp<
 	RootStackParamList,

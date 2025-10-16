@@ -1,14 +1,14 @@
-import React, { useState, useRef, useEffect } from "react";
-import { Animated, Dimensions, View, Text, ScrollView } from "react-native";
-import SetupIntro from "./setup/SetupIntro";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { useStyles } from "managers/StyleManager";
-import { Button } from "react-native-elements";
-import SetupFoobar from "./setup/SetupFoobar";
-import SetupBeefweb from "./setup/SetupBeefweb";
-import SetupApplication from "./setup/SetupApplication";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "App";
+import { useStyles } from "managers/StyleManager";
+import React, { useEffect, useRef, useState } from "react";
+import { Animated, Dimensions, ScrollView, Text, View } from "react-native";
+import { Button } from "react-native-elements";
+import { SafeAreaView } from "react-native-safe-area-context";
+import SetupApplication from "./setup/SetupApplication";
+import SetupBeefweb from "./setup/SetupBeefweb";
+import SetupFoobar from "./setup/SetupFoobar";
+import SetupIntro from "./setup/SetupIntro";
 export interface SetupScreenProps {
 	setReady: (ready: boolean) => void;
 	setOnReady: (onReady: () => void) => void;

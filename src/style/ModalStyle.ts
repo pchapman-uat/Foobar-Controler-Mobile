@@ -1,5 +1,5 @@
-import { StyleSheet } from "react-native";
 import { StyleProps } from "classes/Settings";
+import { StyleSheet } from "react-native";
 
 export default ({}: StyleProps) =>
 	StyleSheet.create({

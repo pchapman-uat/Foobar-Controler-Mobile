@@ -1,13 +1,13 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
-	Text,
-	ViewStyle,
+	Animated,
 	Easing,
 	LayoutChangeEvent,
 	ScrollView,
-	Animated,
 	StyleProp,
+	Text,
 	TextStyle,
+	ViewStyle,
 } from "react-native";
 
 type ScrollingTextProps = {

@@ -1,6 +1,6 @@
-import { StyleSheet } from "react-native";
 import { StyleProps } from "classes/Settings";
 import { getColor } from "managers/ThemeManager";
+import { StyleSheet } from "react-native";
 
 export default ({ theme }: StyleProps) => {
 	const primaryText = {

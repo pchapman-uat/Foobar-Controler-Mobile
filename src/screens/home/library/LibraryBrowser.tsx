@@ -10,12 +10,12 @@ import { LottieLoading } from "managers/LottiManager";
 import { useStyles } from "managers/StyleManager";
 import { useContext, useEffect, useState } from "react";
 import React, {
+	SafeAreaView,
+	ScrollView,
+	Text,
+	TextStyle,
 	TouchableOpacity,
 	View,
-	Text,
-	ScrollView,
-	SafeAreaView,
-	TextStyle,
 } from "react-native";
 import { Button } from "react-native-elements";
 

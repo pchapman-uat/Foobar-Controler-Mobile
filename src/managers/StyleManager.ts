@@ -1,16 +1,16 @@
+import AppContext from "AppContext";
 import { AppTheme, StyleProps } from "classes/Settings";
+import { Orientation } from "hooks/useOrientation";
+import { useContext, useMemo } from "react";
+import ColorPickerStyle from "style/ColorPickerStyle";
+import SettingsStyle from "style/SettingsStyle";
+import SetupStyle from "style/SetupStyle";
+import LibraryStyle from "../style/LibraryStyle";
 import MainStyle from "../style/MainStyle";
-import NowPlayingStyle from "../style/NowPlayingStyle";
 import ModalStyle from "../style/ModalStyle";
 import NavBarStyle from "../style/NavBarStyle";
+import NowPlayingStyle from "../style/NowPlayingStyle";
 import StatusBarStyle from "../style/StatusBarStyle";
-import LibraryStyle from "../style/LibraryStyle";
-import { useContext, useMemo } from "react";
-import AppContext from "AppContext";
-import { Orientation } from "hooks/useOrientation";
-import SettingsStyle from "style/SettingsStyle";
-import ColorPickerStyle from "style/ColorPickerStyle";
-import SetupStyle from "style/SetupStyle";
 
 type Styles =
 	| "Main"

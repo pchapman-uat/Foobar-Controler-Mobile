@@ -1,18 +1,10 @@
-import {
-	View,
-	Text,
-	Image,
-	TouchableOpacity,
-	ImageBackground,
-} from "react-native";
-import React, { useContext, useEffect, useState } from "react";
-import AppContext from "AppContext";
 import Slider from "@react-native-community/slider";
-import { WebPlayerResponse } from "managers/TypeManager";
+import AppContext from "AppContext";
+import { NavBarItemProps } from "classes/NavBar";
+import ScrollingText from "elements/ScrollingText";
+import { formatTime } from "helpers/index";
 import { Icon } from "managers/ImageManager";
 import { useStyles } from "managers/StyleManager";
-import { getColor } from "managers/ThemeManager";
-import { formatTime } from "helpers/index";
 import {
 	EmptyStar,
 	FullStar,
@@ -23,9 +15,17 @@ import {
 	PreviousSVG,
 	StopSVG,
 } from "managers/SVGManager";
+import { getColor } from "managers/ThemeManager";
+import { WebPlayerResponse } from "managers/TypeManager";
+import React, { useContext, useEffect, useState } from "react";
+import {
+	Image,
+	ImageBackground,
+	Text,
+	TouchableOpacity,
+	View,
+} from "react-native";
 import { SvgProps } from "react-native-svg";
-import ScrollingText from "elements/ScrollingText";
-import { NavBarItemProps } from "classes/NavBar";
 
 export default function NowPlaying({
 	navigateTo,

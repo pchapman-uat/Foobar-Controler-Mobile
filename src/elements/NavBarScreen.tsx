@@ -1,11 +1,11 @@
-import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
-import NavBar from "./NavBar";
-import React from "react";
-import StatusBar from "./Statusbar";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "App";
-import { useStyles } from "managers/StyleManager";
 import { ItemsType, PagePropsMap } from "classes/NavBar";
+import { useStyles } from "managers/StyleManager";
+import React from "react";
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import NavBar from "./NavBar";
+import StatusBar from "./Statusbar";
 export type NavigateToType = <P extends ItemsType>(
 	page: P | number,
 	props?: PagePropsMap[P],

@@ -1,9 +1,9 @@
-import React, { useState, useContext } from "react";
-import { View, TouchableOpacity, Modal, Text } from "react-native";
+import Validator from "classes/Validated";
+import { useStyles } from "managers/StyleManager";
+import React, { useContext, useState } from "react";
+import { Modal, Text, TouchableOpacity, View } from "react-native";
 import AppContext from "../AppContext";
 import { Columns } from "../classes/responses/Player";
-import { useStyles } from "managers/StyleManager";
-import Validator from "classes/Validated";
 
 type LibraryItemsProps = {
 	playlistId?: string;

@@ -1,8 +1,8 @@
+import { AppContextType } from "AppContext";
 import React from "react";
-import { View, Text } from "react-native";
+import { Text, View } from "react-native";
 import { Button } from "react-native-elements";
 import ModalTypes from "./ModalTypes";
-import { AppContextType } from "AppContext";
 export type RASProps = ModalTypes<"resetAll">;
 
 const resetAll = (ctx: AppContextType) => {

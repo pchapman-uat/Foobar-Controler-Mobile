@@ -1,14 +1,13 @@
 import AppContext from "AppContext";
 import { ChoiceArrayItems } from "classes/ArrayItems";
-import { ALL_SETTINGS, ButtonKeys } from "classes/SettingGroups";
+import { ButtonKeys } from "classes/SettingGroups";
 import { SettingPropTypes } from "classes/Settings";
 import Validator, { Valid } from "classes/Validated";
-import SettingsControl from "elements/SettingsControl";
 import LottieView from "lottie-react-native";
 import { LottieLoading } from "managers/LottiManager";
 import { useStyles } from "managers/StyleManager";
 import React, { useContext, useEffect, useState } from "react";
-import { View, Text, Modal, TouchableOpacity, Alert } from "react-native";
+import { Alert, Modal, Text, TouchableOpacity, View } from "react-native";
 import { Button } from "react-native-elements";
 import { TextInput } from "react-native-gesture-handler";
 import { SetupScreenProps } from "screens/Setup";

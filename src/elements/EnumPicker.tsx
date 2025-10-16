@@ -1,9 +1,9 @@
-import React from "react";
 import {
 	Picker,
-	PickerProps,
 	PickerItemProps,
+	PickerProps,
 } from "@react-native-picker/picker";
+import React from "react";
 type EnumPickerProps<T extends Record<string, string | number>> = {
 	keys: string[];
 	values: T;

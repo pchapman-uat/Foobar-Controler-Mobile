@@ -1,11 +1,6 @@
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { RootStackParamList } from "App";
 import AppContext from "AppContext";
-import { SettingPropTypes, SettingsDefaults } from "classes/Settings";
-import { useStyles } from "managers/StyleManager";
-import { getColor, initCustomTheme } from "managers/ThemeManager";
-import React, { useCallback, useContext, useEffect, useState } from "react";
-import { View, Text, ScrollView, TouchableOpacity, Modal } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { Button } from "react-native-elements";
 import SettingGroups, {
 	ButtonKeys,
 	Group,
@@ -13,15 +8,20 @@ import SettingGroups, {
 	GroupTypes,
 	SettingType,
 } from "classes/SettingGroups";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { RootStackParamList } from "App";
+import { SettingPropTypes, SettingsDefaults } from "classes/Settings";
 import { Color, CustomTheme, Theme } from "classes/Themes";
-import ColorPickers, { ColorPickerOptions } from "elements/ColorPickers";
-import { ColorFormatsObject } from "reanimated-color-picker";
-import SettingsControl, { ButtonControl } from "elements/SettingsControl";
-import { InfoSVG } from "managers/SVGManager";
-import { isPrimitive } from "helpers/index";
 import Validator from "classes/Validated";
+import ColorPickers, { ColorPickerOptions } from "elements/ColorPickers";
+import SettingsControl, { ButtonControl } from "elements/SettingsControl";
+import { isPrimitive } from "helpers/index";
+import { useStyles } from "managers/StyleManager";
+import { InfoSVG } from "managers/SVGManager";
+import { getColor, initCustomTheme } from "managers/ThemeManager";
+import React, { useCallback, useContext, useEffect, useState } from "react";
+import { Modal, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { Button } from "react-native-elements";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { ColorFormatsObject } from "reanimated-color-picker";
 
 type SettingsNavigationProp = NativeStackNavigationProp<
 	RootStackParamList,

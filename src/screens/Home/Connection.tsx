@@ -1,13 +1,13 @@
-import React, { useCallback, useContext, useEffect, useState } from "react";
-import { Text, View } from "react-native";
 import AppContext from "AppContext";
+import { NavBarItemProps } from "classes/NavBar";
 import { RequestStatus } from "classes/WebRequest";
 import { PlayerResponse } from "classes/responses/Player";
-import { Button } from "react-native-elements";
+import updateColors, { LottieLoading } from "managers/LottiManager";
 import { useStyles } from "managers/StyleManager";
 import { getColor } from "managers/ThemeManager";
-import updateColors, { LottieLoading } from "managers/LottiManager";
-import { NavBarItemProps } from "classes/NavBar";
+import React, { useCallback, useContext, useEffect, useState } from "react";
+import { Text, View } from "react-native";
+import { Button } from "react-native-elements";
 
 export default function Connection({}: NavBarItemProps<"Connection">) {
 	const ctx = useContext(AppContext);

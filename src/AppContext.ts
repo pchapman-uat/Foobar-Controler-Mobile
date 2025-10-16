@@ -1,9 +1,9 @@
+import Logger, { LoggerClass } from "classes/Logger";
+import { AlertProps } from "elements/AlertModal";
+import { Orientation } from "hooks/useOrientation";
 import React from "react";
 import Beefweb from "./classes/BeefWeb";
 import Settings, { AppTheme, SettingsClass } from "./classes/Settings";
-import { Orientation } from "hooks/useOrientation";
-import { AlertProps } from "elements/AlertModal";
-import Logger, { LoggerClass } from "classes/Logger";
 
 export interface AppContextType {
 	BeefWeb: Beefweb;

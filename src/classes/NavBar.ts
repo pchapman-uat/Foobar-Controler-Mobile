@@ -1,15 +1,15 @@
+import { NavigateToType } from "elements/NavBarScreen";
 import { SvgProps } from "react-native-svg";
+import Connection from "screens/home/Connection";
+import LibraryMain, { LibraryItems } from "screens/home/LibraryMain";
+import NowPlaying from "screens/home/NowPlaying";
+import PlaybackQueue from "screens/home/PlaybackQueue";
 import {
 	ConnectionSVG,
 	LibrarySVG,
 	NowPlayingSVG,
 	PlaybackQueueSVG,
 } from "../managers/SVGManager";
-import Connection from "screens/home/Connection";
-import LibraryMain, { LibraryItems } from "screens/home/LibraryMain";
-import NowPlaying from "screens/home/NowPlaying";
-import PlaybackQueue from "screens/home/PlaybackQueue";
-import { NavigateToType } from "elements/NavBarScreen";
 
 type Icon = React.FC<SvgProps>;
 

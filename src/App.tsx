@@ -1,29 +1,25 @@
-import React, { useContext, useEffect, useMemo, useState } from "react";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import {
 	createNavigationContainerRef,
 	NavigationContainer,
 } from "@react-navigation/native";
-import Home from "./screens/Home";
-import SettingsScreen from "screens/SettingsScreen";
-import Settings, { AppTheme, SettingsDefaults } from "classes/Settings";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import AppContext, { AppContextType } from "AppContext";
+import { ChoiceArrayItems } from "classes/ArrayItems";
+import Logger from "classes/Logger";
+import Settings, { AppTheme, SettingsDefaults } from "classes/Settings";
+import Validator, { Valid } from "classes/Validated";
 import AlertModal, { AlertProps } from "elements/AlertModal";
 import { useOrientation } from "hooks/useOrientation";
-import AboutScreen from "screens/AboutScreen";
-import { initCustomTheme } from "managers/ThemeManager";
-import Setup from "screens/Setup";
-import { Modal, View } from "react-native";
 import { useStyles } from "managers/StyleManager";
+import { initCustomTheme } from "managers/ThemeManager";
+import React, { useContext, useEffect, useMemo, useState } from "react";
+import { Modal, View } from "react-native";
 import { Button } from "react-native-elements";
+import AboutScreen from "screens/AboutScreen";
 import LogScreen from "screens/LogScreen";
-import Logger from "classes/Logger";
-import {
-	ArrayItemType,
-	ChoiceArrayItems,
-	ChoiceArrayItemsJSON,
-} from "classes/ArrayItems";
-import Validator, { Valid } from "classes/Validated";
+import SettingsScreen from "screens/SettingsScreen";
+import Setup from "screens/Setup";
+import Home from "./screens/Home";
 
 export type RootStackParamList = {
 	Home: undefined;

@@ -1,31 +1,30 @@
-import { NetworkInfo } from "react-native-network-info";
-import {
-	AsyncWebPlayerResponse,
-	WebPlayerResponse,
-} from "../managers/TypeManager";
-import { AddPlaylistResponse } from "./responses/AddPlaylist";
-import { Columns, PlayerResponse } from "./responses/Player";
-import { PlaylistItemsResponse } from "./responses/PlaylistItems";
-import { Playlist, PlaylistsResponse } from "./responses/Playlists";
-import PlayQueueResponse from "./responses/PlayQueue";
-import { RequestStatus, WebRequest } from "./WebRequest";
 import axios, { AxiosResponse } from "axios";
+import FromJSON from "interfaces/iFromJSON";
 import {
 	AudioPro,
 	AudioProContentType,
 	AudioProEvent,
 	AudioProEventType,
 } from "react-native-audio-pro";
-import { SettingsDefaults } from "./Settings";
-import FromJSON from "interfaces/iFromJSON";
+import { NetworkInfo } from "react-native-network-info";
+import {
+	AsyncWebPlayerResponse,
+	WebPlayerResponse,
+} from "../managers/TypeManager";
+import { ChoiceArrayItems } from "./ArrayItems";
+import { LoggerBaseClass, LoggerClass } from "./Logger";
+import { AddPlaylistResponse } from "./responses/AddPlaylist";
 import {
 	BrowserEntriesResponse,
 	BrowserRootsResponse,
 } from "./responses/Browser";
-import Listener, { EventHandler } from "./Listener";
-import { LoggerBaseClass, LoggerClass, LoggerEvents } from "./Logger";
-import { ChoiceArrayItems } from "./ArrayItems";
+import { Columns, PlayerResponse } from "./responses/Player";
+import { PlaylistItemsResponse } from "./responses/PlaylistItems";
+import { Playlist, PlaylistsResponse } from "./responses/Playlists";
+import PlayQueueResponse from "./responses/PlayQueue";
+import { SettingsDefaults } from "./Settings";
 import { Valid } from "./Validated";
+import { RequestStatus, WebRequest } from "./WebRequest";
 
 type AudioProTrack = {
 	id: string;

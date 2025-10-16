@@ -1,18 +1,18 @@
-import {
-	Button,
-	View,
-	Text,
-	ScrollView,
-	Modal,
-	TouchableOpacity,
-} from "react-native";
 import AppContext from "AppContext";
-import React, { useContext, useState } from "react";
+import { NavBarItemProps } from "classes/NavBar";
+import Validator from "classes/Validated";
 import PlayQueueResponse from "classes/responses/PlayQueue";
 import { Columns } from "classes/responses/Player";
 import { useStyles } from "managers/StyleManager";
-import { NavBarItemProps } from "classes/NavBar";
-import Validator from "classes/Validated";
+import React, { useContext, useState } from "react";
+import {
+	Button,
+	Modal,
+	ScrollView,
+	Text,
+	TouchableOpacity,
+	View,
+} from "react-native";
 
 export default function PlaybackQueue({}: NavBarItemProps<"PlaybackQueue">) {
 	const ctx = useContext(AppContext);
