@@ -33,7 +33,7 @@ Please view the [Wiki - Setup](https://github.com/pchapman-uat/Foobar-Controler-
 - [Latest APK](https://github.com/pchapman-uat/Foobar-Controler-Mobile/releases) (Downloaded from project GitHub)
 - [BeefWeb fb2k-component](https://github.com/hyperblast/beefweb/releases) (Downloaded from [hyperblast's](https://github.com/hyperblast) GitHub)
 - Android Phone
-- Install from unknown sources must be enable
+- Install from unknown sources must be enabled
 
 ### Development
 
@@ -47,7 +47,7 @@ Please view the [Wiki - Setup](https://github.com/pchapman-uat/Foobar-Controler-
   - Windows Only: [WSL](https://learn.microsoft.com/en-us/windows/wsl/install) (Ubuntu was used)
 - [SDK tools](https://developer.android.com/tools)
 - [Android Studio](https://developer.android.com/studio) (Recommended, NOT USED)
-- [Node.JS](https://nodejs.org/en)
+- [Node.js](https://nodejs.org/en)
 - [Node Package Manager \[NPM\]](https://www.npmjs.com/)
 
 ## References
@@ -107,13 +107,13 @@ Below is information regarding the assets and libraries used for this project.
 - `react-native`: `0.79.2`,
   - Framework
 - `react-native-audio-pro`: `^9.9.1`,
-  - Audio Controler in notification bar/lock screen
+  - Audio Controller in notification bar/lock screen
 - `react-native-elements`: `^3.4.3`,
   - UI Elements
 - `react-native-gesture-handler`: `^2.27.1`,
   - Required for color picker
 - `react-native-network-info`: `^5.2.1`,
-  - Finding aviaiable servers
+  - Finding available servers
 - `react-native-safe-area-context`: `^5.4.0`,
   - UI Elements
 - `react-native-svg`: `^15.12.0`,
@@ -125,7 +125,7 @@ Below is information regarding the assets and libraries used for this project.
 
 ### VSCode Extensions
 
-This is a list of all VSCode extensions that where used for this project.
+This is a list of all VSCode extensions that were used for this project.
 
 - [ADB QR (Aakash P)](https://marketplace.visualstudio.com/items?itemName=AakashP.adb-qr) [AakashP.adb-qr]
 - [Error Lense (Alexander)](https://marketplace.visualstudio.com/items?itemName=usernamehw.errorlens) [usernamehw.errorlens]
