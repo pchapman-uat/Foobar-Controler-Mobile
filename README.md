@@ -5,6 +5,10 @@
 ![GitHub last commit](https://img.shields.io/github/last-commit/pchapman-uat/Foobar-Controler-Mobile)
 
 [![Static Badge](https://img.shields.io/badge/Objective-ACS.1-purple)](https://pchapman-uat.github.io/Boards/ACS/#objective1)
+[![Static Badge](https://img.shields.io/badge/Objective-ACS.3-purple)](https://pchapman-uat.github.io/Boards/ACS/#objective3)
+[![Static Badge](https://img.shields.io/badge/Objective-ACS.4-purple)](https://pchapman-uat.github.io/Boards/ACS/#objective4)
+[![Static Badge](https://img.shields.io/badge/Objective-ACS.5-purple)](https://pchapman-uat.github.io/Boards/ACS/#objective5)
+[![Static Badge](https://img.shields.io/badge/Objective-ACS.6-purple)](https://pchapman-uat.github.io/Boards/ACS/#objective6)
 
 > [!WARNING]
 > This project is still in early testing and is not ready for release
