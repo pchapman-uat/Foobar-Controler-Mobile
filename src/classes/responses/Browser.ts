@@ -118,6 +118,7 @@ const ExtensionToCategoryMap: Record<string, FileCategory> = {
 	speex: FileCategory.AUDIO,
 	ape: FileCategory.AUDIO,
 	dsd: FileCategory.AUDIO,
+	m3u: FileCategory.PLAYLIST,
 	fpl: FileCategory.PLAYLIST,
 	m3u8: FileCategory.PLAYLIST,
 };
