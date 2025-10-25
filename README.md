@@ -25,6 +25,29 @@ Information in the README and LICENSE may not properly reflect the above at the 
 
 Please view the [Wiki - Setup](https://github.com/pchapman-uat/Foobar-Controler-Mobile/wiki/Setup) for a full guide on setting up the application.
 
+## Objectives
+
+<details>
+  
+  ### ACS.1: Document the software development process to analyze a problem and to design, build, and test software solutions
+  
+  This project has full Git Management, with Releases, Versions, and Tags. This project also features a Wiki that provides explanations about the project and how to use the application. Multiple documents have been created documenting the process of creating this application, along with the use of services such as Trello.  
+
+  ### ACS.3 Implement data-driven solutions.
+
+  Although this project does not store any data locally, Foobar2000 uses SQLite to store its data. The Beefweb API provides a uniform way to retrieve data from Foobar2000, including now-playing information, libraries, album art, tags, and more. Understanding how the tags work in Foobar is crucial for this app to function, since all the requests use the tags like `%title%`
+
+  ### ACS.4 Design and implement software solutions for multiple platforms, including mobile devices.
+  This project is created in React Native, which means it is supported on Android and iOS. This project can even be modified to work with React Native Web as well, which would allow a web-based interface. However, having this fully client-sided and supported on the web would require a rework, so that is currently not an option. This project is created to be a link between a Computer running any Foobar2000-supported operating system and the user's mobile device. 
+
+  ### ACS.5 Design, develop, and maintain object-oriented software solutions utilizing inheritance, encapsulation, polymorphism, and abstraction.
+  This project uses OOP in multiple places, ranging from the base classes for the API, custom elements, as well as types and interfaces. This project uses inheritance with classes like the [Themes](https://github.com/pchapman-uat/Foobar-Controler-Mobile/blob/main/src/classes/Themes.ts), as well as the [Settings](https://github.com/pchapman-uat/Foobar-Controler-Mobile/blob/main/src/classes/Settings.ts) and [Settings Groups](https://github.com/pchapman-uat/Foobar-Controler-Mobile/blob/main/src/classes/SettingGroups.ts). All classes use public/private methods, and some even with `get` methods. Multiple [Settings](https://github.com/pchapman-uat/Foobar-Controler-Mobile/blob/main/src/classes/Settings.ts) classes override methods as needed by their setting type. All [Settings](https://github.com/pchapman-uat/Foobar-Controler-Mobile/blob/main/src/classes/Settings.ts) are generic, which allows for subtypes of different values. The [Themes](https://github.com/pchapman-uat/Foobar-Controler-Mobile/blob/main/src/classes/Themes.ts) use an abstract base class, where each one overrides and fills in the missing values. This allows for each theme to be its own class type, so new values can be adjusted, rather than there being objects for each Theme. [Browser](https://github.com/pchapman-uat/Foobar-Controler-Mobile/blob/main/src/classes/responses/Browser.ts) also uses abstraction as there is a Browser Item, which could be a Folder, or File, there is also recursion and generic, so each folder could have children folders/files, it can also be searched recursively fully, or at a specific depth level. 
+
+  ### 5.6 Within software solutions, describe, implement, and analyze data structure techniques.
+  This application deals with a large amount of data, particularly when it comes to the browser. This will be able to recursively do API calls to be able to get the contents of a Folder, with each File/Folder inside of it. This is then displayed to the user, where they can navigate in and out of the folders, can then play the song. 
+  
+</details>
+
 ## Resources
 
 ### Usage
