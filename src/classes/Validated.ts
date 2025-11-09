@@ -51,7 +51,7 @@ export default class Validator {
 		string: (v) => v.trim().length > 0,
 		number: (v) => !isNaN(v),
 		boolean: (v) => v === true,
-		object: (v) => v.validate(), // expects Validatable
+		object: (v) => v.validate(),
 	};
 
 	public static get<K extends keyof ValidatorMap>(type: K): ValidatorMap[K] {

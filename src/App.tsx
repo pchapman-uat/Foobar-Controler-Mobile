@@ -85,6 +85,7 @@ export default function App() {
 			const validItem = Validator.validate(item);
 			if (validItem.isValid()) BeefWeb.setPort(validItem);
 		});
+		Settings.get("AUTOMATIC_UPDATES").then(BeefWeb.setState);
 		Settings.get("FIRST_TIME").then(firstTime);
 		return () => {
 			BeefWeb.setState(false);

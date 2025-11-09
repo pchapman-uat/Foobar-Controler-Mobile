@@ -84,12 +84,12 @@ export default function SettingsScreen({ navigation }: SettingsProps) {
 	useEffect(() => {
 		(async () => {
 			const entries = await Promise.all(
-				(Object.keys(SettingsDefaults) as (keyof SettingPropTypes)[]).map(
-					async (key) => {
+				(Object.keys(SettingsDefaults) as (keyof SettingPropTypes)[])
+					.filter((key) => typeof SettingsDefaults[key] !== "function")
+					.map(async (key) => {
 						const value = await ctx.Settings.get(key);
 						return [key, value] as const;
-					},
-				),
+					}),
 			);
 
 			setValues(Object.fromEntries(entries));

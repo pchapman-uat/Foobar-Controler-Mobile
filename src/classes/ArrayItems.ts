@@ -44,7 +44,7 @@ export class ChoiceArrayItems<T extends ArrayItemType> implements Validatable {
 		this.ITEMS = items;
 	}
 	public validate(): boolean {
-		return this.selectedIndex > 0 && this.selectedIndex < this.ITEMS.length;
+		return this.selectedIndex >= 0 && this.selectedIndex < this.ITEMS.length;
 	}
 
 	public getItem() {

@@ -135,6 +135,7 @@ export class Beefweb extends LoggerBaseClass<BeefWebEvents> {
 
 	private startInterval() {
 		if (!this.mainInterval) {
+			this.log("Starting main update interval", { internal: true });
 			this.mainInterval = setInterval(() => this.onUpdate(), this.updateFrequency);
 			this.state = State.Running;
 		}
@@ -145,6 +146,7 @@ export class Beefweb extends LoggerBaseClass<BeefWebEvents> {
 		restart = false,
 	) {
 		if (interval) clearInterval(interval);
+		this.mainInterval = undefined;
 		this.state = State.Stopped;
 		// this.onUpdate()
 		if (restart) this.startInterval();
@@ -161,18 +163,27 @@ export class Beefweb extends LoggerBaseClass<BeefWebEvents> {
 
 	public setUsername = (username: Valid<string>) => {
 		this.authentication.username = username.get();
+		this.onConnectionChange();
 	};
 	public setPassword = (password: Valid<string>) => {
 		this.authentication.password = password.get();
+		this.onConnectionChange();
 	};
 	public setAuthenticationEnabled = (enabled: boolean) => {
 		this.authentication.enabled = enabled;
+		this.onConnectionChange();
 	};
 	public setIp = (ip: Valid<ChoiceArrayItems<string>>) => {
 		this.con.setIp(ip.get().getItem());
+		this.onConnectionChange();
 	};
 	public setPort = (port: Valid<number>) => {
 		this.con.setPort(port.get());
+		this.onConnectionChange();
+	};
+
+	private onConnectionChange = () => {
+		this.stopInterval(this.mainInterval, true);
 	};
 	public restart = () => {
 		this.stopInterval(this.mainInterval, true);
@@ -554,8 +565,12 @@ export class Beefweb extends LoggerBaseClass<BeefWebEvents> {
 			: "";
 	}
 
-	public setConnection(ip: Valid<string>, port: Valid<number>) {
+	public setConnection(
+		ip: Valid<string>,
+		port: Valid<number> = new Valid(8880),
+	) {
 		this.con.set(ip.get(), port.get());
+		this.onConnectionChange();
 	}
 	private getAuth() {
 		if (!this.authentication.enabled) return undefined;

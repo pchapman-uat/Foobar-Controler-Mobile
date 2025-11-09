@@ -7,9 +7,15 @@ import LottieView from "lottie-react-native";
 import { LottieLoading } from "managers/LottiManager";
 import { useStyles } from "managers/StyleManager";
 import React, { useContext, useEffect, useState } from "react";
-import { Alert, Modal, Text, TouchableOpacity, View } from "react-native";
+import {
+	Alert,
+	Modal,
+	Text,
+	TextInput,
+	TouchableOpacity,
+	View,
+} from "react-native";
 import { Button } from "react-native-elements";
-import { TextInput } from "react-native-gesture-handler";
 import { SetupScreenProps } from "screens/Setup";
 type AllowedKeys = Exclude<keyof SettingPropTypes, ButtonKeys>;
 
@@ -43,7 +49,9 @@ export default function SetupApplication({
 	}, []);
 	const setIP = (ip: string) => {
 		const validIp = Validator.validate(ip);
+
 		if (validIp.isValid()) {
+			console.log("Setting Beefweb Connection to ", validIp.get());
 			ctx.BeefWeb.setConnection(validIp, new Valid(8880));
 			ctx.Settings.PROPS.IP_ADDRESS.set(
 				new ChoiceArrayItems<string>(validIp.get()),
@@ -115,7 +123,10 @@ export default function SetupApplication({
 				</Text>
 				<View style={Styles.Setup.inputView}>
 					<Text style={Styles.Setup.inputLabel}>IP Address</Text>
-					<TextInput onChangeText={setIP} />
+					<TextInput
+						onChangeText={setIP}
+						style={{ ...Styles.Main.textInput, width: 200 }}
+					/>
 				</View>
 			</View>
 			<View>
