@@ -11,7 +11,7 @@
     {
       "label": "EAS Local Build",
       "type": "shell",
-      "command": "eas build --platform android --profile preview --local --output ./builds/android/app-release",
+      "command": "eas build --platform android --profile preview --local --output ./builds/android/app-release/",
       "group": "build",
       "problemMatcher": [],
       "presentation": {
