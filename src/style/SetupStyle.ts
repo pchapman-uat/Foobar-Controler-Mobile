@@ -23,6 +23,7 @@ export default ({ theme }: StyleProps) =>
 			justifyContent: "space-between",
 		},
 		inputLabel: {
+			color: getColor(theme, "textPrimary"),
 			verticalAlign: "middle",
 		},
 		buttonContainer: {

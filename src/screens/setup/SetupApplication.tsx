@@ -1,12 +1,15 @@
 import AppContext from "AppContext";
 import { ChoiceArrayItems } from "classes/ArrayItems";
 import { ButtonKeys } from "classes/SettingGroups";
-import { SettingPropTypes } from "classes/Settings";
+import { AppTheme, SettingPropTypes } from "classes/Settings";
 import Validator, { Valid } from "classes/Validated";
+import EnumPicker from "elements/EnumPicker";
 import { useLogger } from "helpers/index";
 import LottieView from "lottie-react-native";
+import { getEnumValuesAndKeys } from "managers/EnumManager";
 import { LottieLoading } from "managers/LottieManager";
 import { useStyles } from "managers/StyleManager";
+import { getColor } from "managers/ThemeManager";
 import React, { useContext, useEffect, useState } from "react";
 import {
 	Alert,
@@ -27,13 +30,12 @@ export default function SetupApplication({
 	const Styles = useStyles("Main", "Setup", "Modal");
 	const ctx = useContext(AppContext);
 	const centeredText = Styles.Main.centeredText;
-	const [values, setValues] = useState<
-		Partial<Pick<SettingPropTypes, AllowedKeys>>
-	>({});
+	const [values] = useState<Partial<Pick<SettingPropTypes, AllowedKeys>>>({});
 
 	const [modalVisible, setModalVisible] = useState(false);
 	const [scannedIps, setScannedIps] = useState<string[]>([]);
 	const [ipAddress, setIpAddress] = useState<string>();
+	const [selectedTheme] = useState<AppTheme>(AppTheme.Light);
 	const logger = useLogger("Setup Application");
 	const onSave = () => {
 		const entries = Object.entries(values) as [
@@ -62,6 +64,14 @@ export default function SetupApplication({
 
 		setIpAddress(ip);
 		setModalVisible(false);
+	};
+	const setTheme = (theme: AppTheme) => {
+		const validTheme = Validator.validate(theme);
+		if (validTheme.isValid()) {
+			logger.log(`Setting App Theme to: ${themeKeys[theme]}`);
+			ctx.Settings.PROPS.THEME.set(theme);
+			ctx.setTheme(theme);
+		}
 	};
 	const startScan = async () => {
 		setModalVisible(true);
@@ -114,7 +124,8 @@ export default function SetupApplication({
 			</TouchableOpacity>
 		</Modal>
 	);
-
+	const { values: themeValues, keys: themeKeys } =
+		getEnumValuesAndKeys("AppTheme");
 	return (
 		<View style={Styles.Main.container}>
 			<Text style={Styles.Main.header2}>Application Setup</Text>
@@ -129,14 +140,30 @@ export default function SetupApplication({
 						style={{ ...Styles.Main.textInput, width: 200 }}
 					/>
 				</View>
+				<View>
+					<Button
+						buttonStyle={Styles.Main.button}
+						title="Find Beefweb Servers"
+						onPress={findBeefwebServers}
+					/>
+				</View>
 			</View>
+			<View style={Styles.Setup.spacer}></View>
 			<View>
-				<Button
-					buttonStyle={Styles.Main.button}
-					title="Find Beefweb Servers"
-					onPress={findBeefwebServers}
-				/>
+				<Text style={centeredText}>Choose a Theme</Text>
+				<View>
+					<EnumPicker
+						style={Styles.Main.picker}
+						onValueChange={(item) => setTheme(item as AppTheme)}
+						dropdownIconColor={getColor(ctx.theme, "textPrimary")}
+						mode="dropdown"
+						selectedValue={selectedTheme}
+						keys={themeKeys}
+						values={themeValues}
+					/>
+				</View>
 			</View>
+
 			{modal(scannedIps)}
 		</View>
 	);

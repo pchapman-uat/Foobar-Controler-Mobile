@@ -45,6 +45,7 @@ export default function SetupBeefweb({ setReady }: SetupScreenProps) {
 						"Music Directories: Add all directories",
 						"Require Authentication: ☐ (Authentication is not supported as of v0.1.0 and will break if enabled)",
 					]}
+					textStyle={Styles.Main.primaryText}
 				/>
 				<View style={Styles.Setup.spacer}></View>
 				<Text style={centeredText}>
@@ -58,6 +59,7 @@ export default function SetupBeefweb({ setReady }: SetupScreenProps) {
 						"Changing Output Device: ☐ (Not supported in v0.1.0, enabling will not break)",
 						"Changing Default Web Interface: ☐ (Not supported in v0.1.0, enabling will not break)",
 					]}
+					textStyle={Styles.Main.primaryText}
 				/>
 				<View style={Styles.Setup.spacer}></View>
 				<Text style={centeredText}>
@@ -75,6 +77,7 @@ export default function SetupBeefweb({ setReady }: SetupScreenProps) {
 					Open config.json in a text editor and add the following:
 				</Text>
 				<CodeText
+					language="JSON"
 					code={`{
     "responseHeaders": {
         "Access-Control-Allow-Origin": "*"

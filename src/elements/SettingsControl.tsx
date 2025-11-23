@@ -232,8 +232,7 @@ function EnumControl<K extends EnumKeys>({
 	value: val,
 	set,
 }: ControlProps<K, EnumTypes>) {
-	if (!isEnumType(item.TYPE))
-		throw new Error("This error should not occor should not happen");
+	if (!isEnumType(item.TYPE)) throw new Error("This error should not happen");
 	const { values, keys } = getEnumValuesAndKeys(item.TYPE);
 
 	return (
