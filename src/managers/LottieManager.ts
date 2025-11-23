@@ -6,7 +6,7 @@ export { LottieLoading };
 export default function updateColors(
 	obj: Record<string, any>,
 	color: string | [number, number, number, number],
-): Record<string, any> {
+): Record<string, unknown> {
 	if (typeof color === "string") color = Color.stringToLottie(color);
 	if (obj && typeof obj === "object") {
 		for (const key in obj) {

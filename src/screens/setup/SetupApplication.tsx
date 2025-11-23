@@ -4,7 +4,7 @@ import { ButtonKeys } from "classes/SettingGroups";
 import { SettingPropTypes } from "classes/Settings";
 import Validator, { Valid } from "classes/Validated";
 import LottieView from "lottie-react-native";
-import { LottieLoading } from "managers/LottiManager";
+import { LottieLoading } from "managers/LottieManager";
 import { useStyles } from "managers/StyleManager";
 import React, { useContext, useEffect, useState } from "react";
 import {

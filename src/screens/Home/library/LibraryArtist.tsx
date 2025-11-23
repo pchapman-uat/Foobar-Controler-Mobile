@@ -3,7 +3,7 @@ import { Columns } from "classes/responses/Player";
 import LibraryGrid, { GridItem } from "elements/LibraryGrid";
 import LibraryItems, { filterSongs } from "elements/LibraryList";
 import LottieView from "lottie-react-native";
-import updateColors, { LottieLoading } from "managers/LottiManager";
+import updateColors, { LottieLoading } from "managers/LottieManager";
 import { useStyles } from "managers/StyleManager";
 import { getColor } from "managers/ThemeManager";
 import React, { useContext, useEffect, useState } from "react";

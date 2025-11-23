@@ -2,7 +2,7 @@ import AppContext from "AppContext";
 import { NavBarItemProps } from "classes/NavBar";
 import { RequestStatus } from "classes/WebRequest";
 import { PlayerResponse } from "classes/responses/Player";
-import updateColors, { LottieLoading } from "managers/LottiManager";
+import updateColors, { LottieLoading } from "managers/LottieManager";
 import { useStyles } from "managers/StyleManager";
 import { getColor } from "managers/ThemeManager";
 import React, { useCallback, useContext, useEffect, useState } from "react";

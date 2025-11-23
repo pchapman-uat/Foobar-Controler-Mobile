@@ -6,7 +6,7 @@ import {
 	Recursive,
 } from "classes/responses/Browser";
 import LottieView from "lottie-react-native";
-import { LottieLoading } from "managers/LottiManager";
+import { LottieLoading } from "managers/LottieManager";
 import { useStyles } from "managers/StyleManager";
 import { useContext, useEffect, useState } from "react";
 import React, {
