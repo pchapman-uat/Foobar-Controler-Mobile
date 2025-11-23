@@ -44,7 +44,7 @@ export default defineConfig([
 					ignore: [],
 				},
 			],
-
+			"react/react-in-jsx-scope": "off",
 			"react-naming-convention/context-name": "warn",
 			"react-naming-convention/filename-extension": ["warn", "as-needed"],
 			"react-naming-convention/use-state": "warn",

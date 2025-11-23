@@ -25,7 +25,6 @@ export default function AlertModal({
 	const { title, message, options } = alertData;
 	const optionOnPress = (func: () => void) => {
 		func();
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		modalProps.onRequestClose?.({} as any);
 	};
 	return (

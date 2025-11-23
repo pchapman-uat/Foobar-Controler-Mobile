@@ -2,7 +2,7 @@
   "expo": {
     "name": "Foobar Controler Mobile",
     "slug": "fooobar-controler-mobile",
-    "version": "0.3.0",
+    "version": "0.4.0",
     "orientation": "default",
     "icon": "./src/assets/logo/half/icon_half.png",
     "userInterfaceStyle": "light",

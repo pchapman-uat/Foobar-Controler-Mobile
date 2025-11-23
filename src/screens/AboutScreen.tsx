@@ -5,7 +5,7 @@ import { ThemeType } from "classes/Themes";
 import { useStyles } from "managers/StyleManager";
 import { GitHubMark, GitHubMarkWhite } from "managers/SVGManager";
 import { getTheme } from "managers/ThemeManager";
-import React, { useContext } from "react";
+import { useContext } from "react";
 import { Linking, Text, TouchableOpacity, View } from "react-native";
 import { Button } from "react-native-elements";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -31,7 +31,7 @@ export default function AboutScreen({ navigation }: AboutProps) {
 				/>
 			</View>
 			<Text style={Styles.Main.header1}>Foobar Controller Mobile</Text>
-			<Text style={Styles.Main.header2}>Version: 0.3.0 - Dev</Text>
+			<Text style={Styles.Main.header2}>Version: 0.4.0</Text>
 
 			<View>
 				<Text style={Styles.Main.centeredText}>
