@@ -1,9 +1,8 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "App";
-import AppContext from "AppContext";
-import { LogMessage } from "classes/Logger";
+import Logger, { LogMessage } from "classes/Logger";
 import { useStyles } from "managers/StyleManager";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import React, { SafeAreaView, Text, View } from "react-native";
 
 type LogNavigationProps = NativeStackNavigationProp<RootStackParamList, "Home">;
@@ -13,7 +12,6 @@ type LogScreenProps = {
 };
 
 export default function LogScreen({}: LogScreenProps) {
-	const { Logger } = useContext(AppContext);
 	const Styles = useStyles("Main");
 	const [messages, setMessages] = useState<LogMessage[]>([]);
 	const onMessage = (message: LogMessage) => [

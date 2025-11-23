@@ -2,7 +2,7 @@ import Slider from "@react-native-community/slider";
 import AppContext from "AppContext";
 import { NavBarItemProps } from "classes/NavBar";
 import ScrollingText from "elements/ScrollingText";
-import { formatTime } from "helpers/index";
+import { formatTime, useLogger } from "helpers/index";
 import { Icon } from "managers/ImageManager";
 import { useStyles } from "managers/StyleManager";
 import {
@@ -49,7 +49,7 @@ export default function NowPlaying({
 	const [volumeValue, setVolumeValue] = useState<number>();
 	const [rating, setRating] = useState<number>();
 	const [playing, setPlaying] = useState(false);
-
+	const logger = useLogger("Now Playing Screen");
 	const onUpdate = async (
 		response: WebPlayerResponse,
 		firstTime: boolean = false,
@@ -83,10 +83,10 @@ export default function NowPlaying({
 
 	const renderImage = (url?: string) => {
 		if (!url || url.trim() === "") {
-			return <Image source={Icon} style={Styles.NowPlaying.alubmArt} />;
+			return <Image source={Icon} style={Styles.NowPlaying.albumArt} />;
 		}
 
-		return <Image source={{ uri: url }} style={Styles.NowPlaying.alubmArt} />;
+		return <Image source={{ uri: url }} style={Styles.NowPlaying.albumArt} />;
 	};
 
 	const onToggle = () => {
@@ -112,7 +112,7 @@ export default function NowPlaying({
 		const length =
 			typeof _length == "string" ? Number.parseFloat(_length) : _length;
 		const onSeekChange = (pos: number) => {
-			console.warn("Seeking");
+			logger.warn(`Seeking to ${pos}`);
 			ctx.BeefWeb.setPosition(pos);
 		};
 		return (
@@ -144,11 +144,10 @@ export default function NowPlaying({
 		const normalized = (valueGain - minGain) / (maxGain - minGain);
 		const percentage = Math.pow(normalized, intensity);
 		const onVolumeChanged = (sliderValue: number) => {
-			console.log("Volume Changed");
 			const adjusted = Math.pow(sliderValue, 1 / intensity);
 			const gain = minGain + adjusted * (maxGain - minGain);
 			const dB = 20 * Math.log10(gain);
-
+			logger.log(`Volume Changed to ${sliderValue} (${dB}dB)`);
 			ctx.BeefWeb.setVolume(dB);
 		};
 		return (
@@ -249,7 +248,7 @@ export default function NowPlaying({
 					{renderImage(albumArt)}
 				</TouchableOpacity>
 			</View>
-			<View style={Styles.NowPlaying.interfaceControler}>
+			<View style={Styles.NowPlaying.interfaceController}>
 				<View>
 					<ScrollingText textStyle={Styles.NowPlaying.npText}>{title}</ScrollingText>
 					<TouchableOpacity
@@ -271,7 +270,7 @@ export default function NowPlaying({
 				{ratingEle(rating)}
 				<View style={Styles.NowPlaying.controlsContainer}>
 					<View style={Styles.NowPlaying.progressBarContainer}>
-						<View style={Styles.NowPlaying.progressBarvalues}>
+						<View style={Styles.NowPlaying.progressBarValues}>
 							<Text style={Styles.NowPlaying.npText}>{formatTime(elapsed)}</Text>
 							{progressBar(elapsed, length)}
 							<Text style={Styles.NowPlaying.npText}>{formatTime(length)}</Text>

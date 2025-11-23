@@ -1,3 +1,4 @@
+import { LoggerBaseClass } from "./Logger";
 import { Validatable } from "./Validated";
 
 export enum ThemeType {
@@ -66,8 +67,6 @@ export class Color {
 	}
 
 	public static fromHex(hex: string): Color {
-		console.log("Look at me!", hex);
-
 		hex = hex.replace(/^#/, "").toLowerCase();
 
 		if (hex.length === 3 || hex.length === 4) {
@@ -93,7 +92,8 @@ export class Color {
 		return new Color(this.r, this.g, this.b, a);
 	}
 }
-export abstract class Theme {
+export abstract class Theme extends LoggerBaseClass {
+	protected SOURCE: string = "Themes";
 	public abstract name: string;
 
 	public abstract type: ThemeType;
@@ -202,6 +202,7 @@ export type ThemeJSON = {
 };
 
 export class CustomTheme extends Light implements Validatable {
+	protected override SOURCE = "Custom Theme";
 	constructor() {
 		super();
 	}
@@ -210,7 +211,6 @@ export class CustomTheme extends Light implements Validatable {
 	}
 
 	public init(json: ThemeJSON) {
-		console.warn(json);
 		this.name = json.name;
 		this.type = json.type;
 
@@ -219,11 +219,11 @@ export class CustomTheme extends Light implements Validatable {
 				try {
 					return Color.fromHex(item);
 				} catch (e) {
-					console.error(`Invalid hex value for "${key}":`, item);
+					this.error(`Invalid hex value for "${key}": ${item}`);
 					throw e;
 				}
 			}
-			console.error(`Missing or invalid color for "${key}":`, item);
+			this.error(`Missing or invalid color for "${key}": ${item}`);
 			throw new Error(`Color for "${key}" is invalid or missing.`);
 		};
 

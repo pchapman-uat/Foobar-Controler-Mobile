@@ -1,5 +1,6 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "App";
+import Logger from "classes/Logger";
 import { Screen } from "enum/Screens";
 import { useStyles } from "managers/StyleManager";
 import { getColor } from "managers/ThemeManager";
@@ -26,14 +27,12 @@ const StatusBar: React.FC<StatusBarProps> = ({ navigator, onNavigate }) => {
 	const [album, setAlbum] = useState("");
 	const onUpdate = (request: WebRequest<PlayerResponse> | undefined) => {
 		if (!request) return;
-		console.log("Updating Status");
 		setStatus(ctx.BeefWeb.status);
 		const columns = request.data.activeItem.columns;
 		if (!columns) return;
 		setTitle(columns.title);
 		setAlbum(columns.album);
 		setState(ctx.BeefWeb.state);
-		console.log(getStateColor(state));
 	};
 
 	const getStatusColor = (status: Status) => {
@@ -48,7 +47,7 @@ const StatusBar: React.FC<StatusBarProps> = ({ navigator, onNavigate }) => {
 	};
 
 	const getStateColor = (state: State) => {
-		console.log(state);
+		Logger.log("Status Bar Color", `Current State: ${state}`);
 		switch (state) {
 			case State.Disconnected:
 				return "red";

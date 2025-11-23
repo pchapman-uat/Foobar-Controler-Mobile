@@ -3,6 +3,7 @@ import { Columns } from "classes/responses/Player";
 import Validator from "classes/Validated";
 import LibraryGrid, { GridItem } from "elements/LibraryGrid";
 import LibraryItems, { filterSongs } from "elements/LibraryList";
+import { useLogger } from "helpers/index";
 import LottieView from "lottie-react-native";
 import updateColors, { LottieLoading } from "managers/LottieManager";
 import { useStyles } from "managers/StyleManager";
@@ -23,18 +24,18 @@ export default function LibraryPlaylist() {
 	);
 	const [view, setView] = useState<Views>("grid");
 	const [loading, setLoading] = useState(false);
-
+	const logger = useLogger("Library Playlist");
 	const onPlaylistChange = async (playlistID: string) => {
 		setPlaylistId(playlistID);
 		const validPlaylistID = Validator.validate(playlistID);
 		if (validPlaylistID.isValid()) {
-			console.log(playlistID);
+			logger.log(`Changing playlist to: ${playlistID}`);
 			const response = await ctx.BeefWeb.getPlaylistItems(validPlaylistID);
 			if (response) {
-				console.log("Setting Songs");
+				logger.log("Setting Songs");
 				setSongs(response.data.items);
 				setFilteredSongs(response.data.items);
-			}
+			} else logger.error("Failed to get songs");
 		}
 	};
 
@@ -79,7 +80,6 @@ export default function LibraryPlaylist() {
 		playlistId,
 		filteredSongs,
 	}: GetViewProps) => {
-		console.log(playlists);
 		const onGridPress = (item: GridItem) => {
 			onPlaylistChange(item.id);
 			setView("list");

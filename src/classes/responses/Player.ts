@@ -31,7 +31,6 @@ export class PlayerResponse {
 	}
 
 	public static fromJSON(json: FullPlayerResponseJSON): PlayerResponse {
-		console.log("Creating from JSON");
 		const rawActiveItem = json.player.activeItem;
 		const rawColumns = rawActiveItem.columns;
 

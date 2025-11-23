@@ -23,6 +23,7 @@ export default function LibraryAlbum({ value }: LibraryItemScreenProps) {
 	const [album, setAlbum] = useState<string>();
 	const [filteredSongs, setFilteredSongs] = useState<Columns[]>([]);
 	const [loading, setLoading] = useState(false);
+	const logger = useLogger("Library Album");
 	useEffect(() => {
 		const getAllSongs = async () => {
 			setLoading(true);
@@ -48,9 +49,9 @@ export default function LibraryAlbum({ value }: LibraryItemScreenProps) {
 		setFilteredSongs(filterSongs(text, songs));
 	};
 	const onAlbumChange = (album: string) => {
+		logger.log(`Album Changed to ${album}`);
 		setAlbum(album);
 		const newSongs = filterSongs(album, songs, "album");
-		console.log(newSongs);
 		setFilteredSongs(newSongs);
 		return newSongs;
 	};
@@ -82,7 +83,7 @@ export default function LibraryAlbum({ value }: LibraryItemScreenProps) {
 		const playAll = async (item: GridItem) => {
 			const newSongs = onAlbumChange(item.title);
 			await ctx.BeefWeb.addToMobilePlaylist(newSongs.map((item) => item.path));
-			console.log("Done!");
+			logger.log("Playing all songs");
 		};
 		switch (view) {
 			case "grid":

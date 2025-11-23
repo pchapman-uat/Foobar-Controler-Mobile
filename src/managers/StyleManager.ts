@@ -1,4 +1,5 @@
 import AppContext from "AppContext";
+import Logger from "classes/Logger";
 import { AppTheme, StyleProps } from "classes/Settings";
 import { Orientation } from "hooks/useOrientation";
 import { useContext, useMemo } from "react";
@@ -54,7 +55,7 @@ export function createStyle<T extends Styles>(
 	ori: Orientation,
 	...styles: T[]
 ): Pick<StyleMapType, T> {
-	console.log("updating style");
+	Logger.log("Style Manager", "updating style");
 	const result = {} as Pick<StyleMapType, T>;
 	for (const style of styles) {
 		result[style] = styleMap[style]({ theme, ori });

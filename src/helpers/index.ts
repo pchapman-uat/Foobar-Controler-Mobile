@@ -1,3 +1,4 @@
+import Logger, { LoggerProps } from "classes/Logger";
 import { BrowserDirectory, BrowserItem } from "classes/responses/Browser";
 
 export function formatTime(seconds: number = 0): string {
@@ -12,6 +13,7 @@ export function printTree(
 	isLast: boolean = true,
 ): void {
 	const connector = isLast ? "└── " : "├── ";
+	// eslint-disable-next-line no-console
 	console.log(prefix + connector + item.name);
 
 	if (item instanceof BrowserDirectory && item.children.length > 0) {
@@ -43,4 +45,14 @@ export function indexToKey<
 >(obj: T, index: number): K {
 	const keys = Object.keys(obj) as K[];
 	return keys[index];
+}
+export function useLogger(source: string) {
+	return {
+		log: (msg: string, props?: LoggerProps | undefined) =>
+			Logger.log(source, msg, props),
+		warn: (msg: string, props?: LoggerProps | undefined) =>
+			Logger.warn(source, msg, props),
+		error: (msg: string, props?: LoggerProps | undefined) =>
+			Logger.error(source, msg, props),
+	};
 }

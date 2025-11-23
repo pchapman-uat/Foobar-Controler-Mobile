@@ -2,6 +2,7 @@ import AppContext from "AppContext";
 import { Columns } from "classes/responses/Player";
 import LibraryGrid, { GridItem } from "elements/LibraryGrid";
 import LibraryItems, { filterSongs } from "elements/LibraryList";
+import { useLogger } from "helpers/index";
 import LottieView from "lottie-react-native";
 import updateColors, { LottieLoading } from "managers/LottieManager";
 import { useStyles } from "managers/StyleManager";
@@ -22,6 +23,7 @@ export default function LibraryArtist({ value }: LibraryItemScreenProps) {
 	const [artist, setArtist] = useState<string>();
 	const [filteredSongs, setFilteredSongs] = useState<Columns[]>([]);
 	const [loading, setLoading] = useState(false);
+	const logger = useLogger("Library Artist");
 	useEffect(() => {
 		const getAllSongs = async () => {
 			setLoading(true);
@@ -50,9 +52,9 @@ export default function LibraryArtist({ value }: LibraryItemScreenProps) {
 		setFilteredSongs(filterSongs(text, songs, "artist"));
 	};
 	const onArtistChange = (artist: string) => {
+		logger.log(`Artist Changed to ${artist}`);
 		setArtist(artist);
 		const newSongs = filterSongs(artist, songs, "artist");
-		console.log(newSongs);
 		setFilteredSongs(newSongs);
 		return newSongs;
 	};
@@ -80,7 +82,7 @@ export default function LibraryArtist({ value }: LibraryItemScreenProps) {
 		const playAll = async (item: GridItem) => {
 			const newSongs = onArtistChange(item.title);
 			await ctx.BeefWeb.addToMobilePlaylist(newSongs.map((item) => item.path));
-			console.log("Done!");
+			logger.log("Done Playing all Songs");
 		};
 		switch (view) {
 			case "grid":

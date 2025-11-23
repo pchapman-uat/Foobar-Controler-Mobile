@@ -1,5 +1,4 @@
-/* eslint-disable no-console */
-import Listener from "./Listener";
+/* eslint-disable no-console */ import Listener from "./Listener";
 
 export enum LogType {
 	MESSAGE,
@@ -27,7 +26,7 @@ export type LoggerEvents = {
 	warnMessage: LogMessage<LogType.WARNING | LogType.ERROR>;
 	errorMessage: LogMessage<LogType.ERROR>;
 };
-class Logger extends Listener<LoggerEvents> {
+class LoggerClass extends Listener<LoggerEvents> {
 	private send(
 		kind: LogType,
 		message: string,
@@ -71,38 +70,135 @@ class Logger extends Listener<LoggerEvents> {
 	public warn(source: string, message: string, props?: LoggerProps) {
 		this.send(LogType.WARNING, message, source, props);
 	}
-	public error(source: string, message: string, props?: LoggerProps) {
+	public error(
+		source: string,
+		message: string,
+		props?: LoggerProps,
+		e?: unknown,
+	) {
 		this.send(LogType.ERROR, message, source, props);
+		console.error(e);
 	}
 }
-
-interface LoggerProps {
+export type Stringifiable = { toString(): string };
+type LogMode = "Log" | "Warn" | "Error";
+export interface LoggerProps {
 	internal?: boolean;
 }
 
 export abstract class LoggerBaseClass<
-	E extends Record<string, unknown>,
+	E extends Record<string, unknown> = {},
 > extends Listener<E> {
-	private readonly LOGGER: Logger;
+	private readonly LOGGER: LoggerClass = Logger;
 	protected abstract readonly SOURCE: string;
-	constructor(logger: Logger) {
+	constructor() {
 		super();
-		this.LOGGER = logger;
 	}
+	private handleMessage(
+		mode: LogMode,
+		messageOrMessages: Stringifiable | Stringifiable[],
+		propsOrNothing?: LoggerProps | Stringifiable,
+		...rest: Stringifiable[]
+	): void {
+		let messages: Stringifiable[] = [];
+		let props: LoggerProps | undefined = undefined;
 
-	protected log(message: string, props?: LoggerProps) {
-		this.LOGGER.log(this.SOURCE, message, props);
+		if (Array.isArray(messageOrMessages)) {
+			messages = messageOrMessages;
+			if (
+				propsOrNothing &&
+				typeof propsOrNothing === "object" &&
+				"toString" in propsOrNothing === false
+			) {
+				props = propsOrNothing as LoggerProps;
+			}
+		} else if (rest.length > 0) {
+			messages = [messageOrMessages, propsOrNothing as Stringifiable, ...rest];
+		} else {
+			messages = [messageOrMessages];
+			if (
+				propsOrNothing &&
+				typeof propsOrNothing === "object" &&
+				"toString" in propsOrNothing === false
+			) {
+				props = propsOrNothing as LoggerProps;
+			}
+		}
+		const stringMessages = messages.map((m) => m.toString()).join(" ");
+		switch (mode) {
+			case "Log":
+				this.LOGGER.log(this.SOURCE, stringMessages, props);
+			case "Warn":
+			case "Error":
+		}
 	}
-	protected warn(message: string, props?: LoggerProps) {
-		this.LOGGER.warn(this.SOURCE, message, props);
+	protected log(message: Stringifiable, props?: LoggerProps): void;
+	protected log(message: Stringifiable[], props?: LoggerProps): void;
+	protected log(...messages: Stringifiable[]): void;
+	protected log(
+		messageOrMessages: Stringifiable | Stringifiable[],
+		propsOrNothing?: LoggerProps | Stringifiable,
+		...rest: Stringifiable[]
+	): void {
+		this.handleMessage("Log", messageOrMessages, propsOrNothing, ...rest);
 	}
-	protected error(message: string | unknown, props?: LoggerProps): void {
-		if (message instanceof Error) this.error(message.message, props);
-		else if (typeof message == "string")
-			this.LOGGER.error(this.SOURCE, message, props);
-		else this.LOGGER.error(this.SOURCE, "Unknown Error Occurred", props);
+	protected warn(message: Stringifiable, props?: LoggerProps): void;
+	protected warn(message: Stringifiable[], props?: LoggerProps): void;
+	protected warn(...messages: Stringifiable[]): void;
+	protected warn(
+		messageOrMessages: Stringifiable | Stringifiable[],
+		propsOrNothing?: LoggerProps | Stringifiable,
+		...rest: Stringifiable[]
+	): void {
+		this.handleMessage("Warn", messageOrMessages, propsOrNothing, ...rest);
+	}
+	protected error(
+		message: Error | Stringifiable | unknown,
+		props?: LoggerProps,
+	): void;
+	protected error(
+		message: (Error | Stringifiable | unknown)[],
+		props?: LoggerProps,
+	): void;
+	protected error(...messages: (Error | Stringifiable | unknown)[]): void;
+	protected error(
+		messageOrMessages:
+			| Error
+			| Stringifiable
+			| unknown
+			| (Error | Stringifiable | unknown)[],
+		propsOrNothing?: LoggerProps | Stringifiable,
+		...rest: (Error | Stringifiable | unknown)[]
+	): void {
+		const normalize = (msg: Error | Stringifiable | unknown): Stringifiable => {
+			if (msg instanceof Error) return msg.message;
+			if (typeof msg === "string") return msg;
+			if (msg && typeof msg === "object" && "toString" in msg)
+				return msg as Stringifiable;
+			return { toString: () => "Unknown Error Occurred" };
+		};
+
+		if (Array.isArray(messageOrMessages)) {
+			const normalized = messageOrMessages.map(normalize);
+			return this.handleMessage("Error", normalized, propsOrNothing as any);
+		}
+
+		if (rest.length > 0) {
+			const normalized = [
+				normalize(messageOrMessages),
+				...(propsOrNothing ? [normalize(propsOrNothing)] : []),
+				...rest.map(normalize),
+			];
+			return this.handleMessage("Error", normalized);
+		}
+
+		const normalized = normalize(messageOrMessages);
+
+		return this.handleMessage("Error", normalized, propsOrNothing as any);
 	}
 }
 
-export default new Logger();
-export { Logger as LoggerClass };
+const Logger = new LoggerClass();
+export default Logger;
+
+export { LoggerClass as LoggerClass };

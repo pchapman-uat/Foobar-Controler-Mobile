@@ -1,3 +1,4 @@
+import Logger from "classes/Logger";
 import { AppTheme, SettingsDefaults } from "classes/Settings";
 import Themes, { CustomTheme, Theme, ThemeJSON } from "classes/Themes";
 
@@ -17,9 +18,8 @@ export function getColor(
 
 export function initCustomTheme(customTheme: Theme) {
 	const theme = getCustomTheme();
-	console.warn("Hello?", theme);
 	if (theme instanceof CustomTheme) {
-		console.warn("Custom Theme");
+		Logger.warn("Theme Manager", "User is using a Custom Theme");
 		if (!customTheme) return;
 		const data = JSON.parse(JSON.stringify(customTheme)) as ThemeJSON;
 		theme.init(data);

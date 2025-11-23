@@ -1,8 +1,6 @@
 import LottieLoading from "assets/lottie/loading.lottie.json";
 import { Color } from "classes/Themes";
 export { LottieLoading };
-
-/* eslint-disable @typescript-eslint/no-explicit-any */
 export default function updateColors(
 	obj: Record<string, any>,
 	color: string | [number, number, number, number],

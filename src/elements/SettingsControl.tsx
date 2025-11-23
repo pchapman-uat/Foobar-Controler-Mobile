@@ -59,8 +59,8 @@ type CustomThemeControlProps = {
 	selectedColor: ColorFormatsObject | undefined;
 	setCustomTheme: React.Dispatch<React.SetStateAction<CustomTheme | undefined>>;
 	customTheme: CustomTheme | undefined;
-	setColorModalVisable: React.Dispatch<React.SetStateAction<boolean>>;
-	colorModalVisable: boolean;
+	setColorModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
+	colorModalVisible: boolean;
 };
 
 type ControlProps<
@@ -268,7 +268,7 @@ function CustomThemeControl<K extends CustomThemeKeys>({
 		setSelectedColorKey,
 		setCustomTheme,
 		customTheme,
-		setColorModalVisable,
+		setColorModalVisible: setColorModalVisable,
 	} = customThemeProps;
 
 	const custom = getCustomTheme();

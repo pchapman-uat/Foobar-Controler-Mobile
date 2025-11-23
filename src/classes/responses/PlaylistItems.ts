@@ -12,7 +12,6 @@ export class PlaylistItemsResponse {
 	public static fromJSON(
 		json: FullPlaylistItemsResponseJSON,
 	): PlaylistItemsResponse {
-		console.log("Creating from JSON");
 		const rawColumns: { columns: RawColumns }[] = json.playlistItems.items;
 		const columns = rawColumns.map((item) => new Columns(item.columns));
 		return new PlaylistItemsResponse(

@@ -1,4 +1,3 @@
-import Logger, { LoggerClass } from "classes/Logger";
 import { AlertProps } from "elements/AlertModal";
 import { Orientation } from "hooks/useOrientation";
 import React from "react";
@@ -13,17 +12,15 @@ export interface AppContextType {
 	orientation: Orientation;
 	alert: (props: AlertProps) => void;
 	setModal: (element: React.JSX.Element) => void;
-	Logger: LoggerClass;
 }
 const defaultContext: AppContextType = {
-	BeefWeb: new Beefweb(Logger),
+	BeefWeb: new Beefweb(),
 	Settings: Settings,
 	theme: AppTheme.Light,
 	setTheme: () => {},
 	orientation: "unknown",
 	setModal: () => {},
 	alert: () => {},
-	Logger,
 };
 
 export default React.createContext<AppContextType>(defaultContext);

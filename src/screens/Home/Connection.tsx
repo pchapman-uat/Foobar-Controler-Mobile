@@ -2,6 +2,7 @@ import AppContext from "AppContext";
 import { NavBarItemProps } from "classes/NavBar";
 import { RequestStatus } from "classes/WebRequest";
 import { PlayerResponse } from "classes/responses/Player";
+import { useLogger } from "helpers/index";
 import updateColors, { LottieLoading } from "managers/LottieManager";
 import { useStyles } from "managers/StyleManager";
 import { getColor } from "managers/ThemeManager";
@@ -17,16 +18,17 @@ export default function Connection({}: NavBarItemProps<"Connection">) {
 	const [infoVersion, setInfoVersion] = useState<string>("");
 	const [infoPluginVersion, setInfoPluginVersion] = useState<string>("");
 	const [status, setStatus] = useState<string>("");
-
+	const logger = useLogger("Connection Screen");
 	const connectToBeefweb = useCallback(async () => {
 		setStatus("Connecting... Please Wait");
 		const response = await ctx.BeefWeb.getPlayer();
-		console.log(response);
-		if (!response || response.status != RequestStatus.OK) onConnectFail();
-		else onConnectSucess(response.data);
+		if (!response || response.status != RequestStatus.OK)
+			onConnectFail(response?.status);
+		else onConnectSuccess(response.data);
 	}, [ctx]);
 
-	const onConnectSucess = (response: PlayerResponse) => {
+	const onConnectSuccess = (response: PlayerResponse) => {
+		logger.log("Successfully connected to Beefweb");
 		setStatus("Connected!");
 		setInfoName(response.info.name);
 		setInfoTitle(response.info.title);
@@ -34,15 +36,20 @@ export default function Connection({}: NavBarItemProps<"Connection">) {
 		setInfoPluginVersion(response.info.pluginVersion);
 	};
 
-	const onConnectFail = () => {
+	const onConnectFail = (status?: RequestStatus) => {
+		if (status)
+			logger.error(`Failed to connect to Beefweb with error code: ${status}`);
+		else
+			logger.error(
+				`Failed to get a response from Beefweb, please check your internet connection`,
+			);
 		setStatus("Failed");
 	};
 
 	useEffect(() => {
-		console.log("Running");
 		ctx.BeefWeb.addEventListener(
 			"update",
-			(response) => response?.data && onConnectSucess(response.data),
+			(response) => response?.data && onConnectSuccess(response.data),
 		);
 	}, []);
 

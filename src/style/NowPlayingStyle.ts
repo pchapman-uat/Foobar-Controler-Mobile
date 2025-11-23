@@ -15,7 +15,7 @@ export default ({ theme, ori }: StyleProps) => {
 			width: "100%",
 			flexDirection: getOri(ori, "landscape", "row", "column"),
 		},
-		alubmArt: {
+		albumArt: {
 			height: imageSize,
 			width: imageSize,
 			alignSelf: "center",
@@ -31,14 +31,14 @@ export default ({ theme, ori }: StyleProps) => {
 			justifyContent: "space-around",
 		},
 		controlsContainer: {},
-		interfaceControler: {
+		interfaceController: {
 			width: getOri(ori, "landscape", "45%", "100%"),
 			padding: 10,
 		},
 		progressBarContainer: {
 			display: "flex",
 		},
-		progressBarvalues: {
+		progressBarValues: {
 			display: "flex",
 			flexDirection: "row",
 			justifyContent: "space-between",

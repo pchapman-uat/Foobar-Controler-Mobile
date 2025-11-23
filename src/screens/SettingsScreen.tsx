@@ -13,7 +13,7 @@ import { Color, CustomTheme, Theme } from "classes/Themes";
 import Validator from "classes/Validated";
 import ColorPickers, { ColorPickerOptions } from "elements/ColorPickers";
 import SettingsControl, { ButtonControl } from "elements/SettingsControl";
-import { isPrimitive } from "helpers/index";
+import { isPrimitive, useLogger } from "helpers/index";
 import { useStyles } from "managers/StyleManager";
 import { InfoSVG } from "managers/SVGManager";
 import { getColor, initCustomTheme } from "managers/ThemeManager";
@@ -41,14 +41,15 @@ export default function SettingsScreen({ navigation }: SettingsProps) {
 	const [loaded, setLoaded] = useState(false);
 	const [settingIndex, setSettingIndex] = useState<number>();
 
-	const [colorModalVisable, setColorModalVisable] = useState(false);
+	const [colorModalVisible, setColorModalVisible] = useState(false);
 	const [selectedColorKey, setSelectedColorKey] = useState<keyof Theme>();
 	const [selectedColor, setSelectedColor] = useState<ColorFormatsObject>();
 	const [customTheme, setCustomTheme] = useState<CustomTheme>();
 	const [infoHeading, setInfoHeading] = useState("");
 	const [infoText, setInfoText] = useState("");
-	const [infoModalVisable, setInfoModalVisable] = useState(false);
+	const [infoModalVisible, setInfoModalVisible] = useState(false);
 	const [infoDefaultValue, setInfoDefaultValue] = useState("");
+	const logger = useLogger("Settings Screen");
 	const onSave = async () => {
 		const entries = Object.entries(values) as [
 			AllowedKeys,
@@ -57,7 +58,7 @@ export default function SettingsScreen({ navigation }: SettingsProps) {
 
 		try {
 			entries.forEach(([key, value]) => {
-				console.log("Setting: ", key, " To: ", value);
+				logger.log(`Setting: ${key} To: ${value}`);
 				ctx.Settings.set(key, Validator.validate(value));
 			});
 
@@ -76,7 +77,8 @@ export default function SettingsScreen({ navigation }: SettingsProps) {
 				if (validPort.isValid()) ctx.BeefWeb.setPort(validPort);
 			}
 		} catch (error) {
-			console.error(error);
+			if (error instanceof Error) logger.log(error.message);
+			else logger.log("Unknown Error Occurred");
 		}
 		navigation.goBack();
 	};
@@ -99,7 +101,7 @@ export default function SettingsScreen({ navigation }: SettingsProps) {
 	const onInfoPress = (text: string, heading: string, defaultValue: unknown) => {
 		setInfoText(text);
 		setInfoHeading(heading);
-		setInfoModalVisable(true);
+		setInfoModalVisible(true);
 		if (isPrimitive(defaultValue)) {
 			const value = defaultValue.toString();
 			setInfoDefaultValue(value === "" ? "None" : value);
@@ -149,8 +151,8 @@ export default function SettingsScreen({ navigation }: SettingsProps) {
 							selectedColor,
 							setCustomTheme,
 							customTheme,
-							setColorModalVisable,
-							colorModalVisable,
+							setColorModalVisible: setColorModalVisible,
+							colorModalVisible: colorModalVisible,
 						}}
 					/>
 				) : (
@@ -201,7 +203,7 @@ export default function SettingsScreen({ navigation }: SettingsProps) {
 		onColorClose();
 	};
 	const onColorClose = () => {
-		setColorModalVisable(false);
+		setColorModalVisible(false);
 		setSelectedColor(undefined);
 	};
 	return (
@@ -247,9 +249,9 @@ export default function SettingsScreen({ navigation }: SettingsProps) {
 			</View>
 			<Modal
 				transparent
-				visible={colorModalVisable}
+				visible={colorModalVisible}
 				animationType="fade"
-				onRequestClose={() => setColorModalVisable(false)}
+				onRequestClose={() => setColorModalVisible(false)}
 			>
 				<View style={Styles.Modal.modalOverlay}>
 					<View style={Styles.Modal.menu}>
@@ -279,9 +281,9 @@ export default function SettingsScreen({ navigation }: SettingsProps) {
 			</Modal>
 			<Modal
 				transparent
-				visible={infoModalVisable}
+				visible={infoModalVisible}
 				animationType="fade"
-				onRequestClose={() => setInfoModalVisable(false)}
+				onRequestClose={() => setInfoModalVisible(false)}
 			>
 				<View style={Styles.Modal.modalOverlay}>
 					<View style={Styles.Modal.menu}>

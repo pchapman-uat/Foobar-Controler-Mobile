@@ -1,5 +1,6 @@
 import AppContext from "AppContext";
 import BeefWeb from "classes/BeefWeb";
+import Logger from "classes/Logger";
 import Validator, { Valid } from "classes/Validated";
 import { Icon } from "managers/ImageManager";
 import { useStyles } from "managers/StyleManager";
@@ -53,13 +54,11 @@ export default function LibraryGrid({
 		};
 	}, []);
 	const onUpdate = (response: WebPlayerResponse) => {
-		console.log(activePlaylistId);
 		if (response) {
 			setActivePlaylistId(response.data.activeItem.playlistId);
 		}
 	};
 	const handleLongPress = (song: GridItem) => {
-		console.log("Long Press");
 		setSelectedItem(song);
 		setModalVisible(true);
 	};
@@ -150,7 +149,7 @@ export default function LibraryGrid({
 									onPress={() => {
 										setModalVisible(false);
 										if (selectedItem) item.onPress(selectedItem);
-										else console.error("No Item Selected");
+										else Logger.error("Library Grid", "No Item Selected");
 									}}
 								>
 									<Text style={Styles.Modal.menuItem}>{item.text}</Text>

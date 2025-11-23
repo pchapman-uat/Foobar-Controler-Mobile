@@ -1,3 +1,4 @@
+import Logger from "classes/Logger";
 import Validator from "classes/Validated";
 import { useStyles } from "managers/StyleManager";
 import React, { useContext, useState } from "react";
@@ -15,9 +16,8 @@ export default function LibraryItems({ playlistId, songs }: LibraryItemsProps) {
 	const [selectedIndex, setSelectedIndex] = useState<number>();
 	const ctx = useContext(AppContext);
 	const Styles = useStyles("Main", "Library", "Modal");
-	console.log("Displaying Songs");
 	if (!songs) {
-		console.warn("Songs are null");
+		Logger.warn("Library List", "Songs are null");
 		return;
 	}
 

@@ -1,4 +1,5 @@
 import { Beefweb } from "classes/BeefWeb";
+import Logger from "classes/Logger";
 import Validator from "classes/Validated";
 
 export enum BrowserItemType {
@@ -166,7 +167,7 @@ export class BrowserDirectory extends BrowserItem {
 		custom: Record<string, FileCategory>,
 		recursive: Recursive,
 	) {
-		console.log("Initializing: ", this.name);
+		Logger.log("Browser", `Initializing: ${this.name}`);
 		const validPath = Validator.validate(this.path);
 		if (!validPath.isValid()) return this;
 		const response = await beefweb.getBrowserEntries(validPath);

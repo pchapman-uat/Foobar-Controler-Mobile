@@ -48,7 +48,6 @@ export class ChoiceArrayItems<T extends ArrayItemType> implements Validatable {
 	}
 
 	public getItem() {
-		console.warn(this.ITEMS[this.selectedIndex]);
 		return this.ITEMS[this.selectedIndex];
 	}
 	public static init(json: ChoiceArrayItemsJSON<ArrayItemType>) {

@@ -3,6 +3,7 @@ import { NavBarItemProps } from "classes/NavBar";
 import Validator from "classes/Validated";
 import PlayQueueResponse from "classes/responses/PlayQueue";
 import { Columns } from "classes/responses/Player";
+import { useLogger } from "helpers/index";
 import { useStyles } from "managers/StyleManager";
 import React, { useContext, useState } from "react";
 import {
@@ -22,7 +23,7 @@ export default function PlaybackQueue({}: NavBarItemProps<"PlaybackQueue">) {
 	const [selectedSong, setSelectedSong] = useState<Columns | null>(null);
 	const [selectedIndex, setSelectedIndex] = useState<number>();
 	const [selectedPlaylist, setSelectedPlaylist] = useState<string>();
-
+	const logger = useLogger("Playback Queue");
 	const getPlaybackQueue = async () => {
 		const response = await ctx.BeefWeb.getPlaybackQueue();
 		setPlaybackQueue(response?.data);
@@ -30,7 +31,7 @@ export default function PlaybackQueue({}: NavBarItemProps<"PlaybackQueue">) {
 
 	const createPlayqueueList = (playQueue?: PlayQueueResponse) => {
 		if (!playQueue) {
-			console.warn("Playqueue is empty");
+			logger.log("Playqueue is empty");
 			return;
 		}
 		const handleLongPress = (
@@ -52,8 +53,7 @@ export default function PlaybackQueue({}: NavBarItemProps<"PlaybackQueue">) {
 				!validSelectedPlaylist.isValid() ||
 				!validSelectedIndex.isValid()
 			) {
-				console.log(selectedSong?.trackNumber, selectedPlaylist, selectedIndex);
-				console.warn("No Song Selected");
+				logger.error("No song selected or invalid data");
 				return;
 			}
 			ctx.BeefWeb.removeFromQueue(

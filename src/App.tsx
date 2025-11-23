@@ -38,7 +38,6 @@ export default function App() {
 	const { BeefWeb } = useContext(AppContext);
 	const firstTime = (value: boolean) => {
 		const onYes = () => {
-			console.log(navigationRef);
 			Settings.set("FIRST_TIME", new Valid(false));
 			navigationRef.navigate("Setup");
 		};
@@ -46,7 +45,7 @@ export default function App() {
 			Settings.set("FIRST_TIME", new Valid(false));
 		};
 		if (value) {
-			console.log("First Time!");
+			Logger.log("Application", "First Time!");
 			alert({
 				title: "Welcome!",
 				message:
@@ -91,22 +90,20 @@ export default function App() {
 			BeefWeb.setState(false);
 		};
 	}, []);
-	const [modalVisable, setModalVisable] = useState(false);
+	const [modalVisible, setModalVisible] = useState(false);
 	const [modalContent, setModalContent] = useState<React.JSX.Element | null>(
 		null,
 	);
-	const [alertModalVisable, setAlertModalVisable] = useState(false);
+	const [alertModalVisible, setAlertModalVisible] = useState(false);
 	const [alertModalProps, setAlertModalProps] = useState<AlertProps>();
 	const alert = (props: AlertProps) => {
 		setAlertModalProps(props);
-		setAlertModalVisable(true);
+		setAlertModalVisible(true);
 	};
 
 	const setModal = (content: React.JSX.Element) => {
-		console.log("Setting Modal");
-		console.log(content);
 		setModalContent(content);
-		setModalVisable(true);
+		setModalVisible(true);
 	};
 	const contextValue = useMemo<AppContextType>(
 		() => ({
@@ -117,7 +114,6 @@ export default function App() {
 			orientation,
 			setModal,
 			alert,
-			Logger,
 		}),
 		[theme, orientation, setModal, alert],
 	);
@@ -134,24 +130,24 @@ export default function App() {
 				</Stack.Navigator>
 				<Modal
 					transparent
-					visible={modalVisable}
+					visible={modalVisible}
 					animationType="fade"
-					onRequestClose={() => setModalVisable(false)}
+					onRequestClose={() => setModalVisible(false)}
 				>
 					<View style={Styles.Modal.modalOverlay}>
 						<View style={Styles.Modal.menu}>
 							{modalContent}
 							<View>
-								<Button title={"Close"} onPress={() => setModalVisable(false)} />
+								<Button title={"Close"} onPress={() => setModalVisible(false)} />
 							</View>
 						</View>
 					</View>
 				</Modal>
 				<AlertModal
 					transparent
-					visible={alertModalVisable}
+					visible={alertModalVisible}
 					animationType="fade"
-					onRequestClose={() => setAlertModalVisable(false)}
+					onRequestClose={() => setAlertModalVisible(false)}
 					Styles={Styles}
 					alertData={alertModalProps}
 				/>

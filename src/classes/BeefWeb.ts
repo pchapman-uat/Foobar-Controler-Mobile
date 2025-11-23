@@ -12,7 +12,7 @@ import {
 	WebPlayerResponse,
 } from "../managers/TypeManager";
 import { ChoiceArrayItems } from "./ArrayItems";
-import { LoggerBaseClass, LoggerClass } from "./Logger";
+import { LoggerBaseClass } from "./Logger";
 import { AddPlaylistResponse } from "./responses/AddPlaylist";
 import {
 	BrowserEntriesResponse,
@@ -128,8 +128,8 @@ export class Beefweb extends LoggerBaseClass<BeefWebEvents> {
 	 */
 	private mainInterval?: ReturnType<typeof setInterval>;
 
-	constructor(logger: LoggerClass) {
-		super(logger);
+	constructor() {
+		super();
 		this.init();
 	}
 

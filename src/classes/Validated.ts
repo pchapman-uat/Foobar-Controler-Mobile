@@ -1,4 +1,7 @@
-export abstract class UnknownValidation<T> {
+import { LoggerBaseClass } from "./Logger";
+
+export abstract class UnknownValidation<T> extends LoggerBaseClass {
+	protected SOURCE = "Validation";
 	public abstract isValid(): this is Valid<T>;
 }
 
@@ -21,10 +24,16 @@ export class Valid<T> extends UnknownValidation<T> {
 
 export class Invalid<T> extends UnknownValidation<T> {
 	protected readonly VALUE: T | null | undefined;
+	protected override SOURCE = "Invalid Validation";
 
-	constructor(value?: T | null) {
+	constructor(value?: T | null, reason?: string | null) {
 		super();
 		this.VALUE = value;
+		if (reason) {
+			this.warn(typeof value, "was not valid for", reason);
+		} else {
+			this.warn(`${typeof value} was not valid for unknown reason`);
+		}
 	}
 
 	public isValid(): this is Valid<T> {
@@ -46,7 +55,8 @@ type SupportedTypes = {
 		: never;
 }[keyof ValidatorMap];
 
-export default class Validator {
+export default class Validator extends LoggerBaseClass {
+	protected SOURCE = "Validator";
 	private static readonly VALIDATORS: ValidatorMap = {
 		string: (v) => v.trim().length > 0,
 		number: (v) => !isNaN(v),
@@ -68,8 +78,7 @@ export default class Validator {
 
 		if (type === "object") {
 			if (typeof (value as any).validate !== "function") {
-				console.warn("Object lacks validate() method", value);
-				return new Invalid(value);
+				return new Invalid(value, "Object lacks validate() method");
 			}
 		}
 

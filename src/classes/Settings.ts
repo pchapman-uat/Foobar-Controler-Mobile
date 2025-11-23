@@ -12,6 +12,7 @@ import { Screen } from "enum/Screens";
 import { getItemAsync, setItemAsync } from "expo-secure-store";
 import { Orientation } from "hooks/useOrientation";
 import { ArrayItems, ChoiceArrayItems } from "./ArrayItems";
+import Logger from "./Logger";
 import { Recursive } from "./responses/Browser";
 import { ButtonKeys } from "./SettingGroups";
 import { CustomTheme } from "./Themes";
@@ -184,7 +185,12 @@ class SettingsProperty<T> {
 			const json = JSON.stringify(value);
 			await AsyncStorage.setItem(this.getKey(), json);
 		} catch (e) {
-			console.error(e);
+			Logger.error(
+				"Settings",
+				`Error setting item with key "${this.getKey()}"`,
+				{},
+				e,
+			);
 		}
 	}
 
@@ -195,7 +201,12 @@ class SettingsProperty<T> {
 			const jsonValue = await AsyncStorage.getItem(this.getKey());
 			return jsonValue != null ? (JSON.parse(jsonValue) as T) : fallback;
 		} catch (e) {
-			console.error(`Error retrieving item with key "${this.getKey()}":`, e);
+			Logger.error(
+				"Settings",
+				`Error retrieving item with key "${this.getKey()}"`,
+				{},
+				e,
+			);
 			return fallback;
 		}
 	}
@@ -217,7 +228,12 @@ class EncryptedSettingsProperty extends SettingsProperty<string> {
 		try {
 			await setItemAsync(this.KEY, value);
 		} catch (e) {
-			console.error(e);
+			Logger.error(
+				"Settings",
+				`Failed to set encrypted setting with key ${this.KEY}`,
+				{},
+				e,
+			);
 		}
 	}
 	protected override async getHelper(fallback: string): Promise<string>;
@@ -225,11 +241,15 @@ class EncryptedSettingsProperty extends SettingsProperty<string> {
 	protected override async getHelper(
 		fallback: string | null,
 	): Promise<string | null> {
-		console.warn("Look at me!", this.KEY);
 		try {
 			return getItemAsync(this.KEY);
 		} catch (e) {
-			console.error(`Error retrieving item with key "${this.KEY}":`, e);
+			Logger.error(
+				"Settings",
+				`Error retrieving encrypted item with key "${this.KEY}":`,
+				{},
+				e,
+			);
 			return fallback;
 		}
 	}

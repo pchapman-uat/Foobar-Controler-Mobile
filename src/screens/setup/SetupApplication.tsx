@@ -3,6 +3,7 @@ import { ChoiceArrayItems } from "classes/ArrayItems";
 import { ButtonKeys } from "classes/SettingGroups";
 import { SettingPropTypes } from "classes/Settings";
 import Validator, { Valid } from "classes/Validated";
+import { useLogger } from "helpers/index";
 import LottieView from "lottie-react-native";
 import { LottieLoading } from "managers/LottieManager";
 import { useStyles } from "managers/StyleManager";
@@ -33,6 +34,7 @@ export default function SetupApplication({
 	const [modalVisible, setModalVisible] = useState(false);
 	const [scannedIps, setScannedIps] = useState<string[]>([]);
 	const [ipAddress, setIpAddress] = useState<string>();
+	const logger = useLogger("Setup Application");
 	const onSave = () => {
 		const entries = Object.entries(values) as [
 			AllowedKeys,
@@ -40,7 +42,7 @@ export default function SetupApplication({
 		][];
 
 		entries.map(([key, value]) => {
-			console.log("Setting: ", key, " To: ", value);
+			logger.log(`Setting: ${key} To: ${value}`);
 			return ctx.Settings.set(key, Validator.validate(value));
 		});
 	};
@@ -51,7 +53,7 @@ export default function SetupApplication({
 		const validIp = Validator.validate(ip);
 
 		if (validIp.isValid()) {
-			console.log("Setting Beefweb Connection to ", validIp.get());
+			logger.log(`Setting Beefweb Connection to ${validIp.get()}`);
 			ctx.BeefWeb.setConnection(validIp, new Valid(8880));
 			ctx.Settings.PROPS.IP_ADDRESS.set(
 				new ChoiceArrayItems<string>(validIp.get()),
@@ -80,7 +82,6 @@ export default function SetupApplication({
 	};
 
 	useEffect(() => {
-		console.log(ipAddress);
 		if (ipAddress) setReady(true);
 		else setReady(false);
 	}, [ipAddress]);

@@ -26,7 +26,6 @@ export class WebRequest<T> {
 	): Promise<WebRequest<T>> {
 		const status = response.status;
 		const json = await response.data;
-		console.log(json);
 		const data = type.fromJSON(json);
 		return new WebRequest(status, data);
 	}

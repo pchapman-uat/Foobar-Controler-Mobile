@@ -5,6 +5,7 @@ import {
 	FileCategory,
 	Recursive,
 } from "classes/responses/Browser";
+import { useLogger } from "helpers/index";
 import LottieView from "lottie-react-native";
 import { LottieLoading } from "managers/LottieManager";
 import { useStyles } from "managers/StyleManager";
@@ -27,6 +28,7 @@ export default function LibraryBrowser() {
 	const [customTypes, setCustomTypes] = useState<Record<string, FileCategory>>(
 		{},
 	);
+	const logger = useLogger("Library Browser");
 	useEffect(() => {
 		const fetch = async () => {
 			const playlistsArray = await ctx.Settings.get("CUSTOM_PLAYLIST_TYPES");
@@ -48,7 +50,6 @@ export default function LibraryBrowser() {
 				if (!data) return;
 
 				data.roots[0].init(ctx.BeefWeb, customTypes, Recursive.ONCE).then((dir) => {
-					console.warn("hello!");
 					dir.filter();
 					setSelectedFolder(data.roots[0]);
 					setLoaded(true);
@@ -61,7 +62,7 @@ export default function LibraryBrowser() {
 		if (item.parent) setSelectedFolder(item.parent);
 	};
 	const createList = (dir: BrowserDirectory) => {
-		console.error("Creating List");
+		logger.log("Creating List");
 		const handlePress = async (item: BrowserDirectory | BrowserFile) => {
 			if (item.isDirectory()) {
 				if (!item.initialized)
