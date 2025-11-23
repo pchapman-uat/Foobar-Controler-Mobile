@@ -1,7 +1,7 @@
 export enum Screen {
 	Connection,
-	Library,
 	NowPlaying,
+	Library,
 	PlaybackQueue,
 }
 

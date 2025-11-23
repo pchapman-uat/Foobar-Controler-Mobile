@@ -20,8 +20,8 @@ export type NavBarItemProps<Page extends ItemsType> = {
 
 export type PagePropsMap = {
 	Connection: undefined;
-	Library: LibraryMainProps;
 	NowPlaying: undefined;
+	Library: LibraryMainProps;
 	PlaybackQueue: undefined;
 };
 export type ItemsType = keyof PagePropsMap;
@@ -48,8 +48,8 @@ class NavBarItem<T extends ItemsType> {
 
 export const itemsObj = {
 	Connection: new NavBarItem(ConnectionSVG, "Connection", Connection),
-	Library: new NavBarItem(LibrarySVG, "Library", LibraryMain),
 	NowPlaying: new NavBarItem(NowPlayingSVG, "NowPlaying", NowPlaying),
+	Library: new NavBarItem(LibrarySVG, "Library", LibraryMain),
 	PlaybackQueue: new NavBarItem(
 		PlaybackQueueSVG,
 		"PlaybackQueue",

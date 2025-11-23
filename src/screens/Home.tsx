@@ -11,7 +11,7 @@ import {
 import NavBarScreen, { NavigateToType } from "elements/NavBarScreen";
 import { indexToKey, keyToIndex } from "helpers/index";
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { Animated, Dimensions, StyleSheet } from "react-native";
+import { Animated, BackHandler, Dimensions, StyleSheet } from "react-native";
 
 type HomeNavigationProp = NativeStackNavigationProp<RootStackParamList, "Home">;
 type HomeProps = {
@@ -24,6 +24,8 @@ type PageState<P extends ItemsType = ItemsType> = {
 };
 
 export default function Home({ navigation }: HomeProps) {
+	const [pastPages, setPastPages] = useState<PageState[]>([]);
+
 	const [prevPage, setPrevPage] = useState<PageState>({
 		page: "Connection",
 		props: undefined,
@@ -38,6 +40,34 @@ export default function Home({ navigation }: HomeProps) {
 
 	const screenWidth = Dimensions.get("window").width;
 	const ctx = useContext(AppContext);
+
+	const pastPagesRef = useRef(pastPages);
+
+	useEffect(() => {
+		pastPagesRef.current = pastPages;
+	}, [pastPages]);
+
+	useEffect(() => {
+		const backAction = () => {
+			const currentPages = pastPagesRef.current;
+
+			if (currentPages.length > 0) {
+				const page = currentPages.at(-1);
+				if (page) navigateTo(page.page, { ...page.props, backwards: true });
+				return true;
+			}
+
+			return false;
+		};
+
+		const backHandler = BackHandler.addEventListener(
+			"hardwareBackPress",
+			backAction,
+		);
+
+		return () => backHandler.remove();
+	}, []);
+
 	useEffect(() => {
 		if (prevPage === null) {
 			setPrevPage(currentPage);
@@ -72,6 +102,14 @@ export default function Home({ navigation }: HomeProps) {
 		let _page: ItemsType;
 		if (typeof page === "number") _page = indexToKey(itemsObj, page);
 		else _page = page;
+		if (props?.backwards) {
+			setPastPages((prev) => prev.slice(0, -1));
+		} else {
+			setPastPages((prev) => {
+				const trimmed = prev.length >= 10 ? prev.slice(prev.length - 9) : prev;
+				return [...trimmed, currentPage];
+			});
+		}
 		setCurrentPage({ page: _page, props });
 	};
 	return (

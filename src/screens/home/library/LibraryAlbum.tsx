@@ -2,6 +2,7 @@ import AppContext from "AppContext";
 import { Columns } from "classes/responses/Player";
 import LibraryGrid, { GridItem } from "elements/LibraryGrid";
 import LibraryItems, { filterSongs } from "elements/LibraryList";
+import { useLogger } from "helpers/index";
 import LottieView from "lottie-react-native";
 import updateColors, { LottieLoading } from "managers/LottieManager";
 import { useStyles } from "managers/StyleManager";
@@ -14,7 +15,6 @@ type Views = "grid" | "list";
 
 export default function LibraryAlbum({ value }: LibraryItemScreenProps) {
 	const viewState: Views = value ? "list" : "grid";
-
 	const Styles = useStyles("Main");
 	const ctx = useContext(AppContext);
 	const [view, setView] = useState<Views>(viewState);
@@ -25,9 +25,14 @@ export default function LibraryAlbum({ value }: LibraryItemScreenProps) {
 	const [loading, setLoading] = useState(false);
 	const logger = useLogger("Library Album");
 	useEffect(() => {
+		if (songs && songs.length > 0 && value) {
+			onAlbumChange(value);
+		}
+	}, [songs, value]);
+	useEffect(() => {
 		const getAllSongs = async () => {
 			setLoading(true);
-			const { unique, songs } = await ctx.BeefWeb.getUnique("album");
+			const { unique, songs: newSongs } = await ctx.BeefWeb.getUnique("album");
 			if (!unique) return;
 			setGridItems(
 				unique.map((item, i) => {
@@ -39,8 +44,7 @@ export default function LibraryAlbum({ value }: LibraryItemScreenProps) {
 					};
 				}),
 			);
-			if (value) onAlbumChange(value);
-			setSongs(songs);
+			setSongs(newSongs);
 			setLoading(false);
 		};
 		getAllSongs();

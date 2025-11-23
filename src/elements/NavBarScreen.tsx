@@ -8,8 +8,11 @@ import NavBar from "./NavBar";
 import StatusBar from "./Statusbar";
 export type NavigateToType = <P extends ItemsType>(
 	page: P | number,
-	props?: PagePropsMap[P],
+	props?: PagePropsMap[P] & NavBarBaseProps,
 ) => void;
+type NavBarBaseProps = {
+	backwards?: boolean;
+};
 type NavBarScreenProps = {
 	children: React.ReactNode;
 	navigateTo: NavigateToType;
