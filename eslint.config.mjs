@@ -1,9 +1,9 @@
 import js from "@eslint/js";
-import globals from "globals";
-import tseslint from "typescript-eslint";
 import pluginReact from "eslint-plugin-react";
 import reactNamingConventionPlugin from "eslint-plugin-react-naming-convention";
 import { defineConfig, globalIgnores } from "eslint/config";
+import globals from "globals";
+import tseslint from "typescript-eslint";
 
 export default defineConfig([
 	{
@@ -48,7 +48,7 @@ export default defineConfig([
 			"react-naming-convention/context-name": "warn",
 			"react-naming-convention/filename-extension": ["warn", "as-needed"],
 			"react-naming-convention/use-state": "warn",
-			"no-console": "warn",
+			"no-console": "error",
 
 			"@typescript-eslint/explicit-member-accessibility": [
 				"warn",
