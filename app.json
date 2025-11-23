@@ -4,21 +4,21 @@
     "slug": "fooobar-controler-mobile",
     "version": "0.3.0",
     "orientation": "default",
-    "icon": "./src/assets/icon.png",
+    "icon": "./src/assets/logo/half/icon_half.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
-      "image": "./src/assets/splash-icon.png",
+      "image": "./src/assets/logo//full/icon.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#010526"
     },
     "ios": {
       "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./src/assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "foregroundImage": "./src/assets/logo/half/icon_half.png",
+        "backgroundColor": "#010526"
       },
       "edgeToEdgeEnabled": true,
       "package": "com.pchapman.foobarcontollermobile",
@@ -35,7 +35,7 @@
       }
     },
     "web": {
-      "favicon": "./src/assets/favicon.png"
+      "favicon": "./src/assets/logo/full/icon.png"
     },
     "extra": {
       "eas": {
