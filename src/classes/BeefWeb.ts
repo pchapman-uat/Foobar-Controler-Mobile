@@ -374,7 +374,8 @@ export class Beefweb extends LoggerBaseClass<BeefWebEvents> {
 		}
 	}
 	public async getBrowserEntries(path: Valid<string>) {
-		const url = this.combineUrl("browser", "entries") + "?path=" + path;
+		const url = this.combineUrl("browser", "entries") + "?path=" + path.get();
+		this.error(url);
 		const response = await this._fetch<BrowserEntriesResponse>(url);
 		if (response) {
 			return await this.createWebRequest<BrowserEntriesResponse>(
