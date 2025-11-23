@@ -19,13 +19,45 @@
       }
     },
     {
-      "label": "Validate",
+      "label": "ESLint",
       "type": "eslint",
       "runOptions": {
         "runOn": "folderOpen"
       },
+      "options": {
+        "statusbar": {
+          "hide": true
+        }
+      },
       "presentation": {
         "reveal": "always"
+      }
+    },
+    {
+      "label": "TypeScript Validate",
+      "type": "shell",
+      "command": "tsc --noEmit",
+      "problemMatcher": "$tsc",
+      "runOptions": {
+        "runOn": "folderOpen"
+      },
+      "options": {
+        "statusbar": {
+          "hide": true
+        }
+      },
+      "presentation": {
+        "reveal": "always"
+      }
+    },
+    {
+      "label": "Validate All",
+      "dependsOn": [
+        "ESLint",
+        "TypeScript Validate"
+      ],
+      "runOptions": {
+        "runOn": "folderOpen"
       }
     }
   ]
