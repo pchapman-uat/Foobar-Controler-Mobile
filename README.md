@@ -136,7 +136,7 @@ Below is information regarding the assets and libraries used for this project.
 - [GitHub](./src/assets/icons/) - [GitHub](https://github.com/logos)
 - [Loading](./src/assets/lottie/loading.lottie.json) – [LottieFiles](https://lottiefiles.com/free-animation/music-play-Izr4xf80lB) _(Lottie Simple License)_
 
-- App Icon and Splash Screen – Expo Go provides default placeholder images for the app icon and splash screen when no custom assets are specified in [`app.json`](./app.json).
+- App Icon and Splash Screen – Created by a 3rd party, all rights where given to Preston Chapman.
 
 ### Libraries
 
