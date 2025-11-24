@@ -27,6 +27,39 @@ Information in the README and LICENSE may not properly reflect the above at the 
 
 Please view the [Wiki - Setup](https://github.com/pchapman-uat/Foobar-Controler-Mobile/wiki/Setup) for a full guide on setting up the application.
 
+## Evaluation Criteria
+
+- [x] – Can the user control playback of Foobar2000? (i.e., Pause, Play, Skip, Seek, Volume)
+
+- [x] – Is the application Open Sourced?
+
+- [ ] – Does the application follow the licenses of all dependencies and third-party assets?
+- [x] – Can the user view their music library?
+
+- [x] – Can the user view their playlists?
+
+- [x] – Can the user change the playing song from their Library?
+
+- [x] – Is the app free to use?
+
+- [x] – Does the app NOT have ads?
+
+- [x] – Does the app work fully without an internet connection?
+
+- [ ] – Can the user use the app without crashing or bugs?
+
+- [ ] – Does the app have a good User Interface? (UI)
+
+- [ ] – Does the app have a good User Experience? (UX)
+
+- [x] – Is the app customizable?
+
+- [x] – Does the app follow the methodologies of Foobar2000? (Freeware and advanced)
+
+- [ ] – Is the app secure and follow best practices for network traffic? [^1]
+
+[^1]: Due to the API using HTTP only, the network traffic is not encrypted.
+
 ## Objectives
 
 <details>
