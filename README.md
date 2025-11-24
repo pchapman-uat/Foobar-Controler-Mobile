@@ -1,7 +1,5 @@
 # Foobar Controller Mobile (Name Pending)
 
-<img src="src/assets/logo/full/icon.svg" width="150"/>
-
 ![GitHub latest release](https://img.shields.io/github/v/release/pchapman-uat/Foobar-Controler-Mobile?include_prereleases&display_name=release)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/w/pchapman-uat/Foobar-Controler-Mobile)
 ![GitHub last commit](https://img.shields.io/github/last-commit/pchapman-uat/Foobar-Controler-Mobile)
@@ -14,6 +12,8 @@
 
 > [!WARNING]
 > This project is still in early testing and is not ready for release
+
+<img src="src/assets/logo/full/icon.svg" width="150"/>
 
 Foobar Controller Mobile is an app that uses the [BeefWeb API](https://github.com/hyperblast/beefweb) to allow users to control Foobar2000 remotely.
 
