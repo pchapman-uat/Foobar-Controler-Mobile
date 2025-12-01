@@ -1,4 +1,4 @@
-# Foobar Controller Mobile (Name Pending)
+# AstroTune
 
 ![GitHub latest release](https://img.shields.io/github/v/release/pchapman-uat/Foobar-Controler-Mobile?include_prereleases&display_name=release)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/w/pchapman-uat/Foobar-Controler-Mobile)
@@ -15,7 +15,7 @@
 
 <img src="src/assets/logo/full/icon.svg" width="150"/>
 
-Foobar Controller Mobile is an app that uses the [BeefWeb API](https://github.com/hyperblast/beefweb) to allow users to control Foobar2000 remotely.
+AstroTune is a mobile app that uses the [BeefWeb API](https://github.com/hyperblast/beefweb) to allow users to control Foobar2000 and DeaDBeeF remotely.
 
 This project was created for Preston Chapman's Student Innovation Project (SIP) at the University of Advancing Technology (UAT). The SIP is UAT's equivalent of a master’s thesis; all students graduating with a bachelor's degree are required to innovate and create a product. For more information, view https://www.uat.edu/student-innovation-projects.
 
