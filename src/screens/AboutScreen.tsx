@@ -30,13 +30,14 @@ export default function AboutScreen({ navigation }: AboutProps) {
 					onPress={navigation.goBack}
 				/>
 			</View>
-			<Text style={Styles.Main.header1}>Foobar Controller Mobile</Text>
+			<Text style={Styles.Main.header1}>AstroTune</Text>
 			<Text style={Styles.Main.header2}>Version: 0.4.0</Text>
 
 			<View>
 				<Text style={Styles.Main.centeredText}>
-					Foobar Controller Mobile is an app that uses the BeefWeb API to allow users
-					to control Foobar2000 remotely.
+					Astro Tune (Previously known as Foobar Controller Mobile) is an app that
+					uses the BeefWeb API to allow users to control Foobar2000 and DeaDBeeF
+					remotely.
 				</Text>
 				<Text style={Styles.Main.centeredText}>
 					{
@@ -70,7 +71,7 @@ export default function AboutScreen({ navigation }: AboutProps) {
 			<View>
 				<TouchableOpacity
 					onPress={() =>
-						Linking.openURL("https://github.com/pchapman-uat/Foobar-Controler-Mobile")
+						Linking.openURL("https://github.com/pchapman-uat/AstroTune")
 					}
 				>
 					{getTheme(theme).type == ThemeType.Light ? (

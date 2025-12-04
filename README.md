@@ -1,8 +1,8 @@
 # AstroTune
 
-![GitHub latest release](https://img.shields.io/github/v/release/pchapman-uat/Foobar-Controler-Mobile?include_prereleases&display_name=release)
-![GitHub commit activity](https://img.shields.io/github/commit-activity/w/pchapman-uat/Foobar-Controler-Mobile)
-![GitHub last commit](https://img.shields.io/github/last-commit/pchapman-uat/Foobar-Controler-Mobile)
+![GitHub latest release](https://img.shields.io/github/v/release/pchapman-uat/AstroTune?include_prereleases&display_name=release)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/w/pchapman-uat/AstroTune)
+![GitHub last commit](https://img.shields.io/github/last-commit/pchapman-uat/AstroTune)
 
 [![Static Badge](https://img.shields.io/badge/Objective-ACS.1-purple)](https://pchapman-uat.github.io/Boards/ACS/#objective1)
 [![Static Badge](https://img.shields.io/badge/Objective-ACS.3-purple)](https://pchapman-uat.github.io/Boards/ACS/#objective3)
@@ -15,7 +15,7 @@
 
 <img src="src/assets/logo/full/icon.svg" width="150"/>
 
-AstroTune is a mobile app that uses the [BeefWeb API](https://github.com/hyperblast/beefweb) to allow users to control Foobar2000 and DeaDBeeF remotely.
+AstroTune (Previously known as Foobar Controller Mobile) is a mobile app that uses the [BeefWeb API](https://github.com/hyperblast/beefweb) to allow users to control Foobar2000 and DeaDBeeF remotely.
 
 This project was created for Preston Chapman's Student Innovation Project (SIP) at the University of Advancing Technology (UAT). The SIP is UAT's equivalent of a master’s thesis; all students graduating with a bachelor's degree are required to innovate and create a product. For more information, view https://www.uat.edu/student-innovation-projects.
 
@@ -25,7 +25,7 @@ Information in the README and LICENSE may not properly reflect the above at the 
 
 ## Setup
 
-Please view the [Wiki - Setup](https://github.com/pchapman-uat/Foobar-Controler-Mobile/wiki/Setup) for a full guide on setting up the application.
+Please view the [Wiki - Setup](https://github.com/pchapman-uat/AstroTune/wiki/Setup) for a full guide on setting up the application.
 
 ## Evaluation Criteria
 
@@ -78,7 +78,7 @@ This project is created in React Native, which means it is supported on Android 
 
 ### ACS.5 Design, develop, and maintain object-oriented software solutions utilizing inheritance, encapsulation, polymorphism, and abstraction.
 
-This project uses OOP in multiple places, ranging from the base classes for the API, custom elements, as well as types and interfaces. This project uses inheritance with classes like the [Themes](https://github.com/pchapman-uat/Foobar-Controler-Mobile/blob/main/src/classes/Themes.ts), as well as the [Settings](https://github.com/pchapman-uat/Foobar-Controler-Mobile/blob/main/src/classes/Settings.ts) and [Settings Groups](https://github.com/pchapman-uat/Foobar-Controler-Mobile/blob/main/src/classes/SettingGroups.ts). All classes use public/private methods, and some even with `get` methods. Multiple [Settings](https://github.com/pchapman-uat/Foobar-Controler-Mobile/blob/main/src/classes/Settings.ts) classes override methods as needed by their setting type. All [Settings](https://github.com/pchapman-uat/Foobar-Controler-Mobile/blob/main/src/classes/Settings.ts) are generic, which allows for subtypes of different values. The [Themes](https://github.com/pchapman-uat/Foobar-Controler-Mobile/blob/main/src/classes/Themes.ts) use an abstract base class, where each one overrides and fills in the missing values. This allows for each theme to be its own class type, so new values can be adjusted, rather than there being objects for each Theme. [Browser](https://github.com/pchapman-uat/Foobar-Controler-Mobile/blob/main/src/classes/responses/Browser.ts) also uses abstraction as there is a Browser Item, which could be a Folder, or File, there is also recursion and generic, so each folder could have children folders/files, it can also be searched recursively fully, or at a specific depth level.
+This project uses OOP in multiple places, ranging from the base classes for the API, custom elements, as well as types and interfaces. This project uses inheritance with classes like the [Themes](https://github.com/pchapman-uat/AstroTune/blob/main/src/classes/Themes.ts), as well as the [Settings](https://github.com/pchapman-uat/AstroTune/blob/main/src/classes/Settings.ts) and [Settings Groups](https://github.com/pchapman-uat/AstroTune/blob/main/src/classes/SettingGroups.ts). All classes use public/private methods, and some even with `get` methods. Multiple [Settings](https://github.com/pchapman-uat/AstroTune/blob/main/src/classes/Settings.ts) classes override methods as needed by their setting type. All [Settings](https://github.com/pchapman-uat/AstroTune/blob/main/src/classes/Settings.ts) are generic, which allows for subtypes of different values. The [Themes](https://github.com/pchapman-uat/AstroTune/blob/main/src/classes/Themes.ts) use an abstract base class, where each one overrides and fills in the missing values. This allows for each theme to be its own class type, so new values can be adjusted, rather than there being objects for each Theme. [Browser](https://github.com/pchapman-uat/AstroTune/blob/main/src/classes/responses/Browser.ts) also uses abstraction as there is a Browser Item, which could be a Folder, or File, there is also recursion and generic, so each folder could have children folders/files, it can also be searched recursively fully, or at a specific depth level.
 
 ### 5.6 Within software solutions, describe, implement, and analyze data structure techniques.
 
@@ -91,7 +91,7 @@ This application deals with a large amount of data, particularly when it comes t
 ### Usage
 
 - [Foobar2000](https://www.foobar2000.org/)
-- [Latest APK](https://github.com/pchapman-uat/Foobar-Controler-Mobile/releases) (Downloaded from project GitHub)
+- [Latest APK](https://github.com/pchapman-uat/AstroTune/releases) (Downloaded from project GitHub)
 - [BeefWeb fb2k-component](https://github.com/hyperblast/beefweb/releases) (Downloaded from [hyperblast's](https://github.com/hyperblast) GitHub)
 - Android Phone
 - Install from unknown sources must be enabled

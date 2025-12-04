@@ -1,4 +1,4 @@
-name: foobar-controller-mobile
+name: astrotune
 languages: [javascript]
 extractor:
   javascript:

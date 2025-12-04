@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Foobar Controler Mobile",
-    "slug": "fooobar-controler-mobile",
+    "name": "AstroTune",
+    "slug": "astrotune",
     "version": "0.4.0",
     "orientation": "default",
     "icon": "./src/assets/logo/half/icon_half.png",
@@ -21,7 +21,7 @@
         "backgroundColor": "#010526"
       },
       "edgeToEdgeEnabled": true,
-      "package": "com.pchapman.foobarcontollermobile",
+      "package": "com.pchapman.astrotune",
       "permissions": [
         "FOREGROUND_SERVICE",
         "INTERNET",
