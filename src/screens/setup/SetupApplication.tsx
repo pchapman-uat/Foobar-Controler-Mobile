@@ -148,7 +148,7 @@ export default function SetupApplication({
 					/>
 				</View>
 			</View>
-			<View style={Styles.Setup.spacer}></View>
+			<View style={Styles.Main.spacer}></View>
 			<View>
 				<Text style={centeredText}>Choose a Theme</Text>
 				<View>

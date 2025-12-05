@@ -49,7 +49,7 @@ type ValidatorMap = {
 	object: ValidatorFn<Validatable>;
 };
 
-type SupportedTypes = {
+export type SupportedValidatorTypes = {
 	[K in keyof ValidatorMap]: ValidatorMap[K] extends ValidatorFn<infer T>
 		? T
 		: never;
@@ -68,7 +68,7 @@ export default class Validator extends LoggerBaseClass {
 		return this.VALIDATORS[type];
 	}
 
-	public static validate<T extends SupportedTypes>(
+	public static validate<T extends SupportedValidatorTypes>(
 		value: T | null | undefined,
 		customValidator?: ValidatorFn<T>,
 	): UnknownValidation<T> {

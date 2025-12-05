@@ -8,12 +8,6 @@ export default ({ theme }: StyleProps) =>
 		headerText: {
 			textAlign: "center",
 		},
-		spacer: {
-			height: 5,
-			backgroundColor: getColor(theme, "buttonPrimary"),
-			margin: 5,
-			borderRadius: 5,
-		},
 		container: {
 			padding: 10,
 		},

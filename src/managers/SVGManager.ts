@@ -32,6 +32,8 @@ import StopSVG from "assets/controls/stop.svg";
 import PreviousSVG from "assets/controls/previous.svg";
 // @ts-expect-error TS will not handle custom modules (svg); However, Metro will handle at runtime
 import InfoSVG from "assets/info.svg";
+// @ts-expect-error TS will not handle custom modules (svg); However, Metro will handle at runtime
+import LogoSVG from "assets/logo/full/icon.svg";
 export {
 	AlbumSVG,
 	ConnectionSVG,
@@ -42,6 +44,7 @@ export {
 	HalfStar,
 	InfoSVG,
 	LibrarySVG,
+	LogoSVG,
 	MenuSVG,
 	Next,
 	NowPlayingSVG,

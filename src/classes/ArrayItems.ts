@@ -50,7 +50,7 @@ export class ChoiceArrayItems<T extends ArrayItemType> implements Validatable {
 	public getItem() {
 		return this.ITEMS[this.selectedIndex];
 	}
-	public static init(json: ChoiceArrayItemsJSON<ArrayItemType>) {
+	public static init<T extends ArrayItemType>(json: ChoiceArrayItemsJSON<T>) {
 		const obj = new this(...json.ITEMS);
 		obj.selectedIndex = json.selectedIndex;
 		return obj;

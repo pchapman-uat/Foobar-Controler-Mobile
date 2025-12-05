@@ -64,21 +64,30 @@ export default ({ theme }: StyleProps) => {
 			...primaryText,
 			fontSize: 50,
 			textAlign: "center",
+			fontWeight: "bold",
 		},
 		header2: {
 			...primaryText,
 			fontSize: 25,
 			textAlign: "center",
+			fontWeight: "bold",
 		},
 		header3: {
 			...primaryText,
 			fontSize: 15,
 			textAlign: "center",
+			fontWeight: "bold",
 		},
 		hyperlink: {
 			...primaryText,
 			textDecorationLine: "underline",
 			color: getColor(theme, "buttonPrimary"),
+		},
+		spacer: {
+			height: 5,
+			backgroundColor: getColor(theme, "buttonPrimary"),
+			margin: 5,
+			borderRadius: 5,
 		},
 	});
 };

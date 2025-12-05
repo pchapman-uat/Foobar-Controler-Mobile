@@ -5,9 +5,12 @@ import {
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import AppContext, { AppContextType } from "AppContext";
 import { ChoiceArrayItems } from "classes/ArrayItems";
-import Logger from "classes/Logger";
 import Settings, { AppTheme, SettingsDefaults } from "classes/Settings";
-import Validator, { Valid } from "classes/Validated";
+import Validator, {
+	Invalid,
+	SupportedValidatorTypes,
+	Valid,
+} from "classes/Validated";
 import AlertModal, { AlertProps } from "elements/AlertModal";
 import { useOrientation } from "hooks/useOrientation";
 import { useStyles } from "managers/StyleManager";
@@ -16,80 +19,90 @@ import React, { useContext, useEffect, useMemo, useState } from "react";
 import { Modal, View } from "react-native";
 import { Button } from "react-native-elements";
 import AboutScreen from "screens/AboutScreen";
+import LoadingScreen from "screens/LoadingScreen";
 import LogScreen from "screens/LogScreen";
 import SettingsScreen from "screens/SettingsScreen";
 import Setup from "screens/Setup";
+import WelcomeScreen from "screens/WelcomeScreen";
 import Home from "./screens/Home";
-
+export type PlayerType = "Foobar2000" | "DeaDBeeF";
 export type RootStackParamList = {
+	Loading: undefined;
+	Welcome: undefined;
 	Home: undefined;
 	Settings: undefined;
 	About: undefined;
-	Setup: undefined;
+	Setup: { player: PlayerType } | undefined;
 	Log: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 const navigationRef = createNavigationContainerRef<RootStackParamList>();
-
+function validate<T extends SupportedValidatorTypes>(
+	item: T,
+	onValid: (item: Valid<T>) => void,
+	onInvalid?: (item: Invalid<T>) => void,
+) {
+	const validItem = Validator.validate(item);
+	if (validItem.isValid()) onValid(validItem);
+	else onInvalid && onInvalid(validItem as Invalid<T>);
+}
 export default function App() {
 	const [theme, setTheme] = useState<AppTheme>(SettingsDefaults.THEME);
 	const orientation = useOrientation();
 	const { BeefWeb } = useContext(AppContext);
-	const firstTime = (value: boolean) => {
-		const onYes = () => {
-			Settings.set("FIRST_TIME", new Valid(false));
-			navigationRef.navigate("Setup");
-		};
-		const onNo = () => {
-			Settings.set("FIRST_TIME", new Valid(false));
-		};
-		if (value) {
-			Logger.log("Application", "First Time!");
-			alert({
-				title: "Welcome!",
-				message:
-					"This is your first time using the application, would you like to go through the setup process?",
-				options: [
-					{ optionText: "No", onPress: onNo },
-					{ optionText: "Yes", onPress: onYes },
-				],
-			});
-		}
-	};
+
 	useEffect(() => {
-		Settings.PROPS.THEME.get().then(setTheme);
-		Settings.get("CUSTOM_THEME").then(initCustomTheme);
+		let mounted = true;
 
-		// Beefweb Init
+		(async () => {
+			const [
+				theme,
+				customTheme,
+				autoUpdatesProp,
+				authEnabled,
+				username,
+				password,
+				ip,
+				port,
+				autoUpdates,
+				firstTime,
+			] = await Promise.all([
+				Settings.PROPS.THEME.get(),
+				Settings.get("CUSTOM_THEME"),
+				Settings.PROPS.AUTOMATIC_UPDATES.get(),
+				Settings.get("AUTHENTICATION"),
+				Settings.get("USERNAME"),
+				Settings.get("PASSWORD"),
+				Settings.get("IP_ADDRESS"),
+				Settings.get("PORT"),
+				Settings.get("AUTOMATIC_UPDATES"),
+				Settings.get("FIRST_TIME"),
+			]);
 
-		Settings.PROPS.AUTOMATIC_UPDATES.get().then(BeefWeb.setState);
-		Settings.get("AUTHENTICATION").then(BeefWeb.setAuthenticationEnabled);
-		Settings.get("USERNAME").then((item) => {
-			const validItem = Validator.validate(item);
-			if (validItem.isValid()) BeefWeb.setUsername(validItem);
-		});
-		Settings.get("PASSWORD").then((item) => {
-			const validItem = Validator.validate(item);
-			if (validItem.isValid()) BeefWeb.setPassword(validItem);
-		});
+			if (!mounted) return;
 
-		Settings.get("IP_ADDRESS").then((item) => {
-			const validItem = Validator.validate(
-				ChoiceArrayItems.init(item) as ChoiceArrayItems<string>,
-			);
-			if (validItem.isValid()) BeefWeb.setIp(validItem);
-		});
-		Settings.get("PORT").then((item) => {
-			const validItem = Validator.validate(item);
-			if (validItem.isValid()) BeefWeb.setPort(validItem);
-		});
-		Settings.get("AUTOMATIC_UPDATES").then(BeefWeb.setState);
-		Settings.get("FIRST_TIME").then(firstTime);
+			setTheme(theme);
+			initCustomTheme(customTheme);
+
+			BeefWeb.setState(autoUpdatesProp);
+			BeefWeb.setAuthenticationEnabled(authEnabled);
+
+			validate(username, BeefWeb.setUsername);
+			validate(password, BeefWeb.setPassword);
+			validate(ChoiceArrayItems.init(ip), BeefWeb.setIp);
+			validate(port, BeefWeb.setPort);
+
+			BeefWeb.setState(autoUpdates);
+			onReady(firstTime);
+		})();
+
 		return () => {
+			mounted = false;
 			BeefWeb.setState(false);
 		};
 	}, []);
+
 	const [modalVisible, setModalVisible] = useState(false);
 	const [modalContent, setModalContent] = useState<React.JSX.Element | null>(
 		null,
@@ -118,10 +131,19 @@ export default function App() {
 		[theme, orientation, setModal, alert],
 	);
 	const Styles = useStyles("Main", "Modal");
+
+	const onReady = (firstTime: boolean) => {
+		if (firstTime === null) return;
+		if (firstTime) navigationRef.navigate("Welcome");
+		else navigationRef.navigate("Home");
+	};
+
 	return (
 		<AppContext.Provider value={contextValue}>
 			<NavigationContainer ref={navigationRef}>
 				<Stack.Navigator screenOptions={{ headerShown: false }}>
+					<Stack.Screen name="Loading" component={LoadingScreen} />
+					<Stack.Screen name="Welcome" component={WelcomeScreen} />
 					<Stack.Screen name="Home" component={Home} />
 					<Stack.Screen name="Settings" component={SettingsScreen} />
 					<Stack.Screen name="About" component={AboutScreen} />

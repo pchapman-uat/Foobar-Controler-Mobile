@@ -1,5 +1,6 @@
+import { RouteProp } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { RootStackParamList } from "App";
+import { PlayerType, RootStackParamList } from "App";
 import { useStyles } from "managers/StyleManager";
 import React, { useEffect, useRef, useState } from "react";
 import { Animated, Dimensions, ScrollView, Text, View } from "react-native";
@@ -7,11 +8,12 @@ import { Button } from "react-native-elements";
 import { SafeAreaView } from "react-native-safe-area-context";
 import SetupApplication from "./setup/SetupApplication";
 import SetupBeefweb from "./setup/SetupBeefweb";
-import SetupFoobar from "./setup/SetupFoobar";
 import SetupIntro from "./setup/SetupIntro";
+import SetupPlayer from "./setup/SetupPlayer";
 export interface SetupScreenProps {
 	setReady: (ready: boolean) => void;
 	setOnReady: (onReady: () => void) => void;
+	player?: PlayerType;
 }
 
 type SetupScreen = React.ComponentType<SetupScreenProps>;
@@ -26,18 +28,21 @@ class SetupStep {
 }
 const items: SetupStep[] = [
 	new SetupStep("Intro", SetupIntro),
-	new SetupStep("Foobar", SetupFoobar),
+	new SetupStep("Player", SetupPlayer),
 	new SetupStep("Beefweb", SetupBeefweb),
 	new SetupStep("Application", SetupApplication),
 ];
 type SetupNavigationProp = NativeStackNavigationProp<
 	RootStackParamList,
-	"Settings"
+	"Setup"
 >;
+
+type SetupRouteProp = RouteProp<RootStackParamList, "Setup">;
 type SetupProps = {
 	navigation: SetupNavigationProp;
+	route: SetupRouteProp;
 };
-export default function Setup({ navigation }: SetupProps) {
+export default function Setup({ navigation, route }: SetupProps) {
 	const [currentScreen, setCurrentScreen] = useState<number>(0);
 	const [prevScreen, setPrevScreen] = useState<number | null>(null);
 
@@ -93,7 +98,11 @@ export default function Setup({ navigation }: SetupProps) {
 				</Text>
 			</View>
 			<ScrollView>
-				<screenItem.screen setReady={setReady} setOnReady={setOnReady} />
+				<screenItem.screen
+					setReady={setReady}
+					setOnReady={setOnReady}
+					player={route.params?.player}
+				/>
 			</ScrollView>
 			<View style={Styles.Setup.buttonContainer}>
 				<Button
