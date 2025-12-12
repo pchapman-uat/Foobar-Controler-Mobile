@@ -9,7 +9,7 @@ import {
 	PagePropsMap,
 } from "classes/NavBar";
 import NavBarScreen, { NavigateToType } from "elements/NavBarScreen";
-import { indexToKey, keyToIndex } from "helpers/index";
+import { indexToKey, keyToIndex, useLogger } from "helpers/index";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { Animated, BackHandler, Dimensions, StyleSheet } from "react-native";
 
@@ -25,7 +25,7 @@ type PageState<P extends ItemsType = ItemsType> = {
 
 export default function Home({ navigation }: HomeProps) {
 	const [pastPages, setPastPages] = useState<PageState[]>([]);
-
+	const logger = useLogger("Home Screen");
 	const [prevPage, setPrevPage] = useState<PageState>({
 		page: "Connection",
 		props: undefined,
@@ -69,6 +69,7 @@ export default function Home({ navigation }: HomeProps) {
 	}, []);
 
 	useEffect(() => {
+		if (prevPage.page === currentPage.page) return;
 		if (prevPage === null) {
 			setPrevPage(currentPage);
 			return;
@@ -79,7 +80,6 @@ export default function Home({ navigation }: HomeProps) {
 				: -1;
 
 		screenTranslateX.setValue(direction * screenWidth);
-
 		Animated.timing(screenTranslateX, {
 			toValue: 0,
 			duration: 300,
@@ -102,7 +102,8 @@ export default function Home({ navigation }: HomeProps) {
 		let _page: ItemsType;
 		if (typeof page === "number") _page = indexToKey(itemsObj, page);
 		else _page = page;
-		if (props?.backwards) {
+		if (_page === currentPage.page) {
+		} else if (props?.backwards) {
 			setPastPages((prev) => prev.slice(0, -1));
 		} else {
 			setPastPages((prev) => {
