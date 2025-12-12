@@ -4,10 +4,11 @@ import { RequestStatus } from "classes/WebRequest";
 import { PlayerResponse } from "classes/responses/Player";
 import { useLogger } from "helpers/index";
 import updateColors, { LottieLoading } from "managers/LottieManager";
+import { LogoSVG } from "managers/SVGManager";
 import { useStyles } from "managers/StyleManager";
 import { getColor } from "managers/ThemeManager";
 import React, { useCallback, useContext, useEffect, useState } from "react";
-import { Text, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 import { Button } from "react-native-elements";
 
 export default function Connection({}: NavBarItemProps<"Connection">) {
@@ -18,6 +19,9 @@ export default function Connection({}: NavBarItemProps<"Connection">) {
 	const [infoVersion, setInfoVersion] = useState<string>("");
 	const [infoPluginVersion, setInfoPluginVersion] = useState<string>("");
 	const [status, setStatus] = useState<string>("");
+	const [location, setLocation] = useState<string>("");
+	const [showLocation, setShowLocation] = useState<boolean>(false);
+	const hiddenLocation = "<Tap to show>";
 	const logger = useLogger("Connection Screen");
 	const connectToBeefweb = useCallback(async () => {
 		setStatus("Connecting... Please Wait");
@@ -34,6 +38,7 @@ export default function Connection({}: NavBarItemProps<"Connection">) {
 		setInfoTitle(response.info.title);
 		setInfoVersion(response.info.version);
 		setInfoPluginVersion(response.info.pluginVersion);
+		setLocation(ctx.BeefWeb.location ?? "");
 	};
 
 	const onConnectFail = (status?: RequestStatus) => {
@@ -59,7 +64,16 @@ export default function Connection({}: NavBarItemProps<"Connection">) {
 
 	return (
 		<View style={Styles.Main.container}>
+			<Text style={Styles.Main.header1}>AstroTune</Text>
 			<View>
+				<LogoSVG height={100} width={100} />
+			</View>
+			<View>
+				<TouchableOpacity onPress={() => setShowLocation(!showLocation)}>
+					<Text style={Styles.Main.statusItem}>
+						Location: {showLocation ? location : hiddenLocation}
+					</Text>
+				</TouchableOpacity>
 				<Text style={Styles.Main.statusItem}>Status: {status}</Text>
 				<Text style={Styles.Main.statusItem}>Name: {infoName}</Text>
 				<Text style={Styles.Main.statusItem}>Title: {infoTitle}</Text>

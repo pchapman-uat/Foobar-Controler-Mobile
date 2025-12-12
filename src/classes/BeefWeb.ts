@@ -61,11 +61,18 @@ export class Connection {
 	public setPort(port: number) {
 		this.port = port;
 	}
-	public getUrl(): string | null {
-		if (this.valid()) return `http://${this.ip}:${this.port}/api`;
+	public getApiUrl(): string | null {
+		if (this.valid()) return `${this.getUrl()}/api`;
 		return null;
 	}
-
+	public getUrl(): string | null {
+		if (this.valid()) return `http://${this.location}`;
+		return null;
+	}
+	public get location(): string | null {
+		if (this.valid()) return `${this.ip}:${this.port}`;
+		return null;
+	}
 	public getIp() {
 		return this.ip;
 	}
@@ -161,6 +168,9 @@ export class Beefweb extends LoggerBaseClass<BeefWebEvents> {
 		}
 	};
 
+	get location() {
+		return this.con.location;
+	}
 	public setUsername = (username: Valid<string>) => {
 		this.authentication.username = username.get();
 		this.onConnectionChange();
@@ -237,7 +247,6 @@ export class Beefweb extends LoggerBaseClass<BeefWebEvents> {
 		} catch {}
 		return null;
 	}
-
 	private async onUpdate() {
 		const player = await this.getPlayer();
 		if (!player) return;
@@ -421,7 +430,7 @@ export class Beefweb extends LoggerBaseClass<BeefWebEvents> {
 	}
 
 	public async getArtwork(playlistId: Valid<string>, index: Valid<number>) {
-		const url = this.con.getUrl();
+		const url = this.con.getApiUrl();
 		return url
 			? this.combineUrl(url, "artwork", playlistId.get(), index.get().toString())
 			: null;
@@ -560,7 +569,7 @@ export class Beefweb extends LoggerBaseClass<BeefWebEvents> {
 		);
 	}
 	public get albumArtURI() {
-		const url = this.con.getUrl();
+		const url = this.con.getApiUrl();
 		return url
 			? this.combineUrl(url, "artwork", "current") + `?d=${Date.now()}`
 			: "";
@@ -581,7 +590,7 @@ export class Beefweb extends LoggerBaseClass<BeefWebEvents> {
 		};
 	}
 	private async _fetch<T>(path: string): Promise<AxiosResponse<T> | null> {
-		const url = this.con.getUrl();
+		const url = this.con.getApiUrl();
 		if (url) {
 			const fullUrl = this.combineUrl(url, path);
 			const auth = this.getAuth();
@@ -602,7 +611,7 @@ export class Beefweb extends LoggerBaseClass<BeefWebEvents> {
 		path: string,
 		body?: object,
 	): Promise<AxiosResponse<T> | null> {
-		const url = this.con.getUrl();
+		const url = this.con.getApiUrl();
 		if (url) {
 			try {
 				const auth = this.getAuth();
