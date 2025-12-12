@@ -35,13 +35,13 @@ class LoggerClass extends Listener<LoggerEvents> {
 	) {
 		switch (kind) {
 			case LogType.MESSAGE:
-				console.log("BeefWeb: " + message);
+				console.log(`${source}: ${message}`);
 				break;
 			case LogType.WARNING:
-				console.warn("BeefWeb: " + message);
+				console.warn(`${source}: ${message}`);
 				break;
 			case LogType.ERROR:
-				console.error("BeefWeb: " + message);
+				console.error(`${source}: ${message}`);
 				break;
 		}
 		if (!props?.internal)
