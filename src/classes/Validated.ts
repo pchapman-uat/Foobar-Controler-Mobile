@@ -60,7 +60,7 @@ export default class Validator extends LoggerBaseClass {
 	private static readonly VALIDATORS: ValidatorMap = {
 		string: (v) => v.trim().length > 0,
 		number: (v) => !isNaN(v),
-		boolean: (v) => v === true,
+		boolean: (v) => v === true || v === false,
 		object: (v) => v.validate(),
 	};
 
