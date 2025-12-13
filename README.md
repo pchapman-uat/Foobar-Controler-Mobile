@@ -46,11 +46,11 @@ Please view the [Wiki - Setup](https://github.com/pchapman-uat/AstroTune/wiki/Se
 
 - [x] – Does the app work fully without an internet connection?
 
-- [ ] – Can the user use the app without crashing or bugs?
+- [X] – Can the user use the app without crashing or bugs?
 
-- [ ] – Does the app have a good User Interface? (UI)
+- [X] – Does the app have a good User Interface? (UI)
 
-- [ ] – Does the app have a good User Experience? (UX)
+- [X] – Does the app have a good User Experience? (UX)
 
 - [x] – Is the app customizable?
 
