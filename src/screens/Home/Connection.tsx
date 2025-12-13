@@ -16,13 +16,13 @@ import {
 	checkVersion,
 	newUpdateAlert,
 	SupportedStatus,
-	useLogger,
 	VersionStatus,
 } from "helpers/index";
 import updateColors, { LottieLoading } from "managers/LottieManager";
 import { LogoSVG } from "managers/SVGManager";
 import { useStyles } from "managers/StyleManager";
 import { getColor } from "managers/ThemeManager";
+import { WebPlayerResponse } from "managers/TypeManager";
 import React, { useContext, useEffect, useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 
@@ -42,10 +42,8 @@ export default function Connection({}: NavBarItemProps<"Connection">) {
 		useState<SupportedStatus>();
 
 	const hiddenLocation = "<Tap to show>";
-	const logger = useLogger("Connection Screen");
 
 	const onConnectSuccess = (response: PlayerResponse) => {
-		logger.log("Successfully connected to Beefweb");
 		setStatus("Connected!");
 		setInfoName(response.info.name);
 		setInfoTitle(response.info.title);
@@ -62,10 +60,10 @@ export default function Connection({}: NavBarItemProps<"Connection">) {
 	};
 
 	useEffect(() => {
-		ctx.BeefWeb.addEventListener(
-			"update",
-			(response) => response?.data && onConnectSuccess(response.data),
-		);
+		const onUpdate = (response: WebPlayerResponse) =>
+			response?.data && onConnectSuccess(response.data);
+
+		ctx.BeefWeb.addEventListener("update", onUpdate);
 		GitHub.getRepoReleaseVersion(GITHUB_REPO_OWNER, GITHUB_REPO_NAME).then(
 			(val) => {
 				if (val) {
@@ -74,6 +72,10 @@ export default function Connection({}: NavBarItemProps<"Connection">) {
 				}
 			},
 		);
+
+		return () => {
+			ctx.BeefWeb.removeEventListener("update", onUpdate);
+		};
 	}, []);
 
 	useEffect(() => {

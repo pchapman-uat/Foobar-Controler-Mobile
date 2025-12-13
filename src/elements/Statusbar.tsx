@@ -63,8 +63,10 @@ const StatusBar: React.FC<StatusBarProps> = ({ navigator, onNavigate }) => {
 	};
 
 	useEffect(() => {
-		ctx.BeefWeb.addEventListener("update", async (e) => onUpdate(await e));
-		forceUpdate();
+		ctx.BeefWeb.addEventListener("update", onUpdate);
+		return () => {
+			ctx.BeefWeb.removeEventListener("update", onUpdate);
+		};
 	}, []);
 
 	return (
