@@ -46,11 +46,11 @@ Please view the [Wiki - Setup](https://github.com/pchapman-uat/AstroTune/wiki/Se
 
 - [x] – Does the app work fully without an internet connection?
 
-- [X] – Can the user use the app without crashing or bugs?
+- [x] – Can the user use the app without crashing or bugs?
 
-- [X] – Does the app have a good User Interface? (UI)
+- [x] – Does the app have a good User Interface? (UI)
 
-- [X] – Does the app have a good User Experience? (UX)
+- [x] – Does the app have a good User Experience? (UX)
 
 - [x] – Is the app customizable?
 
@@ -138,48 +138,58 @@ Below is information regarding the assets and libraries used for this project.
 
 - App Icon and Splash Screen – Created by a 3rd party, all rights where given to Preston Chapman.
 
-### Libraries
+### Packages
 
 > [!NOTE]
-> Due to this project being early in development the libraries below will likely be inaccurate, please reference [`package.json`](./package.json) for exact modules.
+> Due to this project being early in development the packages below will likely be inaccurate, please reference [`package.json`](./package.json) for exact modules.
 
 - `@react-native-async-storage/async-storage`: `^2.1.2`,
   - Storage of settings
-- `@react-native-community/slider`: `^4.5.6`,
+- `@react-native-community/slider`: `4.5.6`,
   - UI Element
-- `@react-native-picker/picker`: `^2.11.0`,
+- `@react-native-documents/picker`: `^11.0.3`,
+  - Export/Import Settings
+- `@react-native-picker/picker`: `2.11.0`,
   - UI Element
 - `@react-navigation/native`: `^7.1.9`,
   - Navigation
-- `@react-navigation/native-stack`: `^7.3.13`,
+- `@react-navigation/native-stack`: `^7.3.14`,
   - Navigation
-- `axios`: `^1.9.0`,
-  - Web Request to the Beefweb API
+- `axios`: `^1.12.0`,
+  - Web Requests to the Beefweb API
 - `expo`: `~53.0.9`,
   - Framework
-- `expo-dev-client`: `^5.1.8`
+- `expo-dev-client`: `^5.1.8`,
   - Dev Backend
 - `expo-screen-orientation`: `^8.1.6`,
   - Horizontal and Vertical views
-- `lottie-react-native`: `^7.2.2`,
+- `expo-secure-store`: `~14.2.3`,
+  - Storage of encrypted settings (passwords)
+- `lottie-react-native`: `7.2.2`,
   - Animated Icons
 - `react`: `19.0.0`,
   - Framework
-- `react-native`: `0.79.2`,
+- `react-native`: `0.79.6`,
   - Framework
 - `react-native-audio-pro`: `^9.9.1`,
   - Audio Controller in notification bar/lock screen
 - `react-native-elements`: `^3.4.3`,
   - UI Elements
+- `react-native-fs`: `^2.20.0`,
+  - Export/Import Settings
 - `react-native-gesture-handler`: `^2.27.1`,
   - Required for color picker
 - `react-native-network-info`: `^5.2.1`,
   - Finding available servers
+- `react-native-reanimated`: `^3.18.0`,
+  - Required for color picker
+- `react-native-restart`: `^0.0.27`,
+  - Restart the application
 - `react-native-safe-area-context`: `^5.4.0`,
   - UI Elements
+- `react-native-screens`: `^4.11.1`,
+  - Navigation
 - `react-native-svg`: `^15.12.0`,
-  - SVG Support
-- `react-native-svg-transformer`: `^1.5.1`,
   - SVG Support
 - `reanimated-color-picker`: `^4.1.0`
   - Color Picker
