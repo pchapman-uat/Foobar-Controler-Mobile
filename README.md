@@ -120,23 +120,30 @@ Below is information regarding the assets and libraries used for this project.
 > [!NOTE]
 > Assets are subject to change. All rights belong to their original owners. This application is not ready for release, so its license may prohibit the use of these icons.
 
-- [Connection](./src/assets/navigation/connection.svg) – [SVG Repo](https://www.svgrepo.com/svg/513070/wifi-1029) _(Public Domain)_
-- [Library](./src/assets/navigation/library.svg) – [SVG Repo](https://www.svgrepo.com/svg/532810/folder) _(CC Attribution License)_
-- [Now Playing](./src/assets/navigation/nowPlaying.svg) – [SVG Repo](https://www.svgrepo.com/svg/532708/music) _(CC Attribution License)_
-- [Playback Queue](./src/assets/navigation/playbackQueue.svg) – [SVG Repo](https://www.svgrepo.com/svg/362993/queue-bold) _(MIT License)_
-- [Menu](./src/assets/menu.svg) – [SVG Repo](https://www.svgrepo.com/svg/532195/menu) _(CC Attribution License)_
-- [Album](./src/assets/library/album.svg) - [SVG Repo](https://www.svgrepo.com/svg/324902/album-open) _(MIT License)_
-- [Stars](./src/assets/stars/) - [Google Fonts](https://fonts.google.com/icons?selected=Material+Symbols+Rounded:star_half:FILL@1;wght@400;GRAD@0;opsz@24&icon.query=star&icon.size=24&icon.color=%23000000&icon.platform=web&icon.style=Rounded) _(Apache License Version 2.0)_
-- [Next](./src/assets/controls/next.svg) - [SVG Repo](https://www.svgrepo.com/svg/512548/next-998) _(Public Domain)_
-- [Pause](./src/assets/controls/pause.svg) - [SVG Repo](https://www.svgrepo.com/svg/512622/pause-1006) _(Public Domain)_
-- [Play](./src/assets/controls/play.svg) - [SVG Repo](https://www.svgrepo.com/svg/512667/play-1000) _(Public Domain)_
-- [Previous](./src/assets/controls/previous.svg) - [SVG Repo](https://www.svgrepo.com/svg/512685/previous-999) _(Public Domain)_
-- [Stop](./src/assets/controls/stop.svg) - [SVG Repo](https://www.svgrepo.com/svg/522297/stop) _(CC Attribution License)_
-- [Info](./src/assets/info.svg) - [SVG Repo](https://www.svgrepo.com/svg/524660/info-circle) _(CC Attribution License)_
-- [GitHub](./src/assets/icons/) - [GitHub](https://github.com/logos)
-- [Loading](./src/assets/lottie/loading.lottie.json) – [LottieFiles](https://lottiefiles.com/free-animation/music-play-Izr4xf80lB) _(Lottie Simple License)_
-
-- App Icon and Splash Screen – Created by a 3rd party, all rights where given to Preston Chapman.
+- **Audio**
+  - [Silence](./src/assets/audio/silence.mp3) - [anars GitHub](https://github.com/anars/blank-audio) _(No License)_
+- **Controls**
+  - [Next](./src/assets/controls/next.svg) - [SVG Repo](https://www.svgrepo.com/svg/512548/next-998) _(Public Domain)_
+  - [Pause](./src/assets/controls/pause.svg) - [SVG Repo](https://www.svgrepo.com/svg/512622/pause-1006) _(Public Domain)_
+  - [Play](./src/assets/controls/play.svg) - [SVG Repo](https://www.svgrepo.com/svg/512667/play-1000) _(Public Domain)_
+  - [Previous](./src/assets/controls/previous.svg) - [SVG Repo](https://www.svgrepo.com/svg/512685/previous-999) _(Public Domain)_
+  - [Stop](./src/assets/controls/stop.svg) - [SVG Repo](https://www.svgrepo.com/svg/522297/stop) _(CC Attribution License)_
+- **Icons**
+  - [GitHub Mark](./src/assets/icons/) - [GitHub](https://github.com/logos)
+- **Navigation**
+  - [Connection](./src/assets/navigation/connection.svg) – [SVG Repo](https://www.svgrepo.com/svg/513070/wifi-1029) _(Public Domain)_
+  - [Library](./src/assets/navigation/library.svg) – [SVG Repo](https://www.svgrepo.com/svg/532810/folder) _(CC Attribution License)_
+  - [Now Playing](./src/assets/navigation/nowPlaying.svg) – [SVG Repo](https://www.svgrepo.com/svg/532708/music) _(CC Attribution License)_
+  - [Playback Queue](./src/assets/navigation/playbackQueue.svg) – [SVG Repo](https://www.svgrepo.com/svg/362993/queue-bold) _(MIT License)_
+- **Lottie**
+  - [Loading](./src/assets/lottie/loading.lottie.json) – [LottieFiles](https://lottiefiles.com/free-animation/music-play-Izr4xf80lB) _(Lottie Simple License)_
+- **Miscellaneous**
+  - [Menu](./src/assets/menu.svg) – [SVG Repo](https://www.svgrepo.com/svg/532195/menu) _(CC Attribution License)_
+  - [Album](./src/assets/library/album.svg) - [SVG Repo](https://www.svgrepo.com/svg/324902/album-open) _(MIT License)_
+  - [Stars](./src/assets/stars/) - [Google Fonts](https://fonts.google.com/icons?selected=Material+Symbols+Rounded:star_half:FILL@1;wght@400;GRAD@0;opsz@24&icon.query=star&icon.size=24&icon.color=%23000000&icon.platform=web&icon.style=Rounded) _(Apache License Version 2.0)_
+  - [Info](./src/assets/info.svg) - [SVG Repo](https://www.svgrepo.com/svg/524660/info-circle) _(CC Attribution License)_
+  - [Placeholder](./src/assets/icon.png) - Expo Placeholder Icon
+- [App Icon](./src/assets/logo/) – Created by a 3rd party, all rights where given to Preston Chapman.
 
 ### Packages
 
