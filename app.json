@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "AstroTune",
-    "slug": "astrotune",
+    "slug": "fooobar-controler-mobile",
     "version": "0.4.0",
     "orientation": "default",
     "icon": "./src/assets/logo/half/icon_half.png",
@@ -39,11 +39,6 @@
     "web": {
       "favicon": "./src/assets/logo/full/icon.png"
     },
-    "extra": {
-      "eas": {
-        "projectId": "79fec63c-c71e-41ab-8eb3-4e959253baae"
-      }
-    },
     "plugins": [
       [
         "expo-build-properties",
@@ -54,6 +49,12 @@
         }
       ],
       "expo-secure-store"
-    ]
+    ],
+    "owner": "pchapman",
+    "extra": {
+      "eas": {
+        "projectId": "79fec63c-c71e-41ab-8eb3-4e959253baae"
+      }
+    }
   }
 }
