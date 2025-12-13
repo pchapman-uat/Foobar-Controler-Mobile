@@ -1,4 +1,4 @@
-package com.pchapman.foobarcontollermobile
+package com.pchapman.astrotune
 
 import android.app.Application
 import android.content.res.Configuration

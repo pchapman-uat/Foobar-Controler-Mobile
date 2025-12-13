@@ -87,9 +87,9 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace 'com.pchapman.foobarcontollermobile'
+    namespace "com.pchapman.astrotune"
     defaultConfig {
-        applicationId 'com.pchapman.foobarcontollermobile'
+        applicationId 'com.pchapman.astrotune'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

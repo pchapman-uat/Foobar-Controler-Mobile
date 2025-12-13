@@ -25,7 +25,6 @@ import { getColor } from "managers/ThemeManager";
 import { WebPlayerResponse } from "managers/TypeManager";
 import React, { useContext, useEffect, useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
-
 export default function Connection({}: NavBarItemProps<"Connection">) {
 	const ctx = useContext(AppContext);
 	const Styles = useStyles("Main", "Modal");

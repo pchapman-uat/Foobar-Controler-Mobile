@@ -218,7 +218,11 @@ export class CustomTheme extends Light implements Validatable {
 	public validate(): boolean {
 		return true;
 	}
-
+	public static init(json: string) {
+		const theme = new CustomTheme();
+		theme.init(JSON.parse(json));
+		return theme;
+	}
 	public init(json: ThemeJSON) {
 		this.name = json.name;
 		this.type = json.type;

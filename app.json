@@ -25,7 +25,9 @@
       "permissions": [
         "FOREGROUND_SERVICE",
         "INTERNET",
-        "NOTIFICATION"
+        "NOTIFICATION",
+        "WRITE_EXTERNAL_STORAGE",
+        "READ_EXTERNAL_STORAGE"
       ],
       "services": {
         "musicservice": {

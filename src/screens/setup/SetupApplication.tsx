@@ -69,7 +69,7 @@ export default function SetupApplication({
 		const validTheme = Validator.validate(theme);
 		if (validTheme.isValid()) {
 			logger.log(`Setting App Theme to: ${themeKeys[theme]}`);
-			ctx.Settings.PROPS.THEME.set(theme);
+			ctx.Settings.PROPS.APP_THEME.set(theme);
 			ctx.setTheme(theme);
 		}
 	};

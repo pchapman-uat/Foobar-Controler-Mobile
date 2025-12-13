@@ -1,4 +1,16 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { pick, saveDocuments } from "@react-native-documents/picker";
+import { FILE_TYPE } from "constants/constants";
+import {
+	ESActions,
+	ESProps,
+	ExportSettingsModal,
+} from "elements/modal/ExportSettingsModal";
+import {
+	ImportSettingsModal,
+	ISActions,
+	ISProps,
+} from "elements/modal/ImportSettingsModal";
 import ModalTypes, {
 	ActionMap,
 	AllModalProps,
@@ -10,19 +22,24 @@ import {
 } from "elements/modal/ResetAllSettingsModal";
 import { Screen } from "enum/Screens";
 import { getItemAsync, setItemAsync } from "expo-secure-store";
+import { useLogger } from "helpers/index";
 import { Orientation } from "hooks/useOrientation";
+import RNFS from "react-native-fs";
 import { ArrayItems, ChoiceArrayItems } from "./ArrayItems";
 import Logger from "./Logger";
 import { Recursive } from "./responses/Browser";
 import { ButtonKeys } from "./SettingGroups";
 import { CustomTheme } from "./Themes";
-import { UnknownValidation } from "./Validated";
-
+import Validator, {
+	SupportedValidatorTypes,
+	UnknownValidation,
+} from "./Validated";
 export type ButtonSettingType<T extends keyof ActionMap = keyof ActionMap> = (
 	p: ModalTypes<T>,
 ) => React.JSX.Element;
 class Settings {
 	public readonly PROPS = SettingProps.create();
+	private readonly LOGGER = useLogger("Settings");
 	public async get<K extends keyof SettingPropTypes>(
 		key: K,
 	): Promise<SettingPropTypes[K]> {
@@ -46,6 +63,59 @@ class Settings {
 	public resetAll() {
 		Object.values(this.PROPS).forEach((item) => item.reset());
 	}
+
+	public async exportSettings() {
+		const settings = await Promise.all(
+			Object.values(this.PROPS).map((item) => item.export()),
+		);
+		const jsonString = JSON.stringify(settings);
+		const encodedData = btoa(jsonString);
+		return encodedData;
+	}
+
+	public async exportAndSave() {
+		const tempFilePath =
+			RNFS.DocumentDirectoryPath + "/" + `confg_export.${FILE_TYPE}`;
+		await RNFS.writeFile(tempFilePath, await this.exportSettings());
+
+		const date = new Date();
+		const formattedDate = date.toISOString().replace(/[:\-]/g, "").split(".")[0];
+		await saveDocuments({
+			sourceUris: ["file://" + tempFilePath],
+			copy: true,
+			mimeType: "text/plain",
+			fileName: `${formattedDate}.${FILE_TYPE}`,
+		});
+	}
+	public async importAndLoad() {
+		const [pickResult] = await pick({
+			type: ["text/plain"],
+			mode: "open",
+		});
+		const data = await RNFS.readFile(pickResult.uri);
+		await this.loadSettings(data);
+	}
+	public async loadSettings(encodedData: string) {
+		const rawData = atob(encodedData);
+		const data = JSON.parse(rawData) as ExportedSettingsProperty<unknown>[];
+		const keys = Object.keys(this.PROPS);
+
+		for (const { key, value } of data) {
+			if (keys.includes(key.toUpperCase())) {
+				let unknownValue = value;
+				try {
+					if (Object.keys(SettingsConstructors).includes(key.toUpperCase()))
+						unknownValue = SettingsConstructors[
+							key.toUpperCase() as keyof typeof SettingsConstructors
+						].init(JSON.stringify(unknownValue));
+					const validValue = Validator.validate(
+						unknownValue as SupportedValidatorTypes,
+					) as UnknownValidation<SettingPropTypes[keyof SettingPropTypes]>;
+					this.set(key.toUpperCase() as keyof SettingPropTypes, validValue);
+				} catch {}
+			}
+		}
+	}
 }
 
 enum AppTheme {
@@ -66,7 +136,7 @@ const themes = Object.keys(AppTheme).filter((k) =>
 const SettingsDefaults = {
 	IP_ADDRESS: new ChoiceArrayItems<string>(),
 	REMEMBER_IP: false,
-	THEME: AppTheme.Light,
+	APP_THEME: AppTheme.Light,
 	DYNAMIC_BACKGROUND: false,
 	AUTOMATIC_UPDATES: true,
 	UPDATE_FREQUENCY: 1000,
@@ -80,10 +150,22 @@ const SettingsDefaults = {
 	CUSTOM_AUDIO_TYPES: new ArrayItems<string>(),
 	RECURSIVE_BROWSER: Recursive.ONCE,
 	RESET_ALL_SETTINGS: ResetAllSettingsModal as ButtonSettingType<"resetAll">,
+	EXPORT_SETTINGS: ExportSettingsModal as ButtonSettingType<"exportSettings">,
+	IMPORT_SETTINGS: ImportSettingsModal as ButtonSettingType<"importSettings">,
 	DISABLE_UPDATE_NOTIFICATIONS: false,
 	FIRST_TIME: true,
 };
 
+type Constructible = {
+	new (...args: any[]): any;
+	init(json: any): void;
+};
+const SettingsConstructors = {
+	IP_ADDRESS: ChoiceArrayItems,
+	CUSTOM_THEME: CustomTheme,
+	CUSTOM_PLAYLIST_TYPES: ArrayItems,
+	CUSTOM_AUDIO_TYPES: ArrayItems,
+} as const;
 type SettingPropTypes = {
 	[K in keyof typeof SettingsDefaults]: (typeof SettingsDefaults)[K];
 };
@@ -109,7 +191,10 @@ class SettingProps {
 				"remember_ip",
 				SettingsDefaults.REMEMBER_IP,
 			),
-			THEME: new SettingsProperty<AppTheme>("app_theme", SettingsDefaults.THEME),
+			APP_THEME: new SettingsProperty<AppTheme>(
+				"app_theme",
+				SettingsDefaults.APP_THEME,
+			),
 			DYNAMIC_BACKGROUND: new SettingsProperty<boolean>(
 				"dynamic_background",
 				SettingsDefaults.DYNAMIC_BACKGROUND,
@@ -158,7 +243,15 @@ class SettingProps {
 			RESET_ALL_SETTINGS: new ActionSettingsProperty<
 				RASProps,
 				typeof ResetAllSettingsModal
-			>("", ResetAllSettingsModal, "AAA", RASActions),
+			>("", ResetAllSettingsModal, "Reset", RASActions),
+			IMPORT_SETTINGS: new ActionSettingsProperty<
+				ISProps,
+				typeof ImportSettingsModal
+			>("", ImportSettingsModal, "Import", ISActions),
+			EXPORT_SETTINGS: new ActionSettingsProperty<
+				ESProps,
+				typeof ExportSettingsModal
+			>("", ExportSettingsModal, "Import", ESActions),
 			FIRST_TIME: new SettingsProperty<boolean>(
 				"first_time",
 				SettingsDefaults.FIRST_TIME,
@@ -225,8 +318,18 @@ class SettingsProperty<T> {
 	public async reset() {
 		this.set(this.FALLBACK);
 	}
-}
 
+	public async export(): Promise<ExportedSettingsProperty<T>> {
+		return {
+			key: this.KEY,
+			value: await this.get(),
+		};
+	}
+}
+interface ExportedSettingsProperty<T> {
+	key: string;
+	value: T;
+}
 class EncryptedSettingsProperty extends SettingsProperty<string> {
 	public override async set(value?: string) {
 		if (value == null || value == undefined) return;

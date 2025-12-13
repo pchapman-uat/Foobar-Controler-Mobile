@@ -35,6 +35,9 @@ export class ArrayItems<T extends ArrayItemType> implements Validatable {
 	public validate() {
 		return this.limit >= 0 && this.selectedItems.length <= this.limit;
 	}
+	public static init(data: any) {
+		// TODO: This function does nothing at the moment
+	}
 }
 
 export class ChoiceArrayItems<T extends ArrayItemType> implements Validatable {

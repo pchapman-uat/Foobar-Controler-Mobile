@@ -62,8 +62,8 @@ export default function SettingsScreen({ navigation }: SettingsProps) {
 				ctx.Settings.set(key, Validator.validate(value));
 			});
 
-			if (values.THEME != null) {
-				ctx.setTheme(values.THEME);
+			if (values.APP_THEME != null) {
+				ctx.setTheme(values.APP_THEME);
 			}
 			if (values.CUSTOM_THEME != null && customTheme != null) {
 				initCustomTheme(customTheme);

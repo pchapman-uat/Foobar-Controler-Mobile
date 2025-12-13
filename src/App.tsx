@@ -48,7 +48,7 @@ function validate<T extends SupportedValidatorTypes>(
 	else onInvalid && onInvalid(validItem as Invalid<T>);
 }
 export default function App() {
-	const [theme, setTheme] = useState<AppTheme>(SettingsDefaults.THEME);
+	const [theme, setTheme] = useState<AppTheme>(SettingsDefaults.APP_THEME);
 	const orientation = useOrientation();
 	const { BeefWeb } = useContext(AppContext);
 
@@ -68,7 +68,7 @@ export default function App() {
 				autoUpdates,
 				firstTime,
 			] = await Promise.all([
-				Settings.PROPS.THEME.get(),
+				Settings.PROPS.APP_THEME.get(),
 				Settings.get("CUSTOM_THEME"),
 				Settings.PROPS.AUTOMATIC_UPDATES.get(),
 				Settings.get("AUTHENTICATION"),

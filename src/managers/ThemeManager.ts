@@ -3,7 +3,8 @@ import { AppTheme, SettingsDefaults } from "classes/Settings";
 import Themes, { CustomTheme, Theme, ThemeJSON } from "classes/Themes";
 
 export function getTheme(theme: AppTheme): Theme {
-	if (theme >= Themes.length || theme < 0) return Themes[SettingsDefaults.THEME];
+	if (theme >= Themes.length || theme < 0)
+		return Themes[SettingsDefaults.APP_THEME];
 	return Themes[theme];
 }
 

@@ -145,7 +145,7 @@ export type BooleanKeys = {
 	[K in keyof SettingPropTypes]: SettingPropTypes[K] extends boolean ? K : never;
 }[keyof SettingPropTypes];
 export type CustomThemeKeys = "CUSTOM_THEME";
-export type EnumKeys = "THEME" | "DEFAULT_SCREEN" | "RECURSIVE_BROWSER";
+export type EnumKeys = "APP_THEME" | "DEFAULT_SCREEN" | "RECURSIVE_BROWSER";
 
 export type ArrayItemsKeys = {
 	[K in keyof SettingPropTypes]: SettingPropTypes[K] extends ArrayItems<ArrayItemType>
@@ -158,7 +158,10 @@ export type ChoiceArrayItemsKeys = {
 		? K
 		: never;
 }[keyof SettingPropTypes];
-export type ButtonKeys = "RESET_ALL_SETTINGS";
+export type ButtonKeys =
+	| "RESET_ALL_SETTINGS"
+	| "EXPORT_SETTINGS"
+	| "IMPORT_SETTINGS";
 export type ItemProps = {
 	string: {
 		password: boolean;
@@ -211,7 +214,7 @@ const SETTINGS_DESCRIPTIONS: { [K in keyof SettingPropTypes]: string } = {
 	IP_ADDRESS:
 		"The IP Address of the machine that is currently running Foobar2000. Run ipconfig in CMD and enter the IPv4 or IPv6 address",
 	REMEMBER_IP: "This is unused and should be disregarded",
-	THEME:
+	APP_THEME:
 		"The current theme of the application, custom will default to the 'Light' theme",
 	DYNAMIC_BACKGROUND:
 		"Change the background of the now playing screen based on the album art of the current song",
@@ -233,6 +236,8 @@ const SETTINGS_DESCRIPTIONS: { [K in keyof SettingPropTypes]: string } = {
 	CUSTOM_AUDIO_TYPES: "Add a custom audio file type for the browser",
 	RECURSIVE_BROWSER: "Change if all items are retrieved at once or per folder",
 	RESET_ALL_SETTINGS: "Reset all settings to their defaults",
+	EXPORT_SETTINGS: "Export your settings to an external file.",
+	IMPORT_SETTINGS: "Import your settings from an external file",
 	FIRST_TIME: "If the user has opened the application for the first time",
 	DISABLE_UPDATE_NOTIFICATIONS:
 		"Disable notifications about new updates for the application",
@@ -240,7 +245,7 @@ const SETTINGS_DESCRIPTIONS: { [K in keyof SettingPropTypes]: string } = {
 const ALL_SETTINGS: {
 	[K in keyof SettingPropTypes]: GroupItem<K, SettingType>;
 } = {
-	THEME: new GroupItem("Theme", "THEME", "AppTheme"),
+	APP_THEME: new GroupItem("Theme", "APP_THEME", "AppTheme"),
 	DYNAMIC_BACKGROUND: new GroupItem(
 		"Dynamic Background",
 		"DYNAMIC_BACKGROUND",
@@ -283,7 +288,13 @@ const ALL_SETTINGS: {
 		"RECURSIVE_BROWSER",
 		"Recursive",
 	),
-	RESET_ALL_SETTINGS: new GroupItem("Reset", "RESET_ALL_SETTINGS", "Button"),
+	RESET_ALL_SETTINGS: new GroupItem(
+		"Reset All Settings",
+		"RESET_ALL_SETTINGS",
+		"Button",
+	),
+	EXPORT_SETTINGS: new GroupItem("Export Settings", "EXPORT_SETTINGS", "Button"),
+	IMPORT_SETTINGS: new GroupItem("Import Settings", "IMPORT_SETTINGS", "Button"),
 	FIRST_TIME: new GroupItem("First Time", "FIRST_TIME", "ChoiceArrayItems"),
 	DISABLE_UPDATE_NOTIFICATIONS: new GroupItem(
 		"Disable Update Notifications",
@@ -295,7 +306,7 @@ class SettingGroups {
 	public readonly GROUPS = [
 		new Group(
 			"General",
-			ALL_SETTINGS.THEME,
+			ALL_SETTINGS.APP_THEME,
 			ALL_SETTINGS.DYNAMIC_BACKGROUND,
 			ALL_SETTINGS.AUTOMATIC_UPDATES,
 			ALL_SETTINGS.DEFAULT_SCREEN,
@@ -308,7 +319,7 @@ class SettingGroups {
 			ALL_SETTINGS.USERNAME,
 			ALL_SETTINGS.PASSWORD,
 		),
-		new Group("Themes", ALL_SETTINGS.THEME, ALL_SETTINGS.CUSTOM_THEME),
+		new Group("Themes", ALL_SETTINGS.APP_THEME, ALL_SETTINGS.CUSTOM_THEME),
 		new Group(
 			"Advanced",
 			ALL_SETTINGS.UPDATE_FREQUENCY,
@@ -316,6 +327,8 @@ class SettingGroups {
 			ALL_SETTINGS.CUSTOM_PLAYLIST_TYPES,
 			ALL_SETTINGS.RECURSIVE_BROWSER,
 			ALL_SETTINGS.DISABLE_UPDATE_NOTIFICATIONS,
+			ALL_SETTINGS.IMPORT_SETTINGS,
+			ALL_SETTINGS.EXPORT_SETTINGS,
 			ALL_SETTINGS.RESET_ALL_SETTINGS,
 		),
 	];
