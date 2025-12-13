@@ -108,6 +108,9 @@ export abstract class Theme extends LoggerBaseClass {
 	public abstract textPrimary: Color;
 	public abstract textSecondary: Color;
 	public abstract textDisabled: Color;
+	public abstract textSuccess: Color;
+	public abstract textWarning: Color;
+	public abstract textError: Color;
 
 	public abstract buttonPrimary: Color;
 	public abstract buttonSecondary: Color;
@@ -136,6 +139,9 @@ class Dark extends Theme {
 	public textPrimary = new Color(255, 255, 255);
 	public textSecondary = new Color(255, 255, 255);
 	public textDisabled = new Color(100, 100, 100);
+	public textSuccess = new Color(0, 128, 0);
+	public textWarning = new Color(255, 165, 0);
+	public textError = new Color(255, 0, 0);
 	public buttonPrimary = new Color(103, 58, 183);
 	public buttonSecondary = new Color(0, 0, 0);
 	public border = new Color(255, 255, 255);
@@ -156,6 +162,9 @@ class Light extends Theme {
 	public textPrimary = new Color(0, 0, 0);
 	public textSecondary = new Color(0, 0, 0);
 	public textDisabled = new Color(100, 100, 100);
+	public textSuccess = new Color(0, 128, 0);
+	public textWarning = new Color(255, 165, 0);
+	public textError = new Color(255, 0, 0);
 	public buttonPrimary = new Color(30, 144, 255);
 	public buttonSecondary = new Color(255, 255, 255);
 	public border = new Color(0, 0, 0);

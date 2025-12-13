@@ -1,5 +1,9 @@
 import Logger, { LoggerProps } from "classes/Logger";
 import { BrowserDirectory, BrowserItem } from "classes/responses/Browser";
+import { SettingsClass } from "classes/Settings";
+import { Valid } from "classes/Validated";
+import { APP_NAME, RELEASES_URL } from "constants/constants";
+import { Linking } from "react-native";
 
 export function formatTime(seconds: number = 0): string {
 	const mins = Math.floor(seconds / 60);
@@ -56,3 +60,113 @@ export function useLogger(source: string) {
 			Logger.error(source, msg, props),
 	};
 }
+
+export function parseVersion(version: string): number[] {
+	const prereleaseTypes: Record<string, number> = {
+		alpha: 0,
+		rc: 1,
+	};
+	const versionWithoutV = version.replace(/^v/, "");
+
+	const [mainVersion, prereleasePart] = versionWithoutV.split("-");
+
+	const versionParts = mainVersion.split(".").map((num) => parseInt(num, 10));
+
+	let prereleaseIndex = -1;
+	let prereleaseNumber = 0;
+
+	if (prereleasePart) {
+		const prereleaseTokens = prereleasePart.split(".");
+		const prereleaseType = prereleaseTokens[0];
+
+		if (prereleaseTypes[prereleaseType] !== undefined) {
+			prereleaseIndex = prereleaseTypes[prereleaseType];
+			prereleaseNumber = parseInt(prereleaseTokens[1] || "0", 10);
+		} else {
+			throw new Error(`Unknown pre-release type: ${prereleaseType}`);
+		}
+	}
+
+	while (versionParts.length < 3) {
+		versionParts.push(0);
+	}
+
+	return [...versionParts, prereleaseIndex, prereleaseNumber];
+}
+
+export function checkVersion(
+	currentVersion: string,
+	latestVersion: string,
+): VersionStatus {
+	const current = parseVersion(currentVersion);
+	const latest = parseVersion(latestVersion);
+
+	for (let i = 0; i < Math.min(current.length, latest.length); i++) {
+		if (current[i] < latest[i]) {
+			return VersionStatus.OUTDATED;
+		} else if (current[i] > latest[i]) {
+			return VersionStatus.FUTURE;
+		}
+	}
+	return VersionStatus.CURRENT;
+}
+function arraysEqual(a: number[], b: number[]): boolean {
+	if (a.length !== b.length) return false;
+	for (let i = 0; i < a.length; i++) {
+		if (a[i] !== b[i]) return false;
+	}
+	return true;
+}
+export function checkSupportedVersions(
+	currentVersion: string,
+	supportedVersions: string[],
+	recommendedVersion: string,
+): SupportedStatus {
+	const isSupported = supportedVersions.some((item) => {
+		return arraysEqual(parseVersion(item), parseVersion(currentVersion));
+	});
+
+	if (!isSupported) {
+		return SupportedStatus.UNSUPPORTED;
+	}
+	if (
+		arraysEqual(parseVersion(currentVersion), parseVersion(recommendedVersion))
+	)
+		return SupportedStatus.RECOMMENDED;
+	if (checkVersion(currentVersion, recommendedVersion) === VersionStatus.FUTURE)
+		return SupportedStatus.FUTURE;
+	return SupportedStatus.NOT_RECOMMENDED;
+}
+export enum SupportedStatus {
+	UNSUPPORTED = "UNSUPPORTED",
+	NOT_RECOMMENDED = "NOT RECOMMENDED",
+	RECOMMENDED = "RECOMMENDED",
+	FUTURE = "FUTURE",
+}
+export enum VersionStatus {
+	OUTDATED = "OUTDATED",
+	CURRENT = "CURRENT",
+	FUTURE = "FUTURE",
+}
+
+export const newUpdateAlert = (
+	latestVersion: string,
+	settings: SettingsClass,
+) => ({
+	title: "Update Available",
+	message: `A new version (${latestVersion}) of ${APP_NAME} is available. Please visit the GitHub releases page to download the latest version.`,
+	options: [
+		{
+			optionText: "Go to GitHub",
+			onPress: () => {
+				Linking.openURL(RELEASES_URL);
+			},
+		},
+		{
+			optionText: "Disable Update Notifications",
+			onPress: () => {
+				settings.set("DISABLE_UPDATE_NOTIFICATIONS", new Valid(true));
+			},
+		},
+	],
+});

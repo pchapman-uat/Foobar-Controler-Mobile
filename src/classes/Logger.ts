@@ -201,4 +201,4 @@ export abstract class LoggerBaseClass<
 const Logger = new LoggerClass();
 export default Logger;
 
-export { LoggerClass as LoggerClass };
+export { LoggerClass };

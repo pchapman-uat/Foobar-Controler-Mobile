@@ -234,6 +234,8 @@ const SETTINGS_DESCRIPTIONS: { [K in keyof SettingPropTypes]: string } = {
 	RECURSIVE_BROWSER: "Change if all items are retrieved at once or per folder",
 	RESET_ALL_SETTINGS: "Reset all settings to their defaults",
 	FIRST_TIME: "If the user has opened the application for the first time",
+	DISABLE_UPDATE_NOTIFICATIONS:
+		"Disable notifications about new updates for the application",
 };
 const ALL_SETTINGS: {
 	[K in keyof SettingPropTypes]: GroupItem<K, SettingType>;
@@ -283,6 +285,11 @@ const ALL_SETTINGS: {
 	),
 	RESET_ALL_SETTINGS: new GroupItem("Reset", "RESET_ALL_SETTINGS", "Button"),
 	FIRST_TIME: new GroupItem("First Time", "FIRST_TIME", "ChoiceArrayItems"),
+	DISABLE_UPDATE_NOTIFICATIONS: new GroupItem(
+		"Disable Update Notifications",
+		"DISABLE_UPDATE_NOTIFICATIONS",
+		"boolean",
+	),
 };
 class SettingGroups {
 	public readonly GROUPS = [
@@ -308,6 +315,7 @@ class SettingGroups {
 			ALL_SETTINGS.CUSTOM_AUDIO_TYPES,
 			ALL_SETTINGS.CUSTOM_PLAYLIST_TYPES,
 			ALL_SETTINGS.RECURSIVE_BROWSER,
+			ALL_SETTINGS.DISABLE_UPDATE_NOTIFICATIONS,
 			ALL_SETTINGS.RESET_ALL_SETTINGS,
 		),
 	];

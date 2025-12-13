@@ -1,6 +1,7 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "App";
 import AppContext from "AppContext";
+import GitHub from "classes/GitHub";
 import {
 	items,
 	itemsObj,
@@ -8,8 +9,20 @@ import {
 	NavBarItemProps,
 	PagePropsMap,
 } from "classes/NavBar";
+import { APP_VERSION } from "constants/constants";
+import {
+	GITHUB_REPO_NAME,
+	GITHUB_REPO_OWNER,
+} from "constants/constants.github";
 import NavBarScreen, { NavigateToType } from "elements/NavBarScreen";
-import { indexToKey, keyToIndex, useLogger } from "helpers/index";
+import {
+	checkVersion,
+	indexToKey,
+	keyToIndex,
+	newUpdateAlert,
+	useLogger,
+	VersionStatus,
+} from "helpers";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { Animated, BackHandler, Dimensions, StyleSheet } from "react-native";
 
@@ -42,7 +55,29 @@ export default function Home({ navigation }: HomeProps) {
 	const ctx = useContext(AppContext);
 
 	const pastPagesRef = useRef(pastPages);
-
+	useEffect(() => {
+		const checkForUpdates = async () => {
+			const disabled = await ctx.Settings.get("DISABLE_UPDATE_NOTIFICATIONS");
+			if (disabled) {
+				logger.log("Update notifications are disabled.");
+				return;
+			}
+			const latestVersion = await GitHub.getRepoReleaseVersion(
+				GITHUB_REPO_OWNER,
+				GITHUB_REPO_NAME,
+			);
+			if (latestVersion) {
+				switch (checkVersion(APP_VERSION, latestVersion)) {
+					case VersionStatus.OUTDATED:
+						logger.log(`A new version is available: ${latestVersion}`);
+						ctx.alert(newUpdateAlert(latestVersion, ctx.Settings));
+					case VersionStatus.CURRENT:
+					case VersionStatus.FUTURE:
+				}
+			}
+		};
+		checkForUpdates();
+	}, []);
 	useEffect(() => {
 		pastPagesRef.current = pastPages;
 	}, [pastPages]);

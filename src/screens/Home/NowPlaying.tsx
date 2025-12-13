@@ -158,7 +158,7 @@ export default function NowPlaying({
 				thumbTintColor={getColor(ctx.theme, "buttonPrimary")}
 				maximumValue={1}
 				minimumValue={0}
-				onValueChange={(v) => onVolumeChanged(v)}
+				onValueChange={onVolumeChanged}
 			/>
 		);
 	};

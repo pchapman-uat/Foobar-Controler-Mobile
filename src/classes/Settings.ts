@@ -80,6 +80,7 @@ const SettingsDefaults = {
 	CUSTOM_AUDIO_TYPES: new ArrayItems<string>(),
 	RECURSIVE_BROWSER: Recursive.ONCE,
 	RESET_ALL_SETTINGS: ResetAllSettingsModal as ButtonSettingType<"resetAll">,
+	DISABLE_UPDATE_NOTIFICATIONS: false,
 	FIRST_TIME: true,
 };
 
@@ -161,6 +162,10 @@ class SettingProps {
 			FIRST_TIME: new SettingsProperty<boolean>(
 				"first_time",
 				SettingsDefaults.FIRST_TIME,
+			),
+			DISABLE_UPDATE_NOTIFICATIONS: new SettingsProperty<boolean>(
+				"disable_update_notifications",
+				SettingsDefaults.DISABLE_UPDATE_NOTIFICATIONS,
 			),
 		};
 	}

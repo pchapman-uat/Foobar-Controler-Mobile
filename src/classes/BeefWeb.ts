@@ -168,7 +168,7 @@ export class Beefweb extends LoggerBaseClass<BeefWebEvents> {
 		}
 	};
 
-	get location() {
+	public get location() {
 		return this.con.location;
 	}
 	public setUsername = (username: Valid<string>) => {

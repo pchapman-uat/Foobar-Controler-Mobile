@@ -78,6 +78,12 @@ export default ({ theme }: StyleProps) => {
 			textAlign: "center",
 			fontWeight: "bold",
 		},
+		header4: {
+			...primaryText,
+
+			textAlign: "center",
+			fontWeight: "bold",
+		},
 		hyperlink: {
 			...primaryText,
 			textDecorationLine: "underline",

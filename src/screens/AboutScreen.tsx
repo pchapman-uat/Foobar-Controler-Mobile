@@ -2,6 +2,7 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "App";
 import AppContext from "AppContext";
 import { ThemeType } from "classes/Themes";
+import { APP_NAME, APP_VERSION, REPO_URL } from "constants/constants";
 import { useStyles } from "managers/StyleManager";
 import { GitHubMark, GitHubMarkWhite } from "managers/SVGManager";
 import { getTheme } from "managers/ThemeManager";
@@ -33,11 +34,7 @@ export default function AboutScreen({ navigation }: AboutProps) {
 			<AboutInformation />
 			<Text style={Styles.Main.header2}>Links</Text>
 			<View>
-				<TouchableOpacity
-					onPress={() =>
-						Linking.openURL("https://github.com/pchapman-uat/AstroTune")
-					}
-				>
+				<TouchableOpacity onPress={() => Linking.openURL(REPO_URL)}>
 					{getTheme(theme).type == ThemeType.Light ? (
 						<GitHubMark />
 					) : (
@@ -53,8 +50,8 @@ export function AboutInformation() {
 	const Styles = useStyles("Main");
 	return (
 		<>
-			<Text style={Styles.Main.header1}>AstroTune</Text>
-			<Text style={Styles.Main.header2}>Version: 0.4.0</Text>
+			<Text style={Styles.Main.header1}>{APP_NAME}</Text>
+			<Text style={Styles.Main.header2}>Version: {APP_VERSION}</Text>
 
 			<View>
 				<Text style={Styles.Main.centeredText}>
