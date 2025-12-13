@@ -1,6 +1,6 @@
 {
   "name": "astrotune",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "main": "src/index.ts",
   "scripts": {
     "start": "expo start --dev-client",
